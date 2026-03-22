@@ -3,96 +3,196 @@
 > The missing terminal UI framework for TypeScript.
 > Built with React/Ink. Distributed like shadcn. Designed for developers.
 
+[![CI](https://github.com/Arindam200/termui/actions/workflows/ci.yml/badge.svg)](https://github.com/Arindam200/termui/actions)
+[![npm](https://img.shields.io/npm/v/termui)](https://www.npmjs.com/package/termui)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ---
 
-TermUI fills the gap in the TypeScript/JS ecosystem — no framework today combines React DX, shadcn-style copy-paste distribution, a comprehensive component library, full theming, and accessibility. TermUI is that framework.
+## Why TermUI?
 
-## Why TermUI
+The TypeScript/JS terminal UI ecosystem is fragmented:
+- **Ink** ships ~5 basic primitives
+- **Blessed** is abandoned
+- Nothing has shadcn-style copy-paste distribution
 
-- **Ink has ~5 components.** Blessed is abandoned. Nothing offers a complete terminal UI toolkit for TypeScript.
-- **shadcn-style distribution** — components live in your project. No black-box abstractions.
-- **Accessibility-first** — keyboard-only navigation, screen reader support via ANSI annotations.
-- **90+ components** — from inputs and data tables to charts, modals, and full-screen app shells.
+TermUI fixes all three.
 
-## Tech Stack
+---
+
+## Quick Start
+
+```bash
+# 1. Initialize in your project
+npx termui init
+
+# 2. Add components
+npx termui add spinner
+npx termui add table select alert
+
+# 3. Browse all components
+npx termui list
+```
+
+### Your first TermUI app
+
+```tsx
+import React from 'react';
+import { render } from 'ink';
+import { ThemeProvider } from '@termui/core';
+import { Spinner, ProgressBar, Alert, Select } from '@termui/components';
+
+function App() {
+  return (
+    <ThemeProvider>
+      <Spinner style="dots" label="Loading…" />
+      <ProgressBar value={72} total={100} label="Installing…" />
+      <Alert variant="success" title="Done!">
+        Your app is ready.
+      </Alert>
+      <Select
+        options={[
+          { value: 'npm', label: 'npm' },
+          { value: 'pnpm', label: 'pnpm' },
+          { value: 'bun', label: 'bun' },
+        ]}
+        onSubmit={(val) => console.log('Selected:', val)}
+      />
+    </ThemeProvider>
+  );
+}
+
+render(<App />);
+```
+
+---
+
+## Components (v0.1.0 — 19 components)
+
+| Category | Components |
+|---|---|
+| Layout | `Box` `Stack` `Grid` `ScrollView` |
+| Typography | `Text` `Badge` |
+| Input | `TextInput` |
+| Selection | `Select` `Checkbox` |
+| Data | `List` `Table` |
+| Feedback | `Spinner` `ProgressBar` `Alert` |
+| Navigation | `Tabs` |
+| Overlays | `Modal` |
+| Forms | `Form` |
+| Utility | `Panel` `Toggle` |
+
+---
+
+## Theming
+
+TermUI ships 3 built-in themes: **Default**, **Dracula**, **Nord**.
+
+```tsx
+import { ThemeProvider, draculaTheme, nordTheme } from '@termui/core';
+
+// Wrap your app
+<ThemeProvider theme={draculaTheme}>
+  <App />
+</ThemeProvider>
+```
+
+### Custom theme
+
+```tsx
+import { createTheme } from '@termui/core';
+
+const myTheme = createTheme({
+  name: 'my-brand',
+  colors: {
+    primary: '#FF6B6B',
+    focusRing: '#FF6B6B',
+  },
+});
+```
+
+---
+
+## Hooks
+
+```ts
+import {
+  useInput,        // keyboard input
+  useFocus,        // component focus state
+  useFocusManager, // programmatic focus
+  useTheme,        // access theme tokens
+  useTerminal,     // cols, rows, color depth
+  useAnimation,    // frame-based animation
+  useInterval,     // safe setInterval
+  useClipboard,    // OSC 52 clipboard
+  useKeymap,       // declarative keybindings
+  useMouse,        // mouse events
+  useResize,       // terminal resize
+  useAsync,        // async data loading
+} from '@termui/core';
+```
+
+---
+
+## Stack
 
 | Layer | Technology |
 |---|---|
 | Language | TypeScript (ESM-only) |
-| Renderer | Ink (React reconciler for terminal) |
+| Renderer | [Ink](https://github.com/vadimdemedes/ink) (React for terminal) |
 | Layout | Yoga (Facebook's flexbox engine) |
 | Distribution | shadcn/ui-style CLI |
-| Runtime | Node.js 18+ (Bun supported) |
-| License | MIT |
-
-## Components
-
-**98 components across 11 categories:**
-
-| Category | Components |
-|---|---|
-| Layout | Box, Stack, Grid, Divider, Spacer, ScrollView, Columns, Center, AspectRatio |
-| Typography | Text, Heading, Code, Link, Badge, Tag, Markdown, JSON, Gradient, BigText, Digits |
-| Input | TextInput, TextArea, PasswordInput, NumberInput, SearchInput, MaskedInput, EmailInput, PathInput |
-| Selection | Select, MultiSelect, RadioGroup, Checkbox, CheckboxGroup, Toggle, TreeSelect, TagInput, ColorPicker |
-| Data Display | Table, DataGrid, List, VirtualList, Tree, DirectoryTree, KeyValue, Definition, Card, Panel |
-| Feedback | Spinner, ProgressBar, ProgressCircle, StatusMessage, Toast, Alert, Banner, Skeleton |
-| Navigation | Tabs, TabbedContent, Breadcrumb, Pagination, CommandPalette, Menu, Sidebar |
-| Overlays | Modal, Dialog, Drawer, Tooltip, Popover |
-| Forms | Form, FormField, Wizard, Confirm, DatePicker, TimePicker, FilePicker |
-| Charts | Sparkline, BarChart, LineChart, PieChart, HeatMap, Gauge |
-| Utility | Timer, Stopwatch, Clock, Clipboard, KeyboardShortcuts, Help, ErrorBoundary, Log, Image, QRCode |
-
-**High-level templates:**
-
-- `SplashScreen` — ASCII art banner with gradient, subtitle, and status line
-- `InfoBox` — Bordered box with header and tree rows
-- `AppShell` + `BulletList` — Full-screen TUI layout with header, input, scrollable content
-- `WelcomeScreen` — Two-panel welcome dashboard
-- `LoginFlow` — Full-page onboarding/auth screen with figlet title and numbered select
-- `UsageMonitor` — Real-time resource dashboard with live metrics and progress bars
-- `SetupFlow` — Sequential step flow with clack-style visual language
-
-## Hooks
-
-`useInput` · `useFocus` · `useFocusManager` · `useTheme` · `useTerminal` · `useAnimation` · `useInterval` · `useClipboard` · `useKeymap` · `useMouse` · `useResize` · `useAsync`
-
-## Themes
-
-Default · Dracula · Nord · Catppuccin · Monokai · Solarized · Tokyo Night · One Dark
-
-## CLI
-
-```sh
-npx termui init         # scaffold a new project
-npx termui add <component>  # copy component into your project
-npx termui diff         # compare local component vs registry
-npx termui theme        # manage themes
-npx termui preview      # live preview components
-```
-
-## Adapters
-
-| Package | Description |
-|---|---|
-| `termui/clack` | Drop-in wrapper for `@clack/prompts` |
-| `termui/picocolors` | Drop-in wrapper for `picocolors` + theme integration |
-| `termui/gray-matter` | Frontmatter parser + `<FrontmatterDisplay>` component |
-| `termui/pty` | `<EmbeddedTerminal>` — spawn real PTY inside a TUI panel |
-| `termui/keychain` | `useKeychain()` — OS secure credential storage |
-| `termui/git` | `useGit()` + `<GitStatus>` via simple-git |
-| `termui/args` | Styled `--help` + `createCLI()` via yargs |
-| `termui/github` | `useGitHub()` via @octokit/rest |
-
-## Roadmap
-
-| Phase | Timeline | Goal |
-|---|---|---|
-| v0.1.0 beta | Month 1–2 | 15 core components, CLI init+add, 3 themes |
-| v1.0 | Month 3–4 | 50+ components, full theming, docs site |
-| v1.x | Month 5–6 | All 90 components, charts, dev tools, 4 templates |
-| v2.0+ | Month 7+ | Plugin system, community registry, Vue/Svelte adapters |
+| Runtime | Node.js 18+ |
 
 ---
 
-Built by [Arindam Majumder](https://studio1hq.com) · MIT License
+## Monorepo Structure
+
+```
+termui/
+├── packages/
+│   ├── core/          # Terminal layer, styling engine, 12 hooks
+│   ├── components/    # 19+ UI components
+│   └── cli/           # npx termui CLI tool
+├── registry/          # Component registry (schema + meta)
+├── examples/
+│   └── demo/          # Interactive demo app
+└── .github/
+    └── workflows/     # CI (Node 18, 20, 22)
+```
+
+---
+
+## Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Run all tests
+pnpm test
+
+# Run interactive demo
+pnpm --filter @termui/demo start
+
+# Test CLI
+node --import tsx/esm packages/cli/src/cli.ts help
+node --import tsx/esm packages/cli/src/cli.ts list
+```
+
+---
+
+## Roadmap
+
+| Phase | Status | Description |
+|---|---|---|
+| **Phase 1** | ✅ **Done** | 19 components, CLI (init/add/list), 3 themes, 12 hooks |
+| **Phase 2** | 🔜 Planned | 50+ components, full theming, docs site — v1.0 |
+| **Phase 3** | 🔜 Planned | All 90+ components, charts, dev tools, templates |
+| **Phase 4** | 🔜 Planned | Plugin system, community registry, Vue/Svelte adapters |
+
+---
+
+## License
+
+MIT © [Arindam Majumder](https://studio1hq.com)
