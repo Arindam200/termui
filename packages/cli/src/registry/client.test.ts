@@ -4,7 +4,7 @@ import { getLocalRegistry } from './client.js';
 describe('local registry', () => {
   it('returns a valid manifest', () => {
     const manifest = getLocalRegistry();
-    expect(manifest.version).toBe('0.1.0');
+    expect(manifest.version).toBe('1.0.0');
     expect(typeof manifest.components).toBe('object');
   });
 
