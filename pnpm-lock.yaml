@@ -267,6 +267,31 @@ importers:
         specifier: ^1.0.0
         version: 1.6.1(@types/node@20.19.37)
 
+  packages/testing:
+    dependencies:
+      ink:
+        specifier: ^5.0.0
+        version: 5.2.1(@types/react@18.3.28)(react@18.3.1)
+      react:
+        specifier: ^18.0.0
+        version: 18.3.1
+      strip-ansi:
+        specifier: ^7.1.0
+        version: 7.2.0
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.37
+      '@types/react':
+        specifier: ^18.0.0
+        version: 18.3.28
+      typescript:
+        specifier: ^5.4.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.37)
+
 packages:
 
   '@alcalzone/ansi-tokenize@0.1.3':
