@@ -19,13 +19,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  publish:
-    name: Build & deploy registry to GitHub Pages
+  build:
+    name: Build registry
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
       - uses: actions/checkout@v4
 
@@ -44,19 +40,19 @@ jobs:
       - name: Sync registry from source
         run: node scripts/publish-registry.mjs
 
-      - name: Add CORS headers via _headers file
-        run: |
-          cat > registry/_headers <<'EOF'
-          /*
-            Access-Control-Allow-Origin: *
-            Cache-Control: public, max-age=300, stale-while-revalidate=60
-          EOF
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: registry
 
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
