@@ -11,7 +11,7 @@ import { theme } from './commands/theme.js';
 import { preview, previewHelp } from './commands/preview.js';
 import { dev } from './commands/dev.js';
 import { checkForUpdates } from './utils/updates.js';
-import { printLogo, intro, step, outro, hi, dim, c, sym } from './utils/ui.js';
+import { printLogo, intro, step, outro, hi, dim, c, sym, select, multiselect } from './utils/ui.js';
 
 const [, , command, ...args] = process.argv;
 
@@ -67,8 +67,11 @@ async function main() {
     case 'help':
     case '--help':
     case '-h':
-    case undefined:
       printHelp();
+      break;
+
+    case undefined:
+      await interactiveMenu();
       break;
 
     case '--version':
@@ -90,6 +93,104 @@ async function main() {
       console.log(`${sym.error}  Unknown command: ${c.bold}${command}${c.reset}`);
       outro(`Run ${hi('npx termui help')} to see available commands`);
       process.exit(1);
+  }
+}
+
+const CATEGORY_ICONS: Record<string, string> = {
+  layout: '📐',
+  typography: '🔤',
+  input: '⌨️',
+  selection: '☑️',
+  data: '📊',
+  feedback: '💬',
+  navigation: '🧭',
+  overlays: '🪟',
+  forms: '📝',
+  utility: '🔧',
+  charts: '📈',
+  templates: '🎨',
+};
+
+async function interactiveMenu(): Promise<void> {
+  printLogo();
+  intro('termui');
+
+  const action = await select('What would you like to do?', [
+    { value: 'add-component', label: 'Add a component', hint: 'browse by category' },
+    { value: 'add-template', label: 'Use a template', hint: 'starter layouts & pages' },
+    { value: 'init', label: 'Initialize project', hint: 'set up termui.config.json' },
+    { value: 'theme', label: 'Change theme', hint: 'dracula, nord, catppuccin…' },
+    { value: 'preview', label: 'Preview component gallery', hint: '91 components' },
+    { value: 'list', label: 'Browse all components', hint: 'grouped by category' },
+    { value: 'dev', label: 'Dev mode', hint: 'watch & hot-reload' },
+    { value: 'help', label: 'Show help', hint: 'all commands & examples' },
+  ]);
+
+  if (action === 'add-component') {
+    const { getLocalRegistry } = await import('./registry/client.js');
+    const registry = getLocalRegistry();
+    const components = Object.values(registry.components).filter((c) => c.category !== 'templates');
+
+    // Build unique category list preserving insertion order
+    const categories = [...new Set(components.map((c) => c.category))];
+
+    const category = await select(
+      'Choose a category',
+      categories.map((cat) => ({
+        value: cat,
+        label: `${CATEGORY_ICONS[cat] ?? '•'}  ${cat.charAt(0).toUpperCase() + cat.slice(1)}`,
+        hint: `${components.filter((c) => c.category === cat).length} components`,
+      }))
+    );
+
+    const inCategory = components.filter((c) => c.category === category);
+    const chosen = await multiselect(
+      `Select components to add  ${dim(`(${category})`)}`,
+      inCategory.map((c) => ({ value: c.name, label: c.name, hint: c.description }))
+    );
+
+    if (chosen.length === 0) {
+      step('No components selected.');
+      outro('Run again to pick components');
+      return;
+    }
+
+    await add(chosen);
+  } else if (action === 'add-template') {
+    const { getLocalRegistry } = await import('./registry/client.js');
+    const registry = getLocalRegistry();
+    const templates = Object.values(registry.components).filter((c) => c.category === 'templates');
+
+    if (templates.length === 0) {
+      step('No templates found in the registry.');
+      outro('Check the docs for available templates');
+      return;
+    }
+
+    const chosen = await multiselect(
+      'Select templates to add',
+      templates.map((t) => ({ value: t.name, label: t.name, hint: t.description }))
+    );
+
+    if (chosen.length === 0) {
+      step('No templates selected.');
+      outro('Run again to pick templates');
+      return;
+    }
+
+    await add(chosen);
+  } else if (action === 'init') {
+    await init([]);
+  } else if (action === 'theme') {
+    await theme([]);
+  } else if (action === 'preview') {
+    await preview([]);
+  } else if (action === 'list') {
+    await list([]);
+  } else if (action === 'dev') {
+    await dev([]);
+  } else {
+    printHelp();
   }
 }
 

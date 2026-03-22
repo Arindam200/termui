@@ -2,6 +2,21 @@
 
 All notable changes to TermUI are documented here.
 
+## [1.1.1] — 2026-03-23
+
+### Changed
+
+**CLI — Interactive mode when run with no arguments**
+
+- `npx termui` (no args) now launches a full interactive menu instead of printing static help
+- Top-level `select` prompt: Add a component · Use a template · Initialize project · Change theme · Preview gallery · Browse all components · Dev mode · Show help
+- **Add a component flow**: category select (12 categories with emoji icons and component counts) → `multiselect` of components in that category → installs chosen components
+- **Use a template flow**: `multiselect` of all template-category components → installs chosen templates
+- All other menu options delegate directly to the existing command handlers (`init`, `theme`, `preview`, `list`, `dev`)
+- `npx termui help` still prints the flat text help unchanged; all direct commands (`npx termui add <name>`, etc.) are unaffected
+
+---
+
 ## [1.1.0] — 2026-03-23
 
 ### Added

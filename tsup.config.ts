@@ -24,7 +24,9 @@ const sharedOptions = {
     'latest-version',
     'yaml',
   ],
-  esbuildOptions(options: Parameters<Exclude<import('tsup').Options['esbuildOptions'], undefined>>[0]) {
+  esbuildOptions(
+    options: Parameters<Exclude<import('tsup').Options['esbuildOptions'], undefined>>[0]
+  ) {
     options.alias = {
       '@termui/core': path.resolve(__dirname, 'packages/core/src/index.ts'),
       '@termui/core/hooks': path.resolve(__dirname, 'packages/core/src/hooks/index.ts'),
