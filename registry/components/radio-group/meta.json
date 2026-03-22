@@ -3,9 +3,7 @@
   "description": "Mutually exclusive radio button group",
   "version": "1.0.0",
   "category": "selection",
-  "files": [
-    "RadioGroup.tsx"
-  ],
+  "files": ["RadioGroup.tsx"],
   "deps": [],
   "peerComponents": []
 }

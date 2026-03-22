@@ -3,9 +3,7 @@
   "description": "Auto-dismissing toast notification",
   "version": "1.0.0",
   "category": "feedback",
-  "files": [
-    "Toast.tsx"
-  ],
+  "files": ["Toast.tsx"],
   "deps": [],
   "peerComponents": []
 }

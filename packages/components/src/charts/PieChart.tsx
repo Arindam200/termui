@@ -75,7 +75,8 @@ function buildPieGrid(
       if (angle < 0) angle += Math.PI * 2;
 
       // Find which segment this angle belongs to
-      const seg = angles.find((a) => angle >= a.start && angle < a.end) ?? angles[angles.length - 1];
+      const seg =
+        angles.find((a) => angle >= a.start && angle < a.end) ?? angles[angles.length - 1];
       if (seg) {
         grid[row]![col] = { char: FULL_BLOCK, color: seg.color };
       }
@@ -135,9 +136,7 @@ export function PieChart({
               <Box key={idx} flexDirection="row" gap={1}>
                 <Text color={item.color}>{LEGEND_SQUARE}</Text>
                 <Text color={theme.colors.foreground}>{item.label}</Text>
-                {showPercentages && (
-                  <Text color={theme.colors.mutedForeground}>({pct}%)</Text>
-                )}
+                {showPercentages && <Text color={theme.colors.mutedForeground}>({pct}%)</Text>}
               </Box>
             );
           })}

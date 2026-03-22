@@ -3,9 +3,7 @@
   "description": "Formatted keyboard shortcut reference table",
   "version": "1.0.0",
   "category": "utility",
-  "files": [
-    "KeyboardShortcuts.tsx"
-  ],
+  "files": ["KeyboardShortcuts.tsx"],
   "deps": [],
   "peerComponents": []
 }

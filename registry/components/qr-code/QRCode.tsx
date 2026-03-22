@@ -239,8 +239,21 @@ function placeFormatInfo(matrix: Matrix, maskPattern: number) {
   // Place around top-left finder
   const bits15 = Array.from({ length: 15 }, (_, i) => (fmt >> (14 - i)) & 1);
   const positions = [
-    [0, 8], [1, 8], [2, 8], [3, 8], [4, 8], [5, 8], [7, 8], [8, 8],
-    [8, 7], [8, 5], [8, 4], [8, 3], [8, 2], [8, 1], [8, 0],
+    [0, 8],
+    [1, 8],
+    [2, 8],
+    [3, 8],
+    [4, 8],
+    [5, 8],
+    [7, 8],
+    [8, 8],
+    [8, 7],
+    [8, 5],
+    [8, 4],
+    [8, 3],
+    [8, 2],
+    [8, 1],
+    [8, 0],
   ];
   positions.forEach(([r, c], i) => {
     matrix[r!]![c!] = bits15[i] === 1;
@@ -248,16 +261,27 @@ function placeFormatInfo(matrix: Matrix, maskPattern: number) {
 
   // Place around top-right and bottom-left finders
   const positions2 = [
-    [8, SIZE - 1], [8, SIZE - 2], [8, SIZE - 3], [8, SIZE - 4],
-    [8, SIZE - 5], [8, SIZE - 6], [8, SIZE - 7], [8, SIZE - 8],
+    [8, SIZE - 1],
+    [8, SIZE - 2],
+    [8, SIZE - 3],
+    [8, SIZE - 4],
+    [8, SIZE - 5],
+    [8, SIZE - 6],
+    [8, SIZE - 7],
+    [8, SIZE - 8],
   ];
   positions2.forEach(([r, c], i) => {
     matrix[r!]![c!] = bits15[i] === 1;
   });
 
   const positions3 = [
-    [SIZE - 7, 8], [SIZE - 6, 8], [SIZE - 5, 8], [SIZE - 4, 8],
-    [SIZE - 3, 8], [SIZE - 2, 8], [SIZE - 1, 8],
+    [SIZE - 7, 8],
+    [SIZE - 6, 8],
+    [SIZE - 5, 8],
+    [SIZE - 4, 8],
+    [SIZE - 3, 8],
+    [SIZE - 2, 8],
+    [SIZE - 1, 8],
   ];
   positions3.forEach(([r, c], i) => {
     matrix[r!]![c!] = bits15[8 + i] === 1;
@@ -291,14 +315,30 @@ function applyMask(matrix: Matrix, funcMask: boolean[][], pattern: number) {
       if (funcMask[r]![c]) continue;
       let invert = false;
       switch (pattern) {
-        case 0: invert = (r + c) % 2 === 0; break;
-        case 1: invert = r % 2 === 0; break;
-        case 2: invert = c % 3 === 0; break;
-        case 3: invert = (r + c) % 3 === 0; break;
-        case 4: invert = (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0; break;
-        case 5: invert = (r * c) % 2 + (r * c) % 3 === 0; break;
-        case 6: invert = ((r * c) % 2 + (r * c) % 3) % 2 === 0; break;
-        case 7: invert = ((r + c) % 2 + (r * c) % 3) % 2 === 0; break;
+        case 0:
+          invert = (r + c) % 2 === 0;
+          break;
+        case 1:
+          invert = r % 2 === 0;
+          break;
+        case 2:
+          invert = c % 3 === 0;
+          break;
+        case 3:
+          invert = (r + c) % 3 === 0;
+          break;
+        case 4:
+          invert = (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0;
+          break;
+        case 5:
+          invert = ((r * c) % 2) + ((r * c) % 3) === 0;
+          break;
+        case 6:
+          invert = (((r * c) % 2) + ((r * c) % 3)) % 2 === 0;
+          break;
+        case 7:
+          invert = (((r + c) % 2) + ((r * c) % 3)) % 2 === 0;
+          break;
       }
       if (invert) matrix[r]![c] = !matrix[r]![c];
     }
@@ -437,7 +477,7 @@ export function QRCode({ value, size = 'md', color, label }: QRCodeProps) {
       lines.push(
         <Text key={r} color={resolvedColor}>
           {chars.join('')}
-        </Text>,
+        </Text>
       );
     }
     return (
@@ -460,7 +500,7 @@ export function QRCode({ value, size = 'md', color, label }: QRCodeProps) {
       lines.push(
         <Text key={`${r}-${s}`} color={resolvedColor}>
           {chars.join('')}
-        </Text>,
+        </Text>
       );
     }
   }

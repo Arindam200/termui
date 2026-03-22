@@ -3,9 +3,7 @@
   "description": "OSC 8 clickable hyperlink",
   "version": "1.0.0",
   "category": "typography",
-  "files": [
-    "Link.tsx"
-  ],
+  "files": ["Link.tsx"],
   "deps": [],
   "peerComponents": []
 }

@@ -48,11 +48,22 @@ function formatDate(d: Date): string {
 }
 
 const EXT_ICON: Record<string, string> = {
-  '.ts': '📄', '.tsx': '⚛️ ', '.js': '📄', '.jsx': '⚛️ ',
-  '.json': '{}', '.md': '📝', '.txt': '📄',
-  '.png': '🖼 ', '.jpg': '🖼 ', '.gif': '🖼 ', '.svg': '🎨',
-  '.zip': '📦', '.tar': '📦', '.gz': '📦',
-  '.sh': '⚙️ ', '.env': '🔑',
+  '.ts': '📄',
+  '.tsx': '⚛️ ',
+  '.js': '📄',
+  '.jsx': '⚛️ ',
+  '.json': '{}',
+  '.md': '📝',
+  '.txt': '📄',
+  '.png': '🖼 ',
+  '.jpg': '🖼 ',
+  '.gif': '🖼 ',
+  '.svg': '🎨',
+  '.zip': '📦',
+  '.tar': '📦',
+  '.gz': '📦',
+  '.sh': '⚙️ ',
+  '.env': '🔑',
 };
 
 function fileIcon(entry: FsEntry): string {
@@ -60,7 +71,22 @@ function fileIcon(entry: FsEntry): string {
   return EXT_ICON[entry.ext] ?? '📄';
 }
 
-const TEXT_EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.json', '.md', '.txt', '.env', '.sh', '.yml', '.yaml', '.toml', '.css', '.html']);
+const TEXT_EXTS = new Set([
+  '.ts',
+  '.tsx',
+  '.js',
+  '.jsx',
+  '.json',
+  '.md',
+  '.txt',
+  '.env',
+  '.sh',
+  '.yml',
+  '.yaml',
+  '.toml',
+  '.css',
+  '.html',
+]);
 
 // ─── Directory reader ─────────────────────────────────────────────────────────
 
@@ -110,43 +136,51 @@ function FileList({
   const visible = entries.slice(scrollOffset, scrollOffset + visibleCount);
 
   return (
-    <Box flexDirection="column" width={40} borderStyle="round" borderColor={theme.colors.border} paddingX={1}>
-      <Text bold color={theme.colors.primary}>{basename(cwd) || cwd}</Text>
+    <Box
+      flexDirection="column"
+      width={40}
+      borderStyle="round"
+      borderColor={theme.colors.border}
+      paddingX={1}
+    >
+      <Text bold color={theme.colors.primary}>
+        {basename(cwd) || cwd}
+      </Text>
       <Text dimColor>{cwd}</Text>
       <Divider />
       {loading && (
-        <Box gap={1}><Spinner style="dots" /><Text dimColor>Loading…</Text></Box>
+        <Box gap={1}>
+          <Spinner style="dots" />
+          <Text dimColor>Loading…</Text>
+        </Box>
       )}
-      {!loading && entries.length === 0 && (
-        <Text dimColor>(empty directory)</Text>
-      )}
-      {!loading && visible.map((entry, i) => {
-        const absoluteIdx = i + scrollOffset;
-        const isSelected = absoluteIdx === selectedIndex;
-        return (
-          <Box key={entry.path} gap={1}>
-            <Text color={isSelected ? theme.colors.primary : 'inherit'}>
-              {isSelected ? '▶' : ' '}
-            </Text>
-            <Text>{fileIcon(entry)}</Text>
-            <Text
-              bold={isSelected}
-              color={
-                isSelected
-                  ? theme.colors.primary
-                  : entry.isDir
-                    ? theme.colors.accent
-                    : theme.colors.foreground
-              }
-            >
-              {entry.name.length > 24 ? entry.name.slice(0, 23) + '…' : entry.name}
-            </Text>
-            {!entry.isDir && (
-              <Text dimColor>{formatSize(entry.size)}</Text>
-            )}
-          </Box>
-        );
-      })}
+      {!loading && entries.length === 0 && <Text dimColor>(empty directory)</Text>}
+      {!loading &&
+        visible.map((entry, i) => {
+          const absoluteIdx = i + scrollOffset;
+          const isSelected = absoluteIdx === selectedIndex;
+          return (
+            <Box key={entry.path} gap={1}>
+              <Text color={isSelected ? theme.colors.primary : 'inherit'}>
+                {isSelected ? '▶' : ' '}
+              </Text>
+              <Text>{fileIcon(entry)}</Text>
+              <Text
+                bold={isSelected}
+                color={
+                  isSelected
+                    ? theme.colors.primary
+                    : entry.isDir
+                      ? theme.colors.accent
+                      : theme.colors.foreground
+                }
+              >
+                {entry.name.length > 24 ? entry.name.slice(0, 23) + '…' : entry.name}
+              </Text>
+              {!entry.isDir && <Text dimColor>{formatSize(entry.size)}</Text>}
+            </Box>
+          );
+        })}
     </Box>
   );
 }
@@ -159,9 +193,18 @@ function FilePreview({ entry }: { entry: FsEntry | null }) {
   const [previewLoading, setPreviewLoading] = useState(false);
 
   useEffect(() => {
-    if (!entry || entry.isDir) { setPreview(null); return; }
-    if (!TEXT_EXTS.has(entry.ext)) { setPreview(null); return; }
-    if (entry.size > 50 * 1024) { setPreview('(file too large to preview)'); return; }
+    if (!entry || entry.isDir) {
+      setPreview(null);
+      return;
+    }
+    if (!TEXT_EXTS.has(entry.ext)) {
+      setPreview(null);
+      return;
+    }
+    if (entry.size > 50 * 1024) {
+      setPreview('(file too large to preview)');
+      return;
+    }
 
     setPreviewLoading(true);
     import('fs').then(({ readFileSync }) => {
@@ -178,41 +221,66 @@ function FilePreview({ entry }: { entry: FsEntry | null }) {
 
   if (!entry) {
     return (
-      <Box flexDirection="column" flexGrow={1} borderStyle="round" borderColor={theme.colors.border} paddingX={1}>
+      <Box
+        flexDirection="column"
+        flexGrow={1}
+        borderStyle="round"
+        borderColor={theme.colors.border}
+        paddingX={1}
+      >
         <Text dimColor>No file selected</Text>
       </Box>
     );
   }
 
   return (
-    <Box flexDirection="column" flexGrow={1} borderStyle="round" borderColor={theme.colors.border} paddingX={1}>
-      <Text bold color={theme.colors.primary}>{fileIcon(entry)} {entry.name}</Text>
+    <Box
+      flexDirection="column"
+      flexGrow={1}
+      borderStyle="round"
+      borderColor={theme.colors.border}
+      paddingX={1}
+    >
+      <Text bold color={theme.colors.primary}>
+        {fileIcon(entry)} {entry.name}
+      </Text>
       <Divider />
 
-      <KeyValue items={[
-        { key: 'Type', value: entry.isDir ? 'Directory' : entry.ext || 'File' },
-        { key: 'Size', value: entry.isDir ? '—' : formatSize(entry.size) },
-        { key: 'Modified', value: formatDate(entry.mtime) },
-        { key: 'Path', value: entry.path.length > 35 ? '…' + entry.path.slice(-34) : entry.path },
-      ]} />
+      <KeyValue
+        items={[
+          { key: 'Type', value: entry.isDir ? 'Directory' : entry.ext || 'File' },
+          { key: 'Size', value: entry.isDir ? '—' : formatSize(entry.size) },
+          { key: 'Modified', value: formatDate(entry.mtime) },
+          { key: 'Path', value: entry.path.length > 35 ? '…' + entry.path.slice(-34) : entry.path },
+        ]}
+      />
 
       {!entry.isDir && (
         <>
           <Divider label="Preview" />
-          {previewLoading && <Box gap={1}><Spinner style="dots" /><Text dimColor>Loading…</Text></Box>}
-          {!previewLoading && preview && (
-            <Box flexDirection="column">
-              {preview.split('\n').slice(0, 16).map((line, i) => (
-                <Box key={i} gap={1}>
-                  <Text dimColor>{String(i + 1).padStart(3)}</Text>
-                  <Text>{line.slice(0, 60)}{line.length > 60 ? '…' : ''}</Text>
-                </Box>
-              ))}
+          {previewLoading && (
+            <Box gap={1}>
+              <Spinner style="dots" />
+              <Text dimColor>Loading…</Text>
             </Box>
           )}
-          {!previewLoading && !preview && (
-            <Text dimColor>(binary or unsupported format)</Text>
+          {!previewLoading && preview && (
+            <Box flexDirection="column">
+              {preview
+                .split('\n')
+                .slice(0, 16)
+                .map((line, i) => (
+                  <Box key={i} gap={1}>
+                    <Text dimColor>{String(i + 1).padStart(3)}</Text>
+                    <Text>
+                      {line.slice(0, 60)}
+                      {line.length > 60 ? '…' : ''}
+                    </Text>
+                  </Box>
+                ))}
+            </Box>
           )}
+          {!previewLoading && !preview && <Text dimColor>(binary or unsupported format)</Text>}
         </>
       )}
     </Box>
@@ -237,8 +305,15 @@ function FileManager() {
     setLoading(true);
     setSelectedIndex(0);
     readDir(cwd)
-      .then((e) => { setEntries(e); setLoading(false); })
-      .catch(() => { setEntries([]); setLoading(false); setMessage('Cannot read directory'); });
+      .then((e) => {
+        setEntries(e);
+        setLoading(false);
+      })
+      .catch(() => {
+        setEntries([]);
+        setLoading(false);
+        setMessage('Cannot read directory');
+      });
   }, [cwd]);
 
   const selected = entries[selectedIndex] ?? null;
@@ -268,27 +343,25 @@ function FileManager() {
     <Box flexDirection="column" padding={1} gap={1}>
       {/* Header */}
       <Box justifyContent="space-between">
-        <Text bold color={theme.colors.primary}>◆ File Manager</Text>
-        <Text dimColor>↑↓/jk navigate  →/Enter open  ←/h back  q quit</Text>
+        <Text bold color={theme.colors.primary}>
+          ◆ File Manager
+        </Text>
+        <Text dimColor>↑↓/jk navigate →/Enter open ←/h back q quit</Text>
       </Box>
 
       {message && <StatusMessage variant="error">{message}</StatusMessage>}
 
       {/* Panels */}
       <Box gap={1} flexGrow={1}>
-        <FileList
-          entries={entries}
-          selectedIndex={selectedIndex}
-          loading={loading}
-          cwd={cwd}
-        />
+        <FileList entries={entries} selectedIndex={selectedIndex} loading={loading} cwd={cwd} />
         <FilePreview entry={selected} />
       </Box>
 
       {/* Footer */}
       <Box justifyContent="space-between">
         <Text dimColor>
-          {entries.length} items · {entries.filter((e) => e.isDir).length} dirs · {entries.filter((e) => !e.isDir).length} files
+          {entries.length} items · {entries.filter((e) => e.isDir).length} dirs ·{' '}
+          {entries.filter((e) => !e.isDir).length} files
         </Text>
         <Text dimColor>g top · G bottom</Text>
       </Box>

@@ -3,9 +3,7 @@
   "description": "Countdown timer with pause/resume and auto-start",
   "version": "1.0.0",
   "category": "utility",
-  "files": [
-    "Timer.tsx"
-  ],
+  "files": ["Timer.tsx"],
   "deps": [],
   "peerComponents": []
 }

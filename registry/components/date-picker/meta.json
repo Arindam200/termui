@@ -3,9 +3,7 @@
   "description": "Calendar date picker with keyboard navigation",
   "version": "1.0.0",
   "category": "forms",
-  "files": [
-    "DatePicker.tsx"
-  ],
+  "files": ["DatePicker.tsx"],
   "deps": [],
   "peerComponents": []
 }

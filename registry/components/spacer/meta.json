@@ -3,9 +3,7 @@
   "description": "Flexible space between flex children",
   "version": "1.0.0",
   "category": "layout",
-  "files": [
-    "Spacer.tsx"
-  ],
+  "files": ["Spacer.tsx"],
   "deps": [],
   "peerComponents": []
 }

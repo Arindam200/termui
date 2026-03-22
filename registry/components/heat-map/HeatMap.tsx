@@ -77,9 +77,7 @@ export function HeatMap({
   const max = Math.max(...allValues);
 
   // Row label width
-  const rowLabelWidth = rowLabels
-    ? Math.max(...rowLabels.map((l) => l.length)) + 1
-    : 0;
+  const rowLabelWidth = rowLabels ? Math.max(...rowLabels.map((l) => l.length)) + 1 : 0;
 
   return (
     <Box flexDirection="column">

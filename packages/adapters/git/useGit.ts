@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import simpleGit from 'simple-git';
+import { simpleGit } from 'simple-git';
 import type { StatusResult } from 'simple-git';
 
 export interface UseGitState {

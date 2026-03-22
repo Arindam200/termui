@@ -3,9 +3,7 @@
   "description": "h1–h4 styled headings with optional figlet ASCII art",
   "version": "1.0.0",
   "category": "typography",
-  "files": [
-    "Heading.tsx"
-  ],
+  "files": ["Heading.tsx"],
   "deps": [],
   "peerComponents": []
 }

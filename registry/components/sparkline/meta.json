@@ -3,9 +3,7 @@
   "description": "Inline Unicode braille sparkline chart",
   "version": "1.0.0",
   "category": "charts",
-  "files": [
-    "Sparkline.tsx"
-  ],
+  "files": ["Sparkline.tsx"],
   "deps": [],
   "peerComponents": []
 }

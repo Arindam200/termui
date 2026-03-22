@@ -38,8 +38,9 @@ export function Sparkline({ data, width = 20, color, label }: SparklineProps) {
   // Sample/truncate data to fit width
   const sampled =
     data.length > width
-      ? Array.from({ length: width }, (_, i) =>
-          data[Math.round((i / (width - 1)) * (data.length - 1))] ?? 0
+      ? Array.from(
+          { length: width },
+          (_, i) => data[Math.round((i / (width - 1)) * (data.length - 1))] ?? 0
         )
       : data;
 

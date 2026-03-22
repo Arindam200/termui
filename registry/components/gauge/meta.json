@@ -3,9 +3,7 @@
   "description": "Arc/speedometer gauge meter",
   "version": "1.0.0",
   "category": "charts",
-  "files": [
-    "Gauge.tsx"
-  ],
+  "files": ["Gauge.tsx"],
   "deps": [],
   "peerComponents": []
 }

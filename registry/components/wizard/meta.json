@@ -3,9 +3,7 @@
   "description": "Multi-step wizard with per-step validation",
   "version": "1.0.0",
   "category": "forms",
-  "files": [
-    "Wizard.tsx"
-  ],
+  "files": ["Wizard.tsx"],
   "deps": [],
   "peerComponents": []
 }

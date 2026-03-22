@@ -3,9 +3,7 @@
   "description": "Rows × columns grid layout",
   "version": "0.1.0",
   "category": "layout",
-  "files": [
-    "Grid.tsx"
-  ],
+  "files": ["Grid.tsx"],
   "deps": [],
   "peerComponents": []
 }

@@ -3,9 +3,7 @@
   "description": "Multi-select list with checkboxes and select-all",
   "version": "1.0.0",
   "category": "selection",
-  "files": [
-    "MultiSelect.tsx"
-  ],
+  "files": ["MultiSelect.tsx"],
   "deps": [],
   "peerComponents": []
 }

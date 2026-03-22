@@ -3,9 +3,7 @@
   "description": "Dropdown menu with nested submenus",
   "version": "1.0.0",
   "category": "navigation",
-  "files": [
-    "Menu.tsx"
-  ],
+  "files": ["Menu.tsx"],
   "deps": [],
   "peerComponents": []
 }

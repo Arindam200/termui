@@ -3,9 +3,7 @@
   "description": "Card with header, body, and footer slots",
   "version": "1.0.0",
   "category": "data",
-  "files": [
-    "Card.tsx"
-  ],
+  "files": ["Card.tsx"],
   "deps": [],
   "peerComponents": []
 }

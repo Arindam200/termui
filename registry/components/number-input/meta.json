@@ -3,9 +3,7 @@
   "description": "Numeric input with increment/decrement and bounds",
   "version": "1.0.0",
   "category": "input",
-  "files": [
-    "NumberInput.tsx"
-  ],
+  "files": ["NumberInput.tsx"],
   "deps": [],
   "peerComponents": []
 }

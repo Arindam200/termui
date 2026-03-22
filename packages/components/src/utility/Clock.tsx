@@ -95,7 +95,7 @@ export function Clock({
   const [tick, setTick] = useState(0);
   useInterval(
     useCallback(() => setTick((t) => t + 1), []),
-    1000,
+    1000
   );
 
   const { time, ampm } = getTimeParts(format, showSeconds, timezone);
@@ -103,9 +103,7 @@ export function Clock({
   if (size === 'lg') {
     return (
       <Box flexDirection="column" gap={0}>
-        {showDate && (
-          <Text color={theme.colors.mutedForeground}>{getDateString(timezone)}</Text>
-        )}
+        {showDate && <Text color={theme.colors.mutedForeground}>{getDateString(timezone)}</Text>}
         <Box alignItems="flex-end" gap={0}>
           {renderBigText(time, resolvedColor)}
           {ampm && (
@@ -120,9 +118,7 @@ export function Clock({
 
   return (
     <Box flexDirection="column" gap={0}>
-      {showDate && (
-        <Text color={theme.colors.mutedForeground}>{getDateString(timezone)}</Text>
-      )}
+      {showDate && <Text color={theme.colors.mutedForeground}>{getDateString(timezone)}</Text>}
       <Box gap={0}>
         <Text color={resolvedColor} bold>
           {time}

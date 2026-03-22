@@ -3,9 +3,7 @@
   "description": "Term–description definition list",
   "version": "1.0.0",
   "category": "data",
-  "files": [
-    "Definition.tsx"
-  ],
+  "files": ["Definition.tsx"],
   "deps": [],
   "peerComponents": []
 }

@@ -3,9 +3,7 @@
   "description": "Embedded PTY terminal panel (requires node-pty peer)",
   "version": "1.0.0",
   "category": "utility",
-  "files": [
-    "EmbeddedTerminal.tsx"
-  ],
+  "files": ["EmbeddedTerminal.tsx"],
   "deps": [],
   "peerComponents": []
 }

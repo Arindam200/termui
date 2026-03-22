@@ -3,9 +3,7 @@
   "description": "Count-up stopwatch with laps and reset",
   "version": "1.0.0",
   "category": "utility",
-  "files": [
-    "Stopwatch.tsx"
-  ],
+  "files": ["Stopwatch.tsx"],
   "deps": [],
   "peerComponents": []
 }

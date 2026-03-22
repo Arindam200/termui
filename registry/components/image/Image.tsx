@@ -105,9 +105,12 @@ export function Image({ src, width = 20, height, protocol = 'auto', alt }: Image
     const boxWidth = width ?? 20;
     const topBottom = '─'.repeat(boxWidth - 2);
     const empty = ' '.repeat(boxWidth - 2);
-    const label = (alt ?? filename).slice(0, boxWidth - 4).padStart(
-      Math.floor((boxWidth - 2) / 2) + Math.floor((alt ?? filename).slice(0, boxWidth - 4).length / 2),
-    );
+    const label = (alt ?? filename)
+      .slice(0, boxWidth - 4)
+      .padStart(
+        Math.floor((boxWidth - 2) / 2) +
+          Math.floor((alt ?? filename).slice(0, boxWidth - 4).length / 2)
+      );
 
     const innerRows = 3;
     const displayLines: string[] = [

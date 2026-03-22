@@ -2,7 +2,7 @@
  * Shared TTY / color environment detection for adapters (NO_COLOR, FORCE_COLOR, CLICOLOR).
  */
 
-export function isColorEnabled(stream: NodeJS.WritableStream = process.stdout): boolean {
+export function isColorEnabled(stream: NodeJS.WriteStream = process.stdout): boolean {
   if (process.env['NO_COLOR'] !== undefined && process.env['NO_COLOR'] !== '') {
     return false;
   }

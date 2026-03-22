@@ -3,9 +3,7 @@
   "description": "Inline status message with icon and color",
   "version": "1.0.0",
   "category": "feedback",
-  "files": [
-    "StatusMessage.tsx"
-  ],
+  "files": ["StatusMessage.tsx"],
   "deps": [],
   "peerComponents": []
 }

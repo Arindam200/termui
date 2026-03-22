@@ -3,9 +3,7 @@
   "description": "Real-time clock display with 12h/24h and date",
   "version": "1.0.0",
   "category": "utility",
-  "files": [
-    "Clock.tsx"
-  ],
+  "files": ["Clock.tsx"],
   "deps": [],
   "peerComponents": []
 }

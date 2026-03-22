@@ -3,9 +3,7 @@
   "description": "Grid heatmap with color intensity scale",
   "version": "1.0.0",
   "category": "charts",
-  "files": [
-    "HeatMap.tsx"
-  ],
+  "files": ["HeatMap.tsx"],
   "deps": [],
   "peerComponents": []
 }

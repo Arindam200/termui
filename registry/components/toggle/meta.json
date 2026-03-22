@@ -3,9 +3,7 @@
   "description": "Toggle/switch component with on/off labels",
   "version": "0.1.0",
   "category": "utility",
-  "files": [
-    "Toggle.tsx"
-  ],
+  "files": ["Toggle.tsx"],
   "deps": [],
   "peerComponents": []
 }

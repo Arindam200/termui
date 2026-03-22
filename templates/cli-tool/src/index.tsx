@@ -58,7 +58,9 @@ function InitScreen({ onDone }: { onDone: () => void }) {
   if (installing) {
     return (
       <Stack direction="vertical" gap={1}>
-        <Text bold color={theme.colors.primary}>Initializing project…</Text>
+        <Text bold color={theme.colors.primary}>
+          Initializing project…
+        </Text>
         <ProgressBar value={installProgress} total={100} label="Installing dependencies" />
         <StatusMessage variant="loading">Setting up {projectName}…</StatusMessage>
       </Stack>
@@ -67,7 +69,9 @@ function InitScreen({ onDone }: { onDone: () => void }) {
 
   return (
     <Stack direction="vertical" gap={1}>
-      <Text bold color={theme.colors.primary}>◆ New Project Setup</Text>
+      <Text bold color={theme.colors.primary}>
+        ◆ New Project Setup
+      </Text>
 
       {step === 0 && (
         <Panel title="Project Name">
@@ -87,17 +91,22 @@ function InitScreen({ onDone }: { onDone: () => void }) {
           <Select
             options={runtimeOptions}
             value={runtime}
-            onChange={(v) => { setRuntime(v); setStep(2); }}
+            onChange={(v) => {
+              setRuntime(v);
+              setStep(2);
+            }}
           />
         </Panel>
       )}
 
       {step === 2 && (
         <Panel title="Confirm">
-          <KeyValue items={[
-            { key: 'Project', value: projectName },
-            { key: 'Runtime', value: runtime },
-          ]} />
+          <KeyValue
+            items={[
+              { key: 'Project', value: projectName },
+              { key: 'Runtime', value: runtime },
+            ]}
+          />
           <Box marginTop={1}>
             <Confirm
               message="Create project with these settings?"
@@ -137,7 +146,9 @@ function DeployScreen({ onDone }: { onDone: () => void }) {
 
   return (
     <Stack direction="vertical" gap={1}>
-      <Text bold color={theme.colors.primary}>◆ Deploying</Text>
+      <Text bold color={theme.colors.primary}>
+        ◆ Deploying
+      </Text>
       {DEPLOY_STEPS.map((step, i) => {
         const isPast = i < stepIndex;
         const isCurrent = i === stepIndex;
@@ -147,7 +158,15 @@ function DeployScreen({ onDone }: { onDone: () => void }) {
             {isCurrent && !done && <Spinner style="dots" />}
             {isCurrent && done && <Text color={theme.colors.success}>✓</Text>}
             {i > stepIndex && <Text dimColor>○</Text>}
-            <Text color={isPast || (isCurrent && done) ? theme.colors.success : isCurrent ? theme.colors.foreground : theme.colors.mutedForeground}>
+            <Text
+              color={
+                isPast || (isCurrent && done)
+                  ? theme.colors.success
+                  : isCurrent
+                    ? theme.colors.foreground
+                    : theme.colors.mutedForeground
+              }
+            >
               {step}
             </Text>
           </Box>
@@ -168,7 +187,9 @@ function StatusScreen() {
   const theme = useTheme();
   return (
     <Stack direction="vertical" gap={1}>
-      <Text bold color={theme.colors.primary}>◆ Status</Text>
+      <Text bold color={theme.colors.primary}>
+        ◆ Status
+      </Text>
       <Panel title="Services">
         <Stack direction="vertical" gap={0}>
           <Box gap={2}>
@@ -193,12 +214,14 @@ function StatusScreen() {
           </Box>
         </Stack>
       </Panel>
-      <KeyValue items={[
-        { key: 'Version', value: 'v1.4.2' },
-        { key: 'Region', value: 'us-east-1' },
-        { key: 'Build', value: '#1042' },
-        { key: 'Last deploy', value: '2 hours ago' },
-      ]} />
+      <KeyValue
+        items={[
+          { key: 'Version', value: 'v1.4.2' },
+          { key: 'Region', value: 'us-east-1' },
+          { key: 'Build', value: '#1042' },
+          { key: 'Last deploy', value: '2 hours ago' },
+        ]}
+      />
     </Stack>
   );
 }
@@ -214,7 +237,9 @@ function MainMenu({ onSelect }: { onSelect: (s: Screen) => void }) {
   ];
   return (
     <Stack direction="vertical" gap={1}>
-      <Text bold color={theme.colors.primary}>◆ my-cli  <Text dimColor>v1.0.0</Text></Text>
+      <Text bold color={theme.colors.primary}>
+        ◆ my-cli <Text dimColor>v1.0.0</Text>
+      </Text>
       <Divider />
       <Select
         options={options}
@@ -222,7 +247,7 @@ function MainMenu({ onSelect }: { onSelect: (s: Screen) => void }) {
         onChange={(v) => onSelect(v as Screen)}
         label="Select a command"
       />
-      <Text dimColor>↑↓ navigate  Enter select  q quit</Text>
+      <Text dimColor>↑↓ navigate Enter select q quit</Text>
     </Stack>
   );
 }
@@ -246,7 +271,9 @@ function App() {
       {screen === 'status' && <StatusScreen />}
       {screen === 'done' && (
         <Stack direction="vertical" gap={1}>
-          <Alert variant="success" title="Done!">Command completed successfully.</Alert>
+          <Alert variant="success" title="Done!">
+            Command completed successfully.
+          </Alert>
           <Text dimColor>Press q to quit or any key to return to menu.</Text>
         </Stack>
       )}

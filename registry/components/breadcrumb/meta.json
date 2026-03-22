@@ -3,9 +3,7 @@
   "description": "Breadcrumb navigation trail",
   "version": "1.0.0",
   "category": "navigation",
-  "files": [
-    "Breadcrumb.tsx"
-  ],
+  "files": ["Breadcrumb.tsx"],
   "deps": [],
   "peerComponents": []
 }

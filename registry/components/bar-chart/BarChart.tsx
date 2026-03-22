@@ -59,7 +59,8 @@ export function BarChart({
           </Text>
         )}
         {data.map((item, idx) => {
-          const filled = maxValue === 0 ? 0 : Math.round((item.value / maxValue) * Math.max(1, barWidth));
+          const filled =
+            maxValue === 0 ? 0 : Math.round((item.value / maxValue) * Math.max(1, barWidth));
           const empty = Math.max(0, barWidth - filled);
           const barStr = BAR_CHAR.repeat(filled) + EMPTY_CHAR.repeat(empty);
           const resolvedColor = item.color ?? theme.colors.primary;
@@ -69,7 +70,9 @@ export function BarChart({
               <Text color={theme.colors.foreground}>{pad(item.label, maxLabelLen)}</Text>
               <Text color={resolvedColor}>{barStr}</Text>
               {showValues && (
-                <Text color={theme.colors.mutedForeground}>{padStart(String(item.value), maxValLen)}</Text>
+                <Text color={theme.colors.mutedForeground}>
+                  {padStart(String(item.value), maxValLen)}
+                </Text>
               )}
             </Box>
           );

@@ -40,11 +40,7 @@ export function Clipboard({
     <Box flexDirection="column" gap={0}>
       {label && <Text color={theme.colors.mutedForeground}>{label}</Text>}
       <Box gap={2} alignItems="center">
-        <Box
-          borderStyle="round"
-          borderColor={theme.colors.border}
-          paddingX={1}
-        >
+        <Box borderStyle="round" borderColor={theme.colors.border} paddingX={1}>
           <Text color={theme.colors.foreground}>{value}</Text>
         </Box>
         <Box

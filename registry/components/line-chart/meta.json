@@ -3,9 +3,7 @@
   "description": "ASCII line chart with axes and multi-series support",
   "version": "1.0.0",
   "category": "charts",
-  "files": [
-    "LineChart.tsx"
-  ],
+  "files": ["LineChart.tsx"],
   "deps": [],
   "peerComponents": []
 }

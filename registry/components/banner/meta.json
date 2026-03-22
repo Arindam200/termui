@@ -3,9 +3,7 @@
   "description": "Full-width announcement banner",
   "version": "1.0.0",
   "category": "feedback",
-  "files": [
-    "Banner.tsx"
-  ],
+  "files": ["Banner.tsx"],
   "deps": [],
   "peerComponents": []
 }

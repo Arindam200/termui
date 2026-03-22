@@ -43,7 +43,12 @@ function renderSmGauge(pct: number, color: string, mutedColor: string): React.Re
   );
 }
 
-function renderMdGauge(pct: number, color: string, mutedColor: string, fgColor: string): React.ReactNode {
+function renderMdGauge(
+  pct: number,
+  color: string,
+  mutedColor: string,
+  fgColor: string
+): React.ReactNode {
   // 3-line arc gauge
   //   ╭──────────╮
   //  ╱  72%  ╲
@@ -72,7 +77,12 @@ function renderMdGauge(pct: number, color: string, mutedColor: string, fgColor: 
   );
 }
 
-function renderLgGauge(pct: number, color: string, mutedColor: string, fgColor: string): React.ReactNode {
+function renderLgGauge(
+  pct: number,
+  color: string,
+  mutedColor: string,
+  fgColor: string
+): React.ReactNode {
   // 5-line large arc gauge
   //    ╭────────────────────╮
   //   ╱                    ╲
@@ -93,7 +103,9 @@ function renderLgGauge(pct: number, color: string, mutedColor: string, fgColor: 
       <Text color={mutedColor}>{'╱' + ' '.repeat(arcWidth) + '╲'}</Text>
       <Box flexDirection="row">
         <Text color={mutedColor}>{'│'}</Text>
-        <Text color={fgColor} bold>{centeredPct}</Text>
+        <Text color={fgColor} bold>
+          {centeredPct}
+        </Text>
         <Text color={mutedColor}>{'│'}</Text>
       </Box>
       <Text color={mutedColor}>{'╲' + ' '.repeat(arcWidth) + '╱'}</Text>
@@ -116,17 +128,25 @@ export function Gauge({ value, min = 0, max = 100, label, color, size = 'md' }: 
   if (size === 'sm') {
     gaugeNode = renderSmGauge(pct, resolvedColor, theme.colors.mutedForeground);
   } else if (size === 'lg') {
-    gaugeNode = renderLgGauge(pct, resolvedColor, theme.colors.mutedForeground, theme.colors.foreground);
+    gaugeNode = renderLgGauge(
+      pct,
+      resolvedColor,
+      theme.colors.mutedForeground,
+      theme.colors.foreground
+    );
   } else {
-    gaugeNode = renderMdGauge(pct, resolvedColor, theme.colors.mutedForeground, theme.colors.foreground);
+    gaugeNode = renderMdGauge(
+      pct,
+      resolvedColor,
+      theme.colors.mutedForeground,
+      theme.colors.foreground
+    );
   }
 
   return (
     <Box flexDirection="column">
       {gaugeNode}
-      {label && (
-        <Text color={theme.colors.mutedForeground}>{label}</Text>
-      )}
+      {label && <Text color={theme.colors.mutedForeground}>{label}</Text>}
     </Box>
   );
 }

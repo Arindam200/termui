@@ -3,9 +3,7 @@
   "description": "Rich inline text with bold, italic, color, dim formatting",
   "version": "0.1.0",
   "category": "typography",
-  "files": [
-    "Text.tsx"
-  ],
+  "files": ["Text.tsx"],
   "deps": [],
   "peerComponents": []
 }

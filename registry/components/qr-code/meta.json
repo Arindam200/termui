@@ -3,9 +3,7 @@
   "description": "Unicode block QR code generator",
   "version": "1.0.0",
   "category": "utility",
-  "files": [
-    "QRCode.tsx"
-  ],
+  "files": ["QRCode.tsx"],
   "deps": [],
   "peerComponents": []
 }

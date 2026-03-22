@@ -24,7 +24,11 @@ function KeyLabel({ label, color }: { label: string; color: string }) {
   );
 }
 
-function ShortcutRow({ shortcut, keyColor, descColor }: {
+function ShortcutRow({
+  shortcut,
+  keyColor,
+  descColor,
+}: {
   shortcut: Shortcut;
   keyColor: string;
   descColor: string;
@@ -55,7 +59,7 @@ export function KeyboardShortcuts({ shortcuts, columns = 1, title }: KeyboardSho
       <Box flexDirection="column" gap={1}>
         {title && (
           <Text color={theme.colors.primary} bold>
-            ⌨  {title}
+            ⌨ {title}
           </Text>
         )}
         {Object.entries(grouped).map(([category, items]) => (
@@ -85,7 +89,7 @@ export function KeyboardShortcuts({ shortcuts, columns = 1, title }: KeyboardSho
     <Box flexDirection="column" gap={1}>
       {title && (
         <Text color={theme.colors.primary} bold>
-          ⌨  {title}
+          ⌨ {title}
         </Text>
       )}
       {columns > 1 ? (

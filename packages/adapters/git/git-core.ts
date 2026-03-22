@@ -1,4 +1,4 @@
-import simpleGit from 'simple-git';
+import { simpleGit } from 'simple-git';
 
 export function getGitBranches(cwd: string): Promise<string[]> {
   return simpleGit(cwd)

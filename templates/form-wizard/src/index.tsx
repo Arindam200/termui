@@ -75,7 +75,9 @@ function AccountStep({
   const theme = useTheme();
   return (
     <Stack direction="vertical" gap={1}>
-      <Text color={theme.colors.mutedForeground} dimColor>Tab between fields · Enter to submit</Text>
+      <Text color={theme.colors.mutedForeground} dimColor>
+        Tab between fields · Enter to submit
+      </Text>
       <Panel title="Full Name">
         <TextInput
           value={data.name}
@@ -210,27 +212,35 @@ function ReviewStep({ data }: { data: FormData }) {
   const theme = useTheme();
   return (
     <Stack direction="vertical" gap={1}>
-      <Text bold color={theme.colors.primary}>Review your information</Text>
+      <Text bold color={theme.colors.primary}>
+        Review your information
+      </Text>
       <Panel title="Account">
-        <KeyValue items={[
-          { key: 'Name', value: data.name },
-          { key: 'Email', value: data.email },
-          { key: 'Password', value: '••••••••' },
-        ]} />
+        <KeyValue
+          items={[
+            { key: 'Name', value: data.name },
+            { key: 'Email', value: data.email },
+            { key: 'Password', value: '••••••••' },
+          ]}
+        />
       </Panel>
       <Panel title="Profile">
-        <KeyValue items={[
-          { key: 'Role', value: data.role },
-          { key: 'Experience', value: `${data.experience} years` },
-          { key: 'Timezone', value: data.timezone },
-        ]} />
+        <KeyValue
+          items={[
+            { key: 'Role', value: data.role },
+            { key: 'Experience', value: `${data.experience} years` },
+            { key: 'Timezone', value: data.timezone },
+          ]}
+        />
       </Panel>
       <Panel title="Preferences">
-        <KeyValue items={[
-          { key: 'Theme', value: data.theme },
-          { key: 'Notifications', value: data.notifications ? 'Yes' : 'No' },
-          { key: 'Newsletter', value: data.newsletter ? 'Yes' : 'No' },
-        ]} />
+        <KeyValue
+          items={[
+            { key: 'Theme', value: data.theme },
+            { key: 'Notifications', value: data.notifications ? 'Yes' : 'No' },
+            { key: 'Newsletter', value: data.newsletter ? 'Yes' : 'No' },
+          ]}
+        />
       </Panel>
     </Stack>
   );
@@ -264,27 +274,44 @@ function Wizard() {
   const [done, setDone] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [data, setData] = useState<FormData>({
-    name: '', email: '', password: '',
-    role: '', experience: 0, timezone: 'UTC',
-    theme: 'default', notifications: true, newsletter: false,
+    name: '',
+    email: '',
+    password: '',
+    role: '',
+    experience: 0,
+    timezone: 'UTC',
+    theme: 'default',
+    notifications: true,
+    newsletter: false,
   });
 
   useInput((_i, key) => {
-    if (key.escape) { if (step > 0) setStep((s) => (s - 1) as Step); else exit(); }
+    if (key.escape) {
+      if (step > 0) setStep((s) => (s - 1) as Step);
+      else exit();
+    }
     if (key.ctrl && _i === 'n') advance();
-    if (key.ctrl && _i === 'p') { if (step > 0) setStep((s) => (s - 1) as Step); }
+    if (key.ctrl && _i === 'p') {
+      if (step > 0) setStep((s) => (s - 1) as Step);
+    }
   });
 
   function advance() {
     if (step < 3) {
       const errs = validateStep(step, data);
-      if (errs.length > 0) { setErrors(errs); return; }
+      if (errs.length > 0) {
+        setErrors(errs);
+        return;
+      }
       setErrors([]);
       setStep((s) => (s + 1) as Step);
     } else {
       // Submit
       setSubmitting(true);
-      setTimeout(() => { setSubmitting(false); setDone(true); }, 2000);
+      setTimeout(() => {
+        setSubmitting(false);
+        setDone(true);
+      }, 2000);
     }
   }
 
@@ -303,14 +330,20 @@ function Wizard() {
   }
 
   if (submitting) {
-    return <Box padding={1}><SubmittingStep /></Box>;
+    return (
+      <Box padding={1}>
+        <SubmittingStep />
+      </Box>
+    );
   }
 
   return (
     <Box flexDirection="column" padding={1} gap={1}>
       {/* Header */}
       <Box justifyContent="space-between" alignItems="center">
-        <Text bold color={theme.colors.primary}>◆ Create Account</Text>
+        <Text bold color={theme.colors.primary}>
+          ◆ Create Account
+        </Text>
         <Text dimColor>Step {Math.min(step + 1, 4)} of 4</Text>
       </Box>
 

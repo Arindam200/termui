@@ -73,7 +73,9 @@ export function LineChart({
   const grid: string[][] = Array.from({ length: height }, () => Array(chartWidth).fill(' '));
 
   // Plot points and connectors
-  const normalizedRows = sampledValues.map((v) => height - 1 - normalize(v, minVal, maxVal, height));
+  const normalizedRows = sampledValues.map(
+    (v) => height - 1 - normalize(v, minVal, maxVal, height)
+  );
 
   for (let col = 0; col < chartWidth; col++) {
     const row = normalizedRows[col]!;
@@ -126,7 +128,8 @@ export function LineChart({
         <Box key={rowIdx} flexDirection="row">
           {showAxes && (
             <Text color={theme.colors.mutedForeground}>
-              {String(yLabels[rowIdx] ?? '').padStart(yAxisWidth - 1)}{AXIS_TICK_V}
+              {String(yLabels[rowIdx] ?? '').padStart(yAxisWidth - 1)}
+              {AXIS_TICK_V}
             </Text>
           )}
           {row.map((cell, colIdx) => {
@@ -142,7 +145,9 @@ export function LineChart({
       {showAxes && (
         <Box flexDirection="row">
           <Text color={theme.colors.mutedForeground}>
-            {' '.repeat(yAxisWidth - 1)}{AXIS_CORNER}{AXIS_H.repeat(chartWidth)}
+            {' '.repeat(yAxisWidth - 1)}
+            {AXIS_CORNER}
+            {AXIS_H.repeat(chartWidth)}
           </Text>
         </Box>
       )}

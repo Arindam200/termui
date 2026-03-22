@@ -3,9 +3,7 @@
   "description": "Horizontal or vertical divider / rule",
   "version": "1.0.0",
   "category": "layout",
-  "files": [
-    "Divider.tsx"
-  ],
+  "files": ["Divider.tsx"],
   "deps": [],
   "peerComponents": []
 }

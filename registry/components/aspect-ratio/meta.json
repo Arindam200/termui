@@ -3,9 +3,7 @@
   "description": "Constrains children to a given aspect ratio",
   "version": "1.0.0",
   "category": "layout",
-  "files": [
-    "AspectRatio.tsx"
-  ],
+  "files": ["AspectRatio.tsx"],
   "deps": [],
   "peerComponents": []
 }

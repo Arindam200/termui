@@ -54,9 +54,7 @@ export function Log({
     if (!filter) return entries;
     const lower = filter.toLowerCase();
     return entries.filter(
-      (e) =>
-        e.message.toLowerCase().includes(lower) ||
-        e.level.toLowerCase().includes(lower),
+      (e) => e.message.toLowerCase().includes(lower) || e.level.toLowerCase().includes(lower)
     );
   }, [entries, filter]);
 
@@ -116,8 +114,7 @@ export function Log({
       </Box>
       <Box gap={2} marginTop={0}>
         <Text color={theme.colors.mutedForeground} dimColor>
-          {scrollOffset + 1}–{Math.min(scrollOffset + height, filtered.length)}/
-          {filtered.length}
+          {scrollOffset + 1}–{Math.min(scrollOffset + height, filtered.length)}/{filtered.length}
         </Text>
         <Text color={follow ? theme.colors.success : theme.colors.mutedForeground} dimColor>
           {follow ? '↓ follow' : 'f follow'}

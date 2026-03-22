@@ -3,9 +3,7 @@
   "description": "Time picker with hour/minute/second spinners",
   "version": "1.0.0",
   "category": "forms",
-  "files": [
-    "TimePicker.tsx"
-  ],
+  "files": ["TimePicker.tsx"],
   "deps": [],
   "peerComponents": []
 }

@@ -45,7 +45,7 @@ const BRAILLE_DOTS = ['⣀', '⣄', '⣤', '⣦', '⣶', '⣷', '⣿'];
 function Sparkline({ data, color }: { data: number[]; color: string }) {
   const max = Math.max(...data, 1);
   const chars = data.map((v) => {
-    const idx = Math.round(((v / max) * (BRAILLE_DOTS.length - 1)));
+    const idx = Math.round((v / max) * (BRAILLE_DOTS.length - 1));
     return BRAILLE_DOTS[idx] ?? BRAILLE_DOTS[0]!;
   });
   return <Text color={color}>{chars.join('')}</Text>;
@@ -68,15 +68,31 @@ function KpiCard({
 }) {
   const theme = useTheme();
   const arrow = trend === 'up' ? '↑' : trend === 'down' ? '↓' : '→';
-  const trendColor = trend === 'up' ? theme.colors.success : trend === 'down' ? theme.colors.error : theme.colors.warning;
+  const trendColor =
+    trend === 'up'
+      ? theme.colors.success
+      : trend === 'down'
+        ? theme.colors.error
+        : theme.colors.warning;
   return (
-    <Box flexDirection="column" borderStyle="round" borderColor={theme.colors.border} paddingX={2} paddingY={1} minWidth={18}>
+    <Box
+      flexDirection="column"
+      borderStyle="round"
+      borderColor={theme.colors.border}
+      paddingX={2}
+      paddingY={1}
+      minWidth={18}
+    >
       <Text dimColor>{label}</Text>
       <Box gap={1} alignItems="flex-end">
-        <Text bold color={color} >{value}</Text>
+        <Text bold color={color}>
+          {value}
+        </Text>
         <Text dimColor>{unit}</Text>
       </Box>
-      <Text color={trendColor}>{arrow} {trend}</Text>
+      <Text color={trendColor}>
+        {arrow} {trend}
+      </Text>
     </Box>
   );
 }
@@ -88,16 +104,44 @@ function OverviewTab({ metrics }: { metrics: ReturnType<typeof useMetrics> }) {
   return (
     <Stack direction="vertical" gap={1}>
       <Box gap={2}>
-        <KpiCard label="CPU" value={metrics.cpu} unit="%" trend={metrics.cpu > 70 ? 'up' : 'down'} color={metrics.cpu > 70 ? theme.colors.error : theme.colors.success} />
-        <KpiCard label="Memory" value={metrics.memory} unit="%" trend="flat" color={theme.colors.warning} />
-        <KpiCard label="Requests/s" value={metrics.rps} unit="rps" trend="up" color={theme.colors.info} />
-        <KpiCard label="Errors" value={metrics.errors} unit="/min" trend={metrics.errors > 5 ? 'up' : 'down'} color={metrics.errors > 5 ? theme.colors.error : theme.colors.success} />
+        <KpiCard
+          label="CPU"
+          value={metrics.cpu}
+          unit="%"
+          trend={metrics.cpu > 70 ? 'up' : 'down'}
+          color={metrics.cpu > 70 ? theme.colors.error : theme.colors.success}
+        />
+        <KpiCard
+          label="Memory"
+          value={metrics.memory}
+          unit="%"
+          trend="flat"
+          color={theme.colors.warning}
+        />
+        <KpiCard
+          label="Requests/s"
+          value={metrics.rps}
+          unit="rps"
+          trend="up"
+          color={theme.colors.info}
+        />
+        <KpiCard
+          label="Errors"
+          value={metrics.errors}
+          unit="/min"
+          trend={metrics.errors > 5 ? 'up' : 'down'}
+          color={metrics.errors > 5 ? theme.colors.error : theme.colors.success}
+        />
       </Box>
 
       <Box gap={2}>
         <Panel title="CPU  (1m)" flexGrow={1}>
           <Sparkline data={metrics.cpuHistory} color={theme.colors.primary} />
-          <ProgressBar value={metrics.cpu} total={100} color={metrics.cpu > 80 ? theme.colors.error : theme.colors.primary} />
+          <ProgressBar
+            value={metrics.cpu}
+            total={100}
+            color={metrics.cpu > 80 ? theme.colors.error : theme.colors.primary}
+          />
         </Panel>
         <Panel title="Memory  (1m)" flexGrow={1}>
           <Sparkline data={metrics.memHistory} color={theme.colors.accent} />
@@ -109,7 +153,11 @@ function OverviewTab({ metrics }: { metrics: ReturnType<typeof useMetrics> }) {
         <Stack direction="vertical" gap={0}>
           {metrics.services.map((s) => (
             <Box key={s.name} gap={2}>
-              <Badge variant={s.status === 'up' ? 'success' : s.status === 'degraded' ? 'warning' : 'error'}>
+              <Badge
+                variant={
+                  s.status === 'up' ? 'success' : s.status === 'degraded' ? 'warning' : 'error'
+                }
+              >
                 {s.status === 'up' ? '●' : s.status === 'degraded' ? '◐' : '○'}
               </Badge>
               <Text>{s.name.padEnd(16)}</Text>
@@ -157,7 +205,9 @@ function LogsTab({ logs }: { logs: Array<{ level: string; msg: string; time: str
         {logs.slice(-14).map((log, i) => (
           <Box key={i} gap={1}>
             <Text dimColor>{log.time}</Text>
-            <Text color={levelColor[log.level] ?? theme.colors.foreground} bold>[{log.level.toUpperCase().padEnd(5)}]</Text>
+            <Text color={levelColor[log.level] ?? theme.colors.foreground} bold>
+              [{log.level.toUpperCase().padEnd(5)}]
+            </Text>
             <Text>{log.msg}</Text>
           </Box>
         ))}
@@ -186,11 +236,41 @@ function useMetrics() {
   ];
 
   const endpoints = [
-    { method: 'GET', path: '/api/users', status: '200', latency: `${randBetween(8, 20) + tick * 0}ms`, count: `${randBetween(900, 1200) + tick * 0}` },
-    { method: 'POST', path: '/api/auth/login', status: '200', latency: `${randBetween(20, 60)}ms`, count: `${randBetween(100, 300)}` },
-    { method: 'GET', path: '/api/products', status: '200', latency: `${randBetween(15, 35)}ms`, count: `${randBetween(400, 700)}` },
-    { method: 'DELETE', path: '/api/sessions/:id', status: '204', latency: `${randBetween(5, 15)}ms`, count: `${randBetween(50, 120)}` },
-    { method: 'GET', path: '/api/metrics', status: '500', latency: `${randBetween(100, 300)}ms`, count: `${randBetween(1, 10)}` },
+    {
+      method: 'GET',
+      path: '/api/users',
+      status: '200',
+      latency: `${randBetween(8, 20) + tick * 0}ms`,
+      count: `${randBetween(900, 1200) + tick * 0}`,
+    },
+    {
+      method: 'POST',
+      path: '/api/auth/login',
+      status: '200',
+      latency: `${randBetween(20, 60)}ms`,
+      count: `${randBetween(100, 300)}`,
+    },
+    {
+      method: 'GET',
+      path: '/api/products',
+      status: '200',
+      latency: `${randBetween(15, 35)}ms`,
+      count: `${randBetween(400, 700)}`,
+    },
+    {
+      method: 'DELETE',
+      path: '/api/sessions/:id',
+      status: '204',
+      latency: `${randBetween(5, 15)}ms`,
+      count: `${randBetween(50, 120)}`,
+    },
+    {
+      method: 'GET',
+      path: '/api/metrics',
+      status: '500',
+      latency: `${randBetween(100, 300)}ms`,
+      count: `${randBetween(1, 10)}`,
+    },
   ];
 
   useInterval(() => {
@@ -260,10 +340,12 @@ function Dashboard() {
   return (
     <Box flexDirection="column" padding={1} gap={1}>
       <Box justifyContent="space-between">
-        <Text bold color={theme.colors.primary}>◆ Dashboard  <Text dimColor>auto-refresh 1.5s</Text></Text>
+        <Text bold color={theme.colors.primary}>
+          ◆ Dashboard <Text dimColor>auto-refresh 1.5s</Text>
+        </Text>
         <Box gap={1}>
           <Spinner style="dots" />
-          <Text dimColor>live  ·  q quit</Text>
+          <Text dimColor>live · q quit</Text>
         </Box>
       </Box>
       <Tabs activeTab={activeTab} onTabChange={setActiveTab} tabs={tabs} />
