@@ -3,8 +3,8 @@
  * Tests: ThemeProvider, Spinner, ProgressBar, Alert, Badge, Select, Panel
  */
 import React, { useState } from 'react';
-import { render, Box, Text, useApp } from 'ink';
-import { ThemeProvider, useTheme } from '@termui/core';
+import { render, Box, Text, useApp, useInput } from 'ink';
+import { ThemeProvider, useTheme, useThemeUpdater, useInterval } from '@termui/core';
 import {
   Spinner,
   ProgressBar,
@@ -26,10 +26,25 @@ const THEMES = [
 
 function Demo() {
   const theme = useTheme();
+  const setGlobalTheme = useThemeUpdater();
   const { exit } = useApp();
   const [selectedTheme, setSelectedTheme] = useState('default');
   const [toggleOn, setToggleOn] = useState(false);
   const [activeTab, setActiveTab] = useState('components');
+  const [progress, setProgress] = useState(0);
+
+  useInterval(() => {
+    setProgress((p) => (p >= 100 ? 0 : p + 1));
+  }, 80);
+
+  const progressLabel =
+    progress < 34 ? 'Installing packages…' :
+    progress < 67 ? 'Compiling sources…' :
+                    'Building artifacts…';
+
+  useInput((input) => {
+    if (input === 'q') exit();
+  });
 
   return (
     <Box flexDirection="column" gap={1} padding={1}>
@@ -63,12 +78,12 @@ function Demo() {
                 </Panel>
 
                 {/* Progress */}
-                <Panel title="Progress Bars">
-                  <Stack direction="vertical" gap={1}>
-                    <ProgressBar value={27} total={100} label="Downloading…" color={theme.colors.info} />
-                    <ProgressBar value={64} total={100} label="Installing…" color={theme.colors.success} />
-                    <ProgressBar value={89} total={100} label="Compiling…" color={theme.colors.warning} />
-                  </Stack>
+                <Panel title="Progress Bar">
+                  <ProgressBar value={progress} total={100} label={progressLabel} color={
+                    progress < 34 ? theme.colors.info :
+                    progress < 67 ? theme.colors.warning :
+                                    theme.colors.success
+                  } />
                 </Panel>
 
                 {/* Alerts */}
@@ -103,7 +118,11 @@ function Demo() {
                   <Select
                     options={THEMES.map((t) => ({ value: t.value, label: t.label }))}
                     value={selectedTheme}
-                    onChange={setSelectedTheme}
+                    onChange={(value) => {
+                      setSelectedTheme(value);
+                      const found = THEMES.find((t) => t.value === value);
+                      if (found) setGlobalTheme(found.theme);
+                    }}
                     cursor="›"
                   />
                 </Panel>

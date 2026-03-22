@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Text } from 'ink';
+import { Box, Text, useStdout } from 'ink';
 import { useInput, useTheme } from '@termui/core';
 import type { ReactNode } from 'react';
 
@@ -19,25 +19,26 @@ export interface TabsProps {
 
 export function Tabs({ tabs, defaultTab, activeTab: controlledTab, onTabChange, borderColor }: TabsProps) {
   const theme = useTheme();
+  const { stdout } = useStdout();
   const [internalTab, setInternalTab] = useState(defaultTab ?? tabs[0]?.key ?? '');
   const activeKey = controlledTab ?? internalTab;
   const activeIndex = tabs.findIndex((t) => t.key === activeKey);
 
   const resolvedBorderColor = borderColor ?? theme.colors.border;
 
+  function switchTab(nextKey: string | undefined) {
+    if (!nextKey || nextKey === activeKey) return;
+    // Clear the entire screen before switching so Ink redraws from a clean
+    // slate — prevents old lines from a taller tab persisting as ghost content.
+    stdout.write('\x1b[2J\x1b[H');
+    onTabChange ? onTabChange(nextKey) : setInternalTab(nextKey);
+  }
+
   useInput((input, key) => {
     if (key.leftArrow || (key.shift && key.tab)) {
-      const next = Math.max(0, activeIndex - 1);
-      const nextKey = tabs[next]?.key;
-      if (nextKey) {
-        onTabChange ? onTabChange(nextKey) : setInternalTab(nextKey);
-      }
+      switchTab(tabs[Math.max(0, activeIndex - 1)]?.key);
     } else if (key.rightArrow || key.tab) {
-      const next = Math.min(tabs.length - 1, activeIndex + 1);
-      const nextKey = tabs[next]?.key;
-      if (nextKey) {
-        onTabChange ? onTabChange(nextKey) : setInternalTab(nextKey);
-      }
+      switchTab(tabs[Math.min(tabs.length - 1, activeIndex + 1)]?.key);
     }
   });
 
@@ -45,12 +46,12 @@ export function Tabs({ tabs, defaultTab, activeTab: controlledTab, onTabChange, 
 
   return (
     <Box flexDirection="column">
-      {/* Tab bar */}
-      <Box borderStyle="single" borderColor={resolvedBorderColor} paddingX={1}>
+      {/* Tab bar — plain row, no border */}
+      <Box paddingX={2} gap={0}>
         {tabs.map((tab, idx) => {
           const isActive = tab.key === activeKey;
           return (
-            <Box key={tab.key} paddingX={1}>
+            <Box key={tab.key}>
               <Text
                 color={isActive ? theme.colors.primary : theme.colors.mutedForeground}
                 bold={isActive}
@@ -59,13 +60,13 @@ export function Tabs({ tabs, defaultTab, activeTab: controlledTab, onTabChange, 
                 {tab.label}
               </Text>
               {idx < tabs.length - 1 && (
-                <Text color={resolvedBorderColor}> │ </Text>
+                <Text color={resolvedBorderColor}>  │  </Text>
               )}
             </Box>
           );
         })}
       </Box>
-      {/* Content */}
+      {/* Only the active tab's content is rendered */}
       <Box borderStyle="single" borderColor={resolvedBorderColor} paddingX={1} paddingY={0}>
         {activeTab?.content}
       </Box>
