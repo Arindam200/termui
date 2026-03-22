@@ -1,0 +1,9 @@
+{
+  "name": "list",
+  "description": "Navigable list with optional filtering",
+  "version": "0.1.0",
+  "category": "data",
+  "files": ["List.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

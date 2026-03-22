@@ -1,0 +1,9 @@
+{
+  "name": "panel",
+  "description": "Titled bordered panel",
+  "version": "0.1.0",
+  "category": "utility",
+  "files": ["Panel.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

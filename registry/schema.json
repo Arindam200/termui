@@ -1,0 +1,178 @@
+{
+  "$schema": "https://registry.termui.dev/schema-meta.json",
+  "version": "0.1.0",
+  "updatedAt": "2026-03-22",
+  "components": {
+    "box": {
+      "name": "box",
+      "description": "Enhanced flexbox container with theme-aware borders",
+      "version": "0.1.0",
+      "category": "layout",
+      "files": ["Box.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "stack": {
+      "name": "stack",
+      "description": "Vertical/horizontal stack with gap",
+      "version": "0.1.0",
+      "category": "layout",
+      "files": ["Stack.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "grid": {
+      "name": "grid",
+      "description": "Rows × columns grid layout",
+      "version": "0.1.0",
+      "category": "layout",
+      "files": ["Grid.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "scroll-view": {
+      "name": "scroll-view",
+      "description": "Scrollable container with scrollbar",
+      "version": "0.1.0",
+      "category": "layout",
+      "files": ["ScrollView.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "text": {
+      "name": "text",
+      "description": "Rich inline text with bold, italic, color, dim formatting",
+      "version": "0.1.0",
+      "category": "typography",
+      "files": ["Text.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "badge": {
+      "name": "badge",
+      "description": "Semantic status indicator badge (success/error/warning/info)",
+      "version": "0.1.0",
+      "category": "typography",
+      "files": ["Badge.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "text-input": {
+      "name": "text-input",
+      "description": "Single-line text input with placeholder, validation, mask",
+      "version": "0.1.0",
+      "category": "input",
+      "files": ["TextInput.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "checkbox": {
+      "name": "checkbox",
+      "description": "Checkbox with indeterminate state",
+      "version": "0.1.0",
+      "category": "selection",
+      "files": ["Checkbox.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "select": {
+      "name": "select",
+      "description": "Single-select dropdown with arrow-key navigation and disabled items",
+      "version": "0.1.0",
+      "category": "selection",
+      "files": ["Select.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "list": {
+      "name": "list",
+      "description": "Navigable list with optional filtering",
+      "version": "0.1.0",
+      "category": "data",
+      "files": ["List.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "table": {
+      "name": "table",
+      "description": "Sortable, selectable, paginated data table with auto-sized columns",
+      "version": "0.1.0",
+      "category": "data",
+      "files": ["Table.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "spinner": {
+      "name": "spinner",
+      "description": "Animated spinner with 12+ styles",
+      "version": "0.1.0",
+      "category": "feedback",
+      "files": ["Spinner.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "progress-bar": {
+      "name": "progress-bar",
+      "description": "Determinate progress bar with percent and value/total display",
+      "version": "0.1.0",
+      "category": "feedback",
+      "files": ["ProgressBar.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "alert": {
+      "name": "alert",
+      "description": "Alert box with success/error/warning/info variants",
+      "version": "0.1.0",
+      "category": "feedback",
+      "files": ["Alert.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "tabs": {
+      "name": "tabs",
+      "description": "Tab bar with left/right arrow and tab-key navigation",
+      "version": "0.1.0",
+      "category": "navigation",
+      "files": ["Tabs.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "modal": {
+      "name": "modal",
+      "description": "Focus-trapped overlay modal, close with Esc",
+      "version": "0.1.0",
+      "category": "overlays",
+      "files": ["Modal.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "form": {
+      "name": "form",
+      "description": "Form container with validation, Ctrl+S submit, and dirty tracking",
+      "version": "0.1.0",
+      "category": "forms",
+      "files": ["Form.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "panel": {
+      "name": "panel",
+      "description": "Titled bordered panel",
+      "version": "0.1.0",
+      "category": "utility",
+      "files": ["Panel.tsx"],
+      "deps": [],
+      "peerComponents": []
+    },
+    "toggle": {
+      "name": "toggle",
+      "description": "Toggle/switch component with on/off labels",
+      "version": "0.1.0",
+      "category": "utility",
+      "files": ["Toggle.tsx"],
+      "deps": [],
+      "peerComponents": []
+    }
+  }
+}

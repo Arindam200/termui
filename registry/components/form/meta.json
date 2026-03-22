@@ -1,0 +1,9 @@
+{
+  "name": "form",
+  "description": "Form container with validation, Ctrl+S submit, and dirty tracking",
+  "version": "0.1.0",
+  "category": "forms",
+  "files": ["Form.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

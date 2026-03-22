@@ -1,0 +1,9 @@
+{
+  "name": "box",
+  "description": "Enhanced flexbox container with theme-aware borders",
+  "version": "0.1.0",
+  "category": "layout",
+  "files": ["Box.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

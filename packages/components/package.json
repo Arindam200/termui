@@ -1,0 +1,36 @@
+{
+  "name": "@termui/components",
+  "version": "0.1.0",
+  "description": "TermUI component library — 90+ terminal UI components",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@termui/core": "workspace:*",
+    "ink": "^5.0.0",
+    "react": "^18.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/node": "^20.0.0",
+    "vitest": "^1.0.0",
+    "typescript": "^5.4.0",
+    "@vitest/coverage-v8": "^1.0.0"
+  }
+}

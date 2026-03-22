@@ -1,0 +1,9 @@
+{
+  "name": "stack",
+  "description": "Vertical/horizontal stack with gap",
+  "version": "0.1.0",
+  "category": "layout",
+  "files": ["Stack.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

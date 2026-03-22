@@ -1,0 +1,9 @@
+{
+  "name": "modal",
+  "description": "Focus-trapped overlay modal, close with Esc",
+  "version": "0.1.0",
+  "category": "overlays",
+  "files": ["Modal.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

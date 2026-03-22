@@ -1,0 +1,9 @@
+{
+  "name": "badge",
+  "description": "Semantic status indicator badge (success/error/warning/info)",
+  "version": "0.1.0",
+  "category": "typography",
+  "files": ["Badge.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

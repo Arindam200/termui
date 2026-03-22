@@ -1,0 +1,9 @@
+{
+  "name": "text-input",
+  "description": "Single-line text input with placeholder, validation, mask",
+  "version": "0.1.0",
+  "category": "input",
+  "files": ["TextInput.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

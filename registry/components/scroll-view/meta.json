@@ -1,0 +1,9 @@
+{
+  "name": "scroll-view",
+  "description": "Scrollable container with scrollbar",
+  "version": "0.1.0",
+  "category": "layout",
+  "files": ["ScrollView.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

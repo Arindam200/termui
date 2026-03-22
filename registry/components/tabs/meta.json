@@ -1,0 +1,9 @@
+{
+  "name": "tabs",
+  "description": "Tab bar with left/right arrow and tab-key navigation",
+  "version": "0.1.0",
+  "category": "navigation",
+  "files": ["Tabs.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

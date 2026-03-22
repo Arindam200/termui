@@ -1,0 +1,9 @@
+{
+  "name": "checkbox",
+  "description": "Checkbox with indeterminate state",
+  "version": "0.1.0",
+  "category": "selection",
+  "files": ["Checkbox.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

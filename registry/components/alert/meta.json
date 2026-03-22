@@ -1,0 +1,9 @@
+{
+  "name": "alert",
+  "description": "Alert box with success/error/warning/info variants",
+  "version": "0.1.0",
+  "category": "feedback",
+  "files": ["Alert.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

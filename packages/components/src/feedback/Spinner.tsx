@@ -1,0 +1,44 @@
+import React from 'react';
+import { Text } from 'ink';
+import { useAnimation, useTheme } from '@termui/core';
+
+export type SpinnerStyle =
+  | 'dots' | 'line' | 'star' | 'clock' | 'bounce' | 'bar'
+  | 'arc' | 'arrow' | 'toggle' | 'box' | 'pipe' | 'earth';
+
+const FRAMES: Record<SpinnerStyle, string[]> = {
+  dots: ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'],
+  line: ['—','\\','|','/'],
+  star: ['✶','✸','✹','✺','✹','✸'],
+  clock: ['🕐','🕑','🕒','🕓','🕔','🕕','🕖','🕗','🕘','🕙','🕚','🕛'],
+  bounce: ['⠁','⠂','⠄','⡀','⡈','⠠','⠐','⠈'],
+  bar: ['▏','▎','▍','▌','▋','▊','▉','█','▉','▊','▋','▌','▍','▎'],
+  arc: ['◜','◠','◝','◞','◡','◟'],
+  arrow: ['←','↖','↑','↗','→','↘','↓','↙'],
+  toggle: ['⊶','⊷'],
+  box: ['▖','▘','▝','▗'],
+  pipe: ['┤','┘','┴','└','├','┌','┬','┐'],
+  earth: ['🌍','🌎','🌏'],
+};
+
+export interface SpinnerProps {
+  style?: SpinnerStyle;
+  label?: string;
+  color?: string;
+  fps?: number;
+}
+
+export function Spinner({ style: spinnerStyle = 'dots', label, color, fps = 12 }: SpinnerProps) {
+  const theme = useTheme();
+  const frame = useAnimation(fps);
+  const frames = FRAMES[spinnerStyle];
+  const icon = frames[frame % frames.length];
+  const resolvedColor = color ?? theme.colors.primary;
+
+  return (
+    <Text>
+      <Text color={resolvedColor}>{icon}</Text>
+      {label && <Text> {label}</Text>}
+    </Text>
+  );
+}
