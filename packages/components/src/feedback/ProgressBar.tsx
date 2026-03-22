@@ -3,8 +3,8 @@ import { Box, Text } from 'ink';
 import { useTheme } from '@termui/core';
 
 export interface ProgressBarProps {
-  value: number;       // 0–100
-  total?: number;      // if set, value is current, total is max
+  value: number; // 0–100
+  total?: number; // if set, value is current, total is max
   width?: number;
   showPercent?: boolean;
   showEta?: boolean;
@@ -28,7 +28,10 @@ export function ProgressBar({
   const theme = useTheme();
   const resolvedColor = color ?? theme.colors.primary;
 
-  const percent = total !== undefined ? Math.min(100, Math.round((value / total) * 100)) : Math.min(100, Math.round(value));
+  const percent =
+    total !== undefined
+      ? Math.min(100, Math.round((value / total) * 100))
+      : Math.min(100, Math.round(value));
   const filled = Math.round((percent / 100) * width);
   const empty = width - filled;
 

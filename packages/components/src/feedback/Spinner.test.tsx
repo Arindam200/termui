@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 
 // Import the FRAMES directly for unit testing without React rendering
 const FRAMES = {
-  dots: ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'],
-  line: ['—','\\','|','/'],
+  dots: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
+  line: ['—', '\\', '|', '/'],
 };
 
 describe('Spinner frame data', () => {

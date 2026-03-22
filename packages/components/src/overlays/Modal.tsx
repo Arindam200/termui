@@ -14,10 +14,13 @@ export interface ModalProps {
 export function Modal({ open, onClose, title, width = 60, children }: ModalProps) {
   const theme = useTheme();
 
-  useInput((input, key) => {
-    if (!open) return;
-    if (key.escape) onClose();
-  }, { isActive: open });
+  useInput(
+    (input, key) => {
+      if (!open) return;
+      if (key.escape) onClose();
+    },
+    { isActive: open }
+  );
 
   if (!open) return null;
 
@@ -32,14 +35,16 @@ export function Modal({ open, onClose, title, width = 60, children }: ModalProps
     >
       {title && (
         <Box marginBottom={1} borderStyle="single" borderColor={theme.colors.border} paddingX={1}>
-          <Text bold color={theme.colors.primary}>{title}</Text>
+          <Text bold color={theme.colors.primary}>
+            {title}
+          </Text>
         </Box>
       )}
-      <Box flexDirection="column">
-        {children}
-      </Box>
+      <Box flexDirection="column">{children}</Box>
       <Box marginTop={1}>
-        <Text color={theme.colors.mutedForeground} dimColor>Press Esc to close</Text>
+        <Text color={theme.colors.mutedForeground} dimColor>
+          Press Esc to close
+        </Text>
       </Box>
     </Box>
   );

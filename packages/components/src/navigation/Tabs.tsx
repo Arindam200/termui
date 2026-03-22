@@ -17,7 +17,13 @@ export interface TabsProps {
   borderColor?: string;
 }
 
-export function Tabs({ tabs, defaultTab, activeTab: controlledTab, onTabChange, borderColor }: TabsProps) {
+export function Tabs({
+  tabs,
+  defaultTab,
+  activeTab: controlledTab,
+  onTabChange,
+  borderColor,
+}: TabsProps) {
   const theme = useTheme();
   const { stdout } = useStdout();
   const [internalTab, setInternalTab] = useState(defaultTab ?? tabs[0]?.key ?? '');
@@ -59,9 +65,7 @@ export function Tabs({ tabs, defaultTab, activeTab: controlledTab, onTabChange, 
               >
                 {tab.label}
               </Text>
-              {idx < tabs.length - 1 && (
-                <Text color={resolvedBorderColor}>  │  </Text>
-              )}
+              {idx < tabs.length - 1 && <Text color={resolvedBorderColor}> │ </Text>}
             </Box>
           );
         })}

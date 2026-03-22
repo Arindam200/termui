@@ -4,11 +4,18 @@ import { useState, useEffect } from 'react';
 // All spinners at the same fps share one timer, so React 18 can batch
 // their setState calls into a single re-render per tick.
 type Subscriber = (tick: number) => void;
-const pool = new Map<number, { id: ReturnType<typeof setInterval>; tick: number; subs: Set<Subscriber> }>();
+const pool = new Map<
+  number,
+  { id: ReturnType<typeof setInterval>; tick: number; subs: Set<Subscriber> }
+>();
 
 function subscribe(ms: number, cb: Subscriber) {
   if (!pool.has(ms)) {
-    const entry = { id: null as unknown as ReturnType<typeof setInterval>, tick: 0, subs: new Set<Subscriber>() };
+    const entry = {
+      id: null as unknown as ReturnType<typeof setInterval>,
+      tick: 0,
+      subs: new Set<Subscriber>(),
+    };
     entry.id = setInterval(() => {
       entry.tick++;
       for (const sub of entry.subs) sub(entry.tick);

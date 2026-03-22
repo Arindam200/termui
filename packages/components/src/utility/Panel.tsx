@@ -7,7 +7,14 @@ export interface PanelProps {
   title?: string;
   titleColor?: string;
   borderColor?: string;
-  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   width?: number;
   height?: number;
   paddingX?: number;
@@ -37,8 +44,14 @@ export function Panel({
       height={height}
     >
       {title && (
-        <Box paddingX={paddingX} borderStyle="single" borderColor={borderColor ?? theme.colors.border}>
-          <Text bold color={titleColor ?? theme.colors.primary}>{title}</Text>
+        <Box
+          paddingX={paddingX}
+          borderStyle="single"
+          borderColor={borderColor ?? theme.colors.border}
+        >
+          <Text bold color={titleColor ?? theme.colors.primary}>
+            {title}
+          </Text>
         </Box>
       )}
       <Box flexDirection="column" paddingX={paddingX} paddingY={paddingY}>

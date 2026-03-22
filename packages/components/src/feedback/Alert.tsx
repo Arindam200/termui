@@ -24,10 +24,14 @@ export function Alert({ variant = 'info', title, children, icon }: AlertProps) {
 
   const variantColor = (() => {
     switch (variant) {
-      case 'success': return theme.colors.success;
-      case 'error': return theme.colors.error;
-      case 'warning': return theme.colors.warning;
-      default: return theme.colors.info;
+      case 'success':
+        return theme.colors.success;
+      case 'error':
+        return theme.colors.error;
+      case 'warning':
+        return theme.colors.warning;
+      default:
+        return theme.colors.info;
     }
   })();
 
@@ -42,8 +46,14 @@ export function Alert({ variant = 'info', title, children, icon }: AlertProps) {
       flexDirection="column"
     >
       <Box gap={1}>
-        <Text color={variantColor} bold>{resolvedIcon}</Text>
-        {title && <Text bold color={variantColor}>{title}</Text>}
+        <Text color={variantColor} bold>
+          {resolvedIcon}
+        </Text>
+        {title && (
+          <Text bold color={variantColor}>
+            {title}
+          </Text>
+        )}
       </Box>
       {children && <Text>{children}</Text>}
     </Box>

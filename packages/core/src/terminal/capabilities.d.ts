@@ -4,14 +4,14 @@
  */
 export type ColorDepth = 1 | 4 | 8 | 24;
 export interface TerminalCapabilities {
-    colorDepth: ColorDepth;
-    supportsUnicode: boolean;
-    supportsTrueColor: boolean;
-    supports256Color: boolean;
-    supportsMouse: boolean;
-    columns: number;
-    rows: number;
-    isTTY: boolean;
+  colorDepth: ColorDepth;
+  supportsUnicode: boolean;
+  supportsTrueColor: boolean;
+  supports256Color: boolean;
+  supportsMouse: boolean;
+  columns: number;
+  rows: number;
+  isTTY: boolean;
 }
 /** Detect current terminal capabilities from process environment */
 export declare function detectCapabilities(): TerminalCapabilities;

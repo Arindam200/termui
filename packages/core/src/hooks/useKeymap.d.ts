@@ -1,9 +1,9 @@
 export type KeyBinding = {
-    key?: string;
-    ctrl?: boolean;
-    shift?: boolean;
-    meta?: boolean;
-    action: () => void;
+  key?: string;
+  ctrl?: boolean;
+  shift?: boolean;
+  meta?: boolean;
+  action: () => void;
 };
 /**
  * Declarative keybinding registration with conflict detection.

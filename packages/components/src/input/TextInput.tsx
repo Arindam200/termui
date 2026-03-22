@@ -65,18 +65,13 @@ export function TextInput({
   const borderColor = error
     ? theme.colors.error
     : isFocused
-    ? theme.colors.focusRing
-    : theme.colors.border;
+      ? theme.colors.focusRing
+      : theme.colors.border;
 
   return (
     <Box flexDirection="column">
       {label && <Text bold>{label}</Text>}
-      <Box
-        borderStyle="round"
-        borderColor={borderColor}
-        width={width}
-        paddingX={1}
-      >
+      <Box borderStyle="round" borderColor={borderColor} width={width} paddingX={1}>
         <Text color={value ? theme.colors.foreground : theme.colors.mutedForeground}>
           {displayValue || placeholder}
         </Text>

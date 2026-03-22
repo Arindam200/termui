@@ -11,19 +11,33 @@ export interface BoxProps extends InkBoxProps {
   children?: ReactNode;
 }
 
-export function Box({ border, borderVariant = 'default', borderColor, children, ...props }: BoxProps) {
+export function Box({
+  border,
+  borderVariant = 'default',
+  borderColor,
+  children,
+  ...props
+}: BoxProps) {
   const theme = useTheme();
 
-  const resolvedBorderColor = borderColor ?? (() => {
-    switch (borderVariant) {
-      case 'focus': return theme.colors.focusRing;
-      case 'success': return theme.colors.success;
-      case 'error': return theme.colors.error;
-      case 'warning': return theme.colors.warning;
-      case 'muted': return theme.colors.mutedForeground;
-      default: return theme.colors.border;
-    }
-  })();
+  const resolvedBorderColor =
+    borderColor ??
+    (() => {
+      switch (borderVariant) {
+        case 'focus':
+          return theme.colors.focusRing;
+        case 'success':
+          return theme.colors.success;
+        case 'error':
+          return theme.colors.error;
+        case 'warning':
+          return theme.colors.warning;
+        case 'muted':
+          return theme.colors.mutedForeground;
+        default:
+          return theme.colors.border;
+      }
+    })();
 
   return (
     <InkBox

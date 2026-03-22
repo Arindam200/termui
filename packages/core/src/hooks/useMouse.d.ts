@@ -1,12 +1,12 @@
 export type MouseButton = 'left' | 'middle' | 'right' | 'scrollUp' | 'scrollDown';
 export interface MouseEvent {
-    type: 'press' | 'release' | 'move';
-    button: MouseButton;
-    x: number;
-    y: number;
-    ctrl: boolean;
-    shift: boolean;
-    meta: boolean;
+  type: 'press' | 'release' | 'move';
+  button: MouseButton;
+  x: number;
+  y: number;
+  ctrl: boolean;
+  shift: boolean;
+  meta: boolean;
 }
 type MouseHandler = (event: MouseEvent) => void;
 /**

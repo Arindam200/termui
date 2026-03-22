@@ -4,6 +4,6 @@
  * Note: read() is not universally supported; returns null on unsupported terminals.
  */
 export declare function useClipboard(): {
-    write: (text: string) => void;
+  write: (text: string) => void;
 };
 //# sourceMappingURL=useClipboard.d.ts.map

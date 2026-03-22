@@ -31,10 +31,14 @@ export function useAsync<T>(
       }
     } catch (e) {
       if (mountedRef.current) {
-        setState({ status: 'error', data: null, error: e instanceof Error ? e : new Error(String(e)) });
+        setState({
+          status: 'error',
+          data: null,
+          error: e instanceof Error ? e : new Error(String(e)),
+        });
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
   useEffect(() => {

@@ -71,7 +71,7 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
       const col = columns[sortColIdx];
       if (!col) return;
       if (sortKey === col.key) {
-        setSortDir((d) => d === 'asc' ? 'desc' : 'asc');
+        setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
       } else {
         setSortKey(col.key);
         setSortDir('asc');
@@ -85,14 +85,18 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
     return col.width ?? Math.max(col.header.length, dataMax) + 2;
   });
 
-  const headerRow = columns.map((col, i) => pad(col.header, colWidths[i] ?? col.header.length, col.align)).join(' │ ');
+  const headerRow = columns
+    .map((col, i) => pad(col.header, colWidths[i] ?? col.header.length, col.align))
+    .join(' │ ');
   const separator = colWidths.map((w) => '─'.repeat(w)).join('─┼─');
 
   return (
     <Box flexDirection="column" borderStyle="round" borderColor={resolvedBorderColor}>
       {/* Header */}
       <Box paddingX={1}>
-        <Text bold color={theme.colors.primary}>{headerRow}</Text>
+        <Text bold color={theme.colors.primary}>
+          {headerRow}
+        </Text>
       </Box>
       <Box paddingX={1}>
         <Text color={resolvedBorderColor}>{separator}</Text>
@@ -100,9 +104,9 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
       {/* Rows */}
       {visible.map((row, rowIdx) => {
         const isActive = rowIdx === activeRow && selectable;
-        const cells = columns.map((col, i) =>
-          pad(String(row[col.key] ?? ''), colWidths[i] ?? 8, col.align)
-        ).join(' │ ');
+        const cells = columns
+          .map((col, i) => pad(String(row[col.key] ?? ''), colWidths[i] ?? 8, col.align))
+          .join(' │ ');
         return (
           <Box key={rowIdx} paddingX={1}>
             <Text

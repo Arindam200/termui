@@ -1,4 +1,13 @@
-import { fgHex, bgHex, bold, dim, italic, underline, strikethrough, reset } from '../terminal/ansi.js';
+import {
+  fgHex,
+  bgHex,
+  bold,
+  dim,
+  italic,
+  underline,
+  strikethrough,
+  reset,
+} from '../terminal/ansi.js';
 
 type BorderStyle = 'single' | 'double' | 'round' | 'bold' | 'classic';
 

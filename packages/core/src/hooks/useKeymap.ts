@@ -31,18 +31,21 @@ export function useKeymap(bindings: KeyBinding[], isActive = true): void {
       }
       seen.add(id);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useInput((input: string, key: Key) => {
-    for (const binding of bindingsRef.current) {
-      const keyMatch = !binding.key || input === binding.key;
-      const ctrlMatch = binding.ctrl === undefined || binding.ctrl === key.ctrl;
-      const shiftMatch = binding.shift === undefined || binding.shift === key.shift;
-      const metaMatch = binding.meta === undefined || binding.meta === key.meta;
-      if (keyMatch && ctrlMatch && shiftMatch && metaMatch) {
-        binding.action();
+  useInput(
+    (input: string, key: Key) => {
+      for (const binding of bindingsRef.current) {
+        const keyMatch = !binding.key || input === binding.key;
+        const ctrlMatch = binding.ctrl === undefined || binding.ctrl === key.ctrl;
+        const shiftMatch = binding.shift === undefined || binding.shift === key.shift;
+        const metaMatch = binding.meta === undefined || binding.meta === key.meta;
+        if (keyMatch && ctrlMatch && shiftMatch && metaMatch) {
+          binding.action();
+        }
       }
-    }
-  }, { isActive });
+    },
+    { isActive }
+  );
 }

@@ -17,7 +17,13 @@ export interface ListProps {
   cursor?: string;
 }
 
-export function List({ items, onSelect, filterable = false, height = 10, cursor = '›' }: ListProps) {
+export function List({
+  items,
+  onSelect,
+  filterable = false,
+  height = 10,
+  cursor = '›',
+}: ListProps) {
   const theme = useTheme();
   const [activeIndex, setActiveIndex] = useState(0);
   const [filter, setFilter] = useState('');

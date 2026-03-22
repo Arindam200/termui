@@ -45,7 +45,11 @@ export function Toggle({
           {checked ? '●' : '○'} {stateLabel}
         </Text>
       </Box>
-      {label && <Text color={disabled ? theme.colors.mutedForeground : theme.colors.foreground}>{label}</Text>}
+      {label && (
+        <Text color={disabled ? theme.colors.mutedForeground : theme.colors.foreground}>
+          {label}
+        </Text>
+      )}
     </Box>
   );
 }

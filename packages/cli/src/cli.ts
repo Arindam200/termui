@@ -8,7 +8,7 @@ import { add } from './commands/add.js';
 import { list } from './commands/list.js';
 import { checkForUpdates } from './utils/updates.js';
 
-const [,, command, ...args] = process.argv;
+const [, , command, ...args] = process.argv;
 
 async function main() {
   // Show update notice on every command (non-blocking)

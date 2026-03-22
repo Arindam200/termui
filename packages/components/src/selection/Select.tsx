@@ -71,8 +71,8 @@ export function Select<T = string>({
                 opt.disabled
                   ? theme.colors.mutedForeground
                   : isActive
-                  ? resolvedCursorColor
-                  : theme.colors.foreground
+                    ? resolvedCursorColor
+                    : theme.colors.foreground
               }
               bold={isActive || isSelected}
               dimColor={opt.disabled}

@@ -37,15 +37,12 @@ export function Checkbox({
   const iconColor = disabled
     ? theme.colors.mutedForeground
     : checked || indeterminate
-    ? theme.colors.primary
-    : theme.colors.border;
+      ? theme.colors.primary
+      : theme.colors.border;
 
   return (
     <Box gap={1}>
-      <Text
-        color={isFocused ? theme.colors.focusRing : iconColor}
-        bold={isFocused}
-      >
+      <Text color={isFocused ? theme.colors.focusRing : iconColor} bold={isFocused}>
         {icon}
       </Text>
       {label && (

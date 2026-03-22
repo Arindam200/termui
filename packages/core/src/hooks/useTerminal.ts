@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
-import { getCapabilities, refreshCapabilities, type TerminalCapabilities } from '../terminal/capabilities.js';
+import {
+  getCapabilities,
+  refreshCapabilities,
+  type TerminalCapabilities,
+} from '../terminal/capabilities.js';
 
 /** Returns current terminal capabilities, updates on resize */
 export function useTerminal(): TerminalCapabilities {

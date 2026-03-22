@@ -141,8 +141,7 @@ export const screen = {
 // OSC (Operating System Command) sequences
 export const osc = {
   /** OSC 8 — hyperlink: \x1b]8;;url\x1b\\ text \x1b]8;;\x1b\\ */
-  hyperlink: (url: string, text: string) =>
-    `${ESC}]8;;${url}${ESC}\\${text}${ESC}]8;;${ESC}\\`,
+  hyperlink: (url: string, text: string) => `${ESC}]8;;${url}${ESC}\\${text}${ESC}]8;;${ESC}\\`,
   /** OSC 52 — clipboard write (base64-encoded) */
   clipboardWrite: (data: string) => {
     const encoded = Buffer.from(data).toString('base64');
