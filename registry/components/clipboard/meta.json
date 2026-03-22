@@ -1,0 +1,11 @@
+{
+  "name": "clipboard",
+  "description": "Copy-to-clipboard button with success feedback",
+  "version": "1.0.0",
+  "category": "utility",
+  "files": [
+    "Clipboard.tsx"
+  ],
+  "deps": [],
+  "peerComponents": []
+}

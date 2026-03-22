@@ -1,0 +1,11 @@
+{
+  "name": "error-boundary",
+  "description": "React error boundary with graceful terminal display",
+  "version": "1.0.0",
+  "category": "utility",
+  "files": [
+    "ErrorBoundary.tsx"
+  ],
+  "deps": [],
+  "peerComponents": []
+}

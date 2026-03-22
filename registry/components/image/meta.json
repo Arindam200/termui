@@ -1,0 +1,11 @@
+{
+  "name": "image",
+  "description": "Image renderer with iTerm2/Kitty protocol and ASCII fallback",
+  "version": "1.0.0",
+  "category": "utility",
+  "files": [
+    "Image.tsx"
+  ],
+  "deps": [],
+  "peerComponents": []
+}

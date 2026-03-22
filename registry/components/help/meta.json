@@ -1,0 +1,11 @@
+{
+  "name": "help",
+  "description": "Auto-generated help panel from a keymap",
+  "version": "1.0.0",
+  "category": "utility",
+  "files": [
+    "Help.tsx"
+  ],
+  "deps": [],
+  "peerComponents": []
+}

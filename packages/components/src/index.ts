@@ -27,3 +27,6 @@ export * from './forms/index.js';
 
 // Utility
 export * from './utility/index.js';
+
+// Charts
+export * from './charts/index.js';

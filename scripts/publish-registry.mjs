@@ -138,7 +138,25 @@ const COMPONENTS = [
   { name: 'file-picker',     file: 'FilePicker.tsx',     category: 'forms', version: '1.0.0', description: 'Interactive file browser and picker', deps: ['glob'], peers: [] },
 
   // Utility
-  { name: 'embedded-terminal', file: 'EmbeddedTerminal.tsx', category: 'utility', version: '1.0.0', description: 'Embedded PTY terminal panel (requires node-pty peer)', deps: [], peers: [] },
+  { name: 'embedded-terminal',  file: 'EmbeddedTerminal.tsx',  category: 'utility', version: '1.0.0', description: 'Embedded PTY terminal panel (requires node-pty peer)', deps: [], peers: [] },
+  { name: 'timer',              file: 'Timer.tsx',              category: 'utility', version: '1.0.0', description: 'Countdown timer with pause/resume and auto-start', deps: [], peers: [] },
+  { name: 'stopwatch',          file: 'Stopwatch.tsx',          category: 'utility', version: '1.0.0', description: 'Count-up stopwatch with laps and reset', deps: [], peers: [] },
+  { name: 'clock',              file: 'Clock.tsx',              category: 'utility', version: '1.0.0', description: 'Real-time clock display with 12h/24h and date', deps: [], peers: [] },
+  { name: 'clipboard',          file: 'Clipboard.tsx',          category: 'utility', version: '1.0.0', description: 'Copy-to-clipboard button with success feedback', deps: [], peers: [] },
+  { name: 'keyboard-shortcuts', file: 'KeyboardShortcuts.tsx',  category: 'utility', version: '1.0.0', description: 'Formatted keyboard shortcut reference table', deps: [], peers: [] },
+  { name: 'help',               file: 'Help.tsx',               category: 'utility', version: '1.0.0', description: 'Auto-generated help panel from a keymap', deps: [], peers: [] },
+  { name: 'error-boundary',     file: 'ErrorBoundary.tsx',      category: 'utility', version: '1.0.0', description: 'React error boundary with graceful terminal display', deps: [], peers: [] },
+  { name: 'log',                file: 'Log.tsx',                category: 'utility', version: '1.0.0', description: 'Scrolling log viewer with severity levels and filtering', deps: [], peers: [] },
+  { name: 'image',              file: 'Image.tsx',              category: 'utility', version: '1.0.0', description: 'Image renderer with iTerm2/Kitty protocol and ASCII fallback', deps: [], peers: [] },
+  { name: 'qr-code',            file: 'QRCode.tsx',             category: 'utility', version: '1.0.0', description: 'Unicode block QR code generator', deps: [], peers: [] },
+
+  // Charts
+  { name: 'sparkline',   file: 'Sparkline.tsx',  category: 'charts', version: '1.0.0', description: 'Inline Unicode braille sparkline chart', deps: [], peers: [] },
+  { name: 'bar-chart',   file: 'BarChart.tsx',   category: 'charts', version: '1.0.0', description: 'Horizontal and vertical bar chart with labels', deps: [], peers: [] },
+  { name: 'line-chart',  file: 'LineChart.tsx',  category: 'charts', version: '1.0.0', description: 'ASCII line chart with axes and multi-series support', deps: [], peers: [] },
+  { name: 'pie-chart',   file: 'PieChart.tsx',   category: 'charts', version: '1.0.0', description: 'Unicode block pie chart with legend', deps: [], peers: [] },
+  { name: 'heat-map',    file: 'HeatMap.tsx',    category: 'charts', version: '1.0.0', description: 'Grid heatmap with color intensity scale', deps: [], peers: [] },
+  { name: 'gauge',       file: 'Gauge.tsx',      category: 'charts', version: '1.0.0', description: 'Arc/speedometer gauge meter', deps: [], peers: [] },
 ];
 
 // ---------------------------------------------------------------------------
@@ -152,6 +170,7 @@ const SRC_DIR = {
   selection:  'selection',
   data:       'data',
   feedback:   'feedback',
+  charts:     'charts',
   navigation: 'navigation',
   overlays:   'overlays',
   forms:      'forms',

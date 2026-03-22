@@ -1,6 +1,27 @@
 export { Panel } from './Panel.js';
 export { Toggle } from './Toggle.js';
 export { EmbeddedTerminal } from './EmbeddedTerminal.js';
+export { Timer } from './Timer.js';
+export { Stopwatch } from './Stopwatch.js';
+export { Clock } from './Clock.js';
+export { Clipboard } from './Clipboard.js';
+export { KeyboardShortcuts } from './KeyboardShortcuts.js';
+export { Help } from './Help.js';
+export { ErrorBoundary } from './ErrorBoundary.js';
+export { Log } from './Log.js';
+export { Image } from './Image.js';
+export { QRCode } from './QRCode.js';
+
 export type { EmbeddedTerminalProps } from './EmbeddedTerminal.js';
 export type { PanelProps } from './Panel.js';
 export type { ToggleProps } from './Toggle.js';
+export type { TimerProps } from './Timer.js';
+export type { StopwatchProps } from './Stopwatch.js';
+export type { ClockProps } from './Clock.js';
+export type { ClipboardProps } from './Clipboard.js';
+export type { KeyboardShortcutsProps, Shortcut } from './KeyboardShortcuts.js';
+export type { HelpProps } from './Help.js';
+export type { ErrorBoundaryProps } from './ErrorBoundary.js';
+export type { LogProps, LogEntry, LogLevel } from './Log.js';
+export type { ImageProps, ImageProtocol } from './Image.js';
+export type { QRCodeProps } from './QRCode.js';

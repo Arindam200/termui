@@ -1,0 +1,11 @@
+{
+  "name": "bar-chart",
+  "description": "Horizontal and vertical bar chart with labels",
+  "version": "1.0.0",
+  "category": "charts",
+  "files": [
+    "BarChart.tsx"
+  ],
+  "deps": [],
+  "peerComponents": []
+}

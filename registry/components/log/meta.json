@@ -1,0 +1,11 @@
+{
+  "name": "log",
+  "description": "Scrolling log viewer with severity levels and filtering",
+  "version": "1.0.0",
+  "category": "utility",
+  "files": [
+    "Log.tsx"
+  ],
+  "deps": [],
+  "peerComponents": []
+}

@@ -1,0 +1,11 @@
+{
+  "name": "pie-chart",
+  "description": "Unicode block pie chart with legend",
+  "version": "1.0.0",
+  "category": "charts",
+  "files": [
+    "PieChart.tsx"
+  ],
+  "deps": [],
+  "peerComponents": []
+}

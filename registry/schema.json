@@ -847,6 +847,182 @@
       ],
       "deps": [],
       "peerComponents": []
+    },
+    "timer": {
+      "name": "timer",
+      "description": "Countdown timer with pause/resume and auto-start",
+      "version": "1.0.0",
+      "category": "utility",
+      "files": [
+        "Timer.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "stopwatch": {
+      "name": "stopwatch",
+      "description": "Count-up stopwatch with laps and reset",
+      "version": "1.0.0",
+      "category": "utility",
+      "files": [
+        "Stopwatch.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "clock": {
+      "name": "clock",
+      "description": "Real-time clock display with 12h/24h and date",
+      "version": "1.0.0",
+      "category": "utility",
+      "files": [
+        "Clock.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "clipboard": {
+      "name": "clipboard",
+      "description": "Copy-to-clipboard button with success feedback",
+      "version": "1.0.0",
+      "category": "utility",
+      "files": [
+        "Clipboard.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "keyboard-shortcuts": {
+      "name": "keyboard-shortcuts",
+      "description": "Formatted keyboard shortcut reference table",
+      "version": "1.0.0",
+      "category": "utility",
+      "files": [
+        "KeyboardShortcuts.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "help": {
+      "name": "help",
+      "description": "Auto-generated help panel from a keymap",
+      "version": "1.0.0",
+      "category": "utility",
+      "files": [
+        "Help.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "error-boundary": {
+      "name": "error-boundary",
+      "description": "React error boundary with graceful terminal display",
+      "version": "1.0.0",
+      "category": "utility",
+      "files": [
+        "ErrorBoundary.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "log": {
+      "name": "log",
+      "description": "Scrolling log viewer with severity levels and filtering",
+      "version": "1.0.0",
+      "category": "utility",
+      "files": [
+        "Log.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "image": {
+      "name": "image",
+      "description": "Image renderer with iTerm2/Kitty protocol and ASCII fallback",
+      "version": "1.0.0",
+      "category": "utility",
+      "files": [
+        "Image.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "qr-code": {
+      "name": "qr-code",
+      "description": "Unicode block QR code generator",
+      "version": "1.0.0",
+      "category": "utility",
+      "files": [
+        "QRCode.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "sparkline": {
+      "name": "sparkline",
+      "description": "Inline Unicode braille sparkline chart",
+      "version": "1.0.0",
+      "category": "charts",
+      "files": [
+        "Sparkline.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "bar-chart": {
+      "name": "bar-chart",
+      "description": "Horizontal and vertical bar chart with labels",
+      "version": "1.0.0",
+      "category": "charts",
+      "files": [
+        "BarChart.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "line-chart": {
+      "name": "line-chart",
+      "description": "ASCII line chart with axes and multi-series support",
+      "version": "1.0.0",
+      "category": "charts",
+      "files": [
+        "LineChart.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "pie-chart": {
+      "name": "pie-chart",
+      "description": "Unicode block pie chart with legend",
+      "version": "1.0.0",
+      "category": "charts",
+      "files": [
+        "PieChart.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "heat-map": {
+      "name": "heat-map",
+      "description": "Grid heatmap with color intensity scale",
+      "version": "1.0.0",
+      "category": "charts",
+      "files": [
+        "HeatMap.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
+    },
+    "gauge": {
+      "name": "gauge",
+      "description": "Arc/speedometer gauge meter",
+      "version": "1.0.0",
+      "category": "charts",
+      "files": [
+        "Gauge.tsx"
+      ],
+      "deps": [],
+      "peerComponents": []
     }
   }
 }
