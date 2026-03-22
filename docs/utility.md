@@ -1,5 +1,5 @@
 ---
-title: "Utility Components"
+title: 'Utility Components'
 ---
 
 # Utility Components
@@ -17,10 +17,11 @@ Countdown timer with configurable duration and callbacks.
 | `format` | `string` | `'mm:ss'` | — |
 
 **Usage:**
-```tsx
-import { Timer } from 'termui/components'
 
-<Timer duration={60000} onComplete={() => console.log('Done!')} />
+```tsx
+import { Timer } from 'termui/components';
+
+<Timer duration={60000} onComplete={() => console.log('Done!')} />;
 ```
 
 ---
@@ -36,10 +37,11 @@ Elapsed time stopwatch with start/stop/reset.
 | `format` | `string` | `'hh:mm:ss.ms'` | — |
 
 **Usage:**
-```tsx
-import { Stopwatch } from 'termui/components'
 
-<Stopwatch autoStart />
+```tsx
+import { Stopwatch } from 'termui/components';
+
+<Stopwatch autoStart />;
 ```
 
 ---
@@ -56,10 +58,11 @@ Live clock with configurable format.
 | `color` | `string` | `—` | — |
 
 **Usage:**
-```tsx
-import { Clock } from 'termui/components'
 
-<Clock format="HH:mm:ss" color="cyan" />
+```tsx
+import { Clock } from 'termui/components';
+
+<Clock format="HH:mm:ss" color="cyan" />;
 ```
 
 ---
@@ -76,10 +79,11 @@ OSC 52 clipboard write button.
 | `onCopy` | `() => void` | `—` | — |
 
 **Usage:**
-```tsx
-import { Clipboard } from 'termui/components'
 
-<Clipboard value={apiKey} label="Copy API Key" />
+```tsx
+import { Clipboard } from 'termui/components';
+
+<Clipboard value={apiKey} label="Copy API Key" />;
 ```
 
 ---
@@ -96,15 +100,16 @@ Displays registered keyboard shortcuts in a formatted table.
 | `columns` | `number` | `2` | — |
 
 **Usage:**
+
 ```tsx
-import { KeyboardShortcuts } from 'termui/components'
+import { KeyboardShortcuts } from 'termui/components';
 
 <KeyboardShortcuts
   shortcuts={[
     { keys: ['Ctrl', 'S'], description: 'Save' },
     { keys: ['q'], description: 'Quit' },
   ]}
-/>
+/>;
 ```
 
 ---
@@ -122,10 +127,11 @@ Context-sensitive help panel with keyboard shortcuts.
 | `title` | `string` | `'Keyboard Shortcuts'` | — |
 
 **Usage:**
-```tsx
-import { Help } from 'termui/components'
 
-<Help isOpen={showHelp} onClose={() => setHelp(false)} shortcuts={shortcuts} />
+```tsx
+import { Help } from 'termui/components';
+
+<Help isOpen={showHelp} onClose={() => setHelp(false)} shortcuts={shortcuts} />;
 ```
 
 ---
@@ -142,12 +148,13 @@ Catches render errors and shows a formatted error screen.
 | `onError` | `(error: Error) => void` | `—` | — |
 
 **Usage:**
+
 ```tsx
-import { ErrorBoundary } from 'termui/components'
+import { ErrorBoundary } from 'termui/components';
 
 <ErrorBoundary fallback={<Text color="red">Something went wrong</Text>}>
   <MyApp />
-</ErrorBoundary>
+</ErrorBoundary>;
 ```
 
 ---
@@ -165,10 +172,11 @@ Scrollable log output with level-colored rows.
 | `showTimestamp` | `boolean` | `true` | — |
 
 **Usage:**
-```tsx
-import { Log } from 'termui/components'
 
-<Log entries={logLines} height={15} follow />
+```tsx
+import { Log } from 'termui/components';
+
+<Log entries={logLines} height={15} follow />;
 ```
 
 ---
@@ -186,10 +194,11 @@ Renders images in terminals supporting Sixel or block characters.
 | `fallback` | `ReactNode` | `—` | — |
 
 **Usage:**
-```tsx
-import { Image } from 'termui/components'
 
-<Image src="./logo.png" width={20} />
+```tsx
+import { Image } from 'termui/components';
+
+<Image src="./logo.png" width={20} />;
 ```
 
 ---
@@ -206,10 +215,11 @@ Renders a QR code using Unicode block characters.
 | `color` | `string` | `'white'` | — |
 
 **Usage:**
-```tsx
-import { QRCode } from 'termui/components'
 
-<QRCode value="https://termui.dev" />
+```tsx
+import { QRCode } from 'termui/components';
+
+<QRCode value="https://termui.dev" />;
 ```
 
 ---
@@ -228,15 +238,17 @@ Spawns a real PTY inside a TermUI Box (via termui/pty).
 | `onExit` | `(code: number) => void` | `—` | — |
 
 **Usage:**
+
 ```tsx
-import { EmbeddedTerminal } from 'termui/components'
+import { EmbeddedTerminal } from 'termui/components';
 
 <EmbeddedTerminal
   command="npm"
   args={['install']}
-  width={80} height={20}
+  width={80}
+  height={20}
   onExit={(code) => console.log('Exit:', code)}
-/>
+/>;
 ```
 
 ---
@@ -253,10 +265,11 @@ React.Profiler wrapper that overlays live render timing stats.
 | `show` | `boolean` | `true` | — |
 
 **Usage:**
+
 ```tsx
-import { Profiler } from 'termui/components'
+import { Profiler } from 'termui/components';
 
 <Profiler id="MyList" show>
   <MyList items={data} />
-</Profiler>
+</Profiler>;
 ```

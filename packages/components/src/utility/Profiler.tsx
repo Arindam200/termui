@@ -55,14 +55,12 @@ export function Profiler({ id, children, show = true }: ProfilerProps) {
       <Box flexDirection="column">
         {children}
         {show && (
-          <Box
-            borderStyle="single"
-            borderColor="gray"
-            paddingX={1}
-            marginTop={1}
-          >
+          <Box borderStyle="single" borderColor="gray" paddingX={1} marginTop={1}>
             <Text dimColor>
-              [{id}] renders:{stats.count}  last:{stats.lastMs.toFixed(1)}ms  peak:{stats.peakMs.toFixed(1)}ms  avg:{stats.count > 0 ? (stats.totalMs / stats.count).toFixed(1) : '0.0'}ms  phase:{stats.phase}
+              [{id}] renders:{stats.count} last:{stats.lastMs.toFixed(1)}ms peak:
+              {stats.peakMs.toFixed(1)}ms avg:
+              {stats.count > 0 ? (stats.totalMs / stats.count).toFixed(1) : '0.0'}ms phase:
+              {stats.phase}
             </Text>
           </Box>
         )}

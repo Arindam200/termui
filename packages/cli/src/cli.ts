@@ -99,16 +99,16 @@ function printHelp() {
   intro('termui');
 
   const cmds: [string, string][] = [
-    ['init',               'Initialize TermUI in your project'],
-    ['add <component>',    'Add one or more components from the registry'],
-    ['add --all',          'Add all 91 components at once'],
+    ['init', 'Initialize TermUI in your project'],
+    ['add <component>', 'Add one or more components from the registry'],
+    ['add --all', 'Add all 91 components at once'],
     ['update <component>', 'Re-download a component from the registry'],
-    ['list',               'Browse all available components'],
-    ['diff <component>',   'Show diff between local and registry version'],
-    ['theme [name]',       'List or apply a theme'],
-    ['preview',            'Interactive component gallery (91 components)'],
-    ['dev',                'Watch mode — hot-reload on file change'],
-    ['help',               'Show this help message'],
+    ['list', 'Browse all available components'],
+    ['diff <component>', 'Show diff between local and registry version'],
+    ['theme [name]', 'List or apply a theme'],
+    ['preview', 'Interactive component gallery (91 components)'],
+    ['dev', 'Watch mode — hot-reload on file change'],
+    ['help', 'Show this help message'],
   ];
 
   step(`${c.bold}Usage${c.reset}  npx termui ${c.gray}<command>${c.reset}`);

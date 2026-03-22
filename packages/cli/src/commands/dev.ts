@@ -51,7 +51,11 @@ export async function dev(args: string[]): Promise<void> {
       c.kill('SIGTERM');
       // Force-kill after 2s if SIGTERM not enough
       setTimeout(() => {
-        try { c.kill('SIGKILL'); } catch { /* already dead */ }
+        try {
+          c.kill('SIGKILL');
+        } catch {
+          /* already dead */
+        }
         resolve();
       }, 2000);
     });
@@ -64,15 +68,17 @@ export async function dev(args: string[]): Promise<void> {
     // Forward extra args (minus --dir <path>) to preview
     const previewArgs: string[] = [];
     for (let i = 0; i < args.length; i++) {
-      if (args[i] === '--dir') { i++; continue; }
+      if (args[i] === '--dir') {
+        i++;
+        continue;
+      }
       previewArgs.push(args[i]!);
     }
 
-    child = spawn(
-      process.execPath,
-      [process.argv[1]!, 'preview', ...previewArgs],
-      { stdio: 'inherit', env: { ...process.env, FORCE_COLOR: '1' } }
-    );
+    child = spawn(process.execPath, [process.argv[1]!, 'preview', ...previewArgs], {
+      stdio: 'inherit',
+      env: { ...process.env, FORCE_COLOR: '1' },
+    });
 
     child.on('exit', (code, signal) => {
       if (!isExiting && signal !== 'SIGTERM' && signal !== 'SIGKILL') {

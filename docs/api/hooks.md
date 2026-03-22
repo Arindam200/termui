@@ -49,7 +49,7 @@ useFocus(options?: { isActive?: boolean; autoFocus?: boolean; id?: string })
 Programmatic focus control.
 
 ```ts
-useFocusManager()
+useFocusManager();
 // Returns: { focusNext, focusPrevious, focus(id), disableFocus, enableFocus }
 ```
 
@@ -60,7 +60,7 @@ useFocusManager()
 Access the active theme tokens.
 
 ```ts
-useTheme()
+useTheme();
 // Returns: Theme (colors, borders, spacing, typography)
 ```
 
@@ -71,7 +71,7 @@ useTheme()
 Read terminal capabilities.
 
 ```ts
-useTerminal()
+useTerminal();
 // Returns: { cols, rows, colorDepth, supportsUnicode, supportsHyperlinks }
 ```
 
@@ -103,7 +103,7 @@ useInterval(callback: () => void, delay: number | null)
 OSC 52 clipboard read/write.
 
 ```ts
-useClipboard()
+useClipboard();
 // Returns: { copy(text: string): void, paste(): Promise<string> }
 ```
 

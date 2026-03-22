@@ -1,5 +1,5 @@
 ---
-title: "Feedback Components"
+title: 'Feedback Components'
 ---
 
 # Feedback Components
@@ -17,10 +17,11 @@ Animated loading spinner with 12+ animation styles.
 | `fps` | `number` | `12` | — |
 
 **Usage:**
-```tsx
-import { Spinner } from 'termui/components'
 
-<Spinner label="Loading..." style="dots" color="cyan" />
+```tsx
+import { Spinner } from 'termui/components';
+
+<Spinner label="Loading..." style="dots" color="cyan" />;
 ```
 
 ---
@@ -41,10 +42,11 @@ Determinate progress bar with optional ETA display.
 | `color` | `string` | `—` | — |
 
 **Usage:**
-```tsx
-import { ProgressBar } from 'termui/components'
 
-<ProgressBar value={progress} max={100} label="Installing" showEta />
+```tsx
+import { ProgressBar } from 'termui/components';
+
+<ProgressBar value={progress} max={100} label="Installing" showEta />;
 ```
 
 ---
@@ -62,10 +64,11 @@ Circular progress indicator using Unicode braille characters.
 | `label` | `string` | `—` | — |
 
 **Usage:**
-```tsx
-import { ProgressCircle } from 'termui/components'
 
-<ProgressCircle value={75} label="75%" color="green" />
+```tsx
+import { ProgressCircle } from 'termui/components';
+
+<ProgressCircle value={75} label="75%" color="green" />;
 ```
 
 ---
@@ -82,6 +85,7 @@ Inline status with icon — success, error, warning, info.
 | `icon` | `string` | `—` | — |
 
 **Usage:**
+
 ```tsx
 import { StatusMessage } from 'termui/components'
 
@@ -104,15 +108,11 @@ Auto-dismissing notification with configurable duration.
 | `onDismiss` | `() => void` | `—` | — |
 
 **Usage:**
-```tsx
-import { Toast } from 'termui/components'
 
-<Toast
-  message="Saved!"
-  variant="success"
-  duration={2000}
-  onDismiss={() => setShow(false)}
-/>
+```tsx
+import { Toast } from 'termui/components';
+
+<Toast message="Saved!" variant="success" duration={2000} onDismiss={() => setShow(false)} />;
 ```
 
 ---
@@ -130,12 +130,13 @@ Success / error / warning / info alert box.
 | `icon` | `string` | `—` | — |
 
 **Usage:**
+
 ```tsx
-import { Alert } from 'termui/components'
+import { Alert } from 'termui/components';
 
 <Alert variant="warning" title="Heads up">
   This action cannot be undone.
-</Alert>
+</Alert>;
 ```
 
 ---
@@ -153,12 +154,13 @@ Full-width announcement banner.
 | `dismissible` | `boolean` | `false` | — |
 
 **Usage:**
+
 ```tsx
-import { Banner } from 'termui/components'
+import { Banner } from 'termui/components';
 
 <Banner variant="info" icon="ℹ">
   New version available: v2.0.0
-</Banner>
+</Banner>;
 ```
 
 ---
@@ -175,8 +177,11 @@ Shimmer placeholder shown while content loads.
 | `animated` | `boolean` | `true` | — |
 
 **Usage:**
-```tsx
-import { Skeleton } from 'termui/components'
 
-{loading ? <Skeleton width={30} height={3} /> : <Content />}
+```tsx
+import { Skeleton } from 'termui/components';
+
+{
+  loading ? <Skeleton width={30} height={3} /> : <Content />;
+}
 ```

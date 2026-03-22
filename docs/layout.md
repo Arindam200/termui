@@ -1,5 +1,5 @@
 ---
-title: "Layout Components"
+title: 'Layout Components'
 ---
 
 # Layout Components
@@ -25,12 +25,13 @@ Enhanced flexbox container with border presets and Yoga layout.
 | `justifyContent` | `'flex-start' | 'center' | 'flex-end' | 'space-between'` | `—` | — |
 
 **Usage:**
+
 ```tsx
-import { Box } from 'termui/components'
+import { Box } from 'termui/components';
 
 <Box flexDirection="column" borderStyle="round" padding={1}>
   <Text>Content here</Text>
-</Box>
+</Box>;
 ```
 
 ---
@@ -48,13 +49,14 @@ Vertical or horizontal stack with configurable gap.
 | `align` | `'flex-start' | 'center' | 'flex-end'` | `—` | — |
 
 **Usage:**
+
 ```tsx
-import { Stack } from 'termui/components'
+import { Stack } from 'termui/components';
 
 <Stack direction="column" gap={1}>
   <Text>Item 1</Text>
   <Text>Item 2</Text>
-</Stack>
+</Stack>;
 ```
 
 ---
@@ -71,12 +73,15 @@ Rows × columns grid layout.
 | `gap` | `number` | `1` | — |
 
 **Usage:**
+
 ```tsx
-import { Grid } from 'termui/components'
+import { Grid } from 'termui/components';
 
 <Grid columns={3} gap={1}>
-  <Text>A</Text><Text>B</Text><Text>C</Text>
-</Grid>
+  <Text>A</Text>
+  <Text>B</Text>
+  <Text>C</Text>
+</Grid>;
 ```
 
 ---
@@ -93,12 +98,11 @@ Scrollable container with an optional scrollbar indicator.
 | `showScrollbar` | `boolean` | `true` | — |
 
 **Usage:**
-```tsx
-import { ScrollView } from 'termui/components'
 
-<ScrollView height={10}>
-  {longContent}
-</ScrollView>
+```tsx
+import { ScrollView } from 'termui/components';
+
+<ScrollView height={10}>{longContent}</ScrollView>;
 ```
 
 ---
@@ -115,10 +119,11 @@ Horizontal rule / divider with optional label.
 | `char` | `string` | `'─'` | — |
 
 **Usage:**
-```tsx
-import { Divider } from 'termui/components'
 
-<Divider label="Section" />
+```tsx
+import { Divider } from 'termui/components';
+
+<Divider label="Section" />;
 ```
 
 ---
@@ -133,14 +138,15 @@ Flexible empty space for pushing content apart.
 | `size` | `number` | `1` | — |
 
 **Usage:**
+
 ```tsx
-import { Spacer } from 'termui/components'
+import { Spacer } from 'termui/components';
 
 <Box flexDirection="row">
   <Text>Left</Text>
   <Spacer />
   <Text>Right</Text>
-</Box>
+</Box>;
 ```
 
 ---
@@ -157,13 +163,14 @@ Equal-width or custom-width column layout.
 | `gap` | `number` | `1` | — |
 
 **Usage:**
+
 ```tsx
-import { Columns } from 'termui/components'
+import { Columns } from 'termui/components';
 
 <Columns widths={[20, 40]}>
   <Text>Left</Text>
   <Text>Right</Text>
-</Columns>
+</Columns>;
 ```
 
 ---
@@ -180,12 +187,13 @@ Centers children horizontally and/or vertically.
 | `vertical` | `boolean` | `false` | — |
 
 **Usage:**
+
 ```tsx
-import { Center } from 'termui/components'
+import { Center } from 'termui/components';
 
 <Center>
   <Text>Centered content</Text>
-</Center>
+</Center>;
 ```
 
 ---
@@ -202,10 +210,11 @@ Maintains a fixed aspect ratio for its child.
 | `width` | `number` | `—` | — |
 
 **Usage:**
-```tsx
-import { AspectRatio } from 'termui/components'
 
-<AspectRatio ratio={16/9} width={40}>
+```tsx
+import { AspectRatio } from 'termui/components';
+
+<AspectRatio ratio={16 / 9} width={40}>
   <Box borderStyle="single" />
-</AspectRatio>
+</AspectRatio>;
 ```

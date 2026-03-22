@@ -1,5 +1,5 @@
 ---
-title: "Charts Components"
+title: 'Charts Components'
 ---
 
 # Charts Components
@@ -16,10 +16,11 @@ Inline Unicode braille sparkline chart for numeric series.
 | `height` | `number` | `1` | — |
 
 **Usage:**
-```tsx
-import { Sparkline } from 'termui/components'
 
-<Sparkline data={[1, 3, 2, 8, 5, 6]} color="green" />
+```tsx
+import { Sparkline } from 'termui/components';
+
+<Sparkline data={[1, 3, 2, 8, 5, 6]} color="green" />;
 ```
 
 ---
@@ -38,13 +39,17 @@ Horizontal or vertical bar chart.
 | `showValues` | `boolean` | `true` | — |
 
 **Usage:**
+
 ```tsx
-import { BarChart } from 'termui/components'
+import { BarChart } from 'termui/components';
 
 <BarChart
-  data={[{ label: 'A', value: 10 }, { label: 'B', value: 25 }]}
+  data={[
+    { label: 'A', value: 10 },
+    { label: 'B', value: 25 },
+  ]}
   color="cyan"
-/>
+/>;
 ```
 
 ---
@@ -63,13 +68,11 @@ ASCII line chart with axes and multi-series support.
 | `showLegend` | `boolean` | `true` | — |
 
 **Usage:**
-```tsx
-import { LineChart } from 'termui/components'
 
-<LineChart
-  series={[{ name: 'CPU', data: cpuData, color: 'cyan' }]}
-  width={60} height={15}
-/>
+```tsx
+import { LineChart } from 'termui/components';
+
+<LineChart series={[{ name: 'CPU', data: cpuData, color: 'cyan' }]} width={60} height={15} />;
 ```
 
 ---
@@ -86,15 +89,16 @@ Unicode block pie chart with a legend.
 | `size` | `number` | `10` | — |
 
 **Usage:**
+
 ```tsx
-import { PieChart } from 'termui/components'
+import { PieChart } from 'termui/components';
 
 <PieChart
   data={[
     { label: 'JS', value: 60, color: 'yellow' },
     { label: 'TS', value: 40, color: 'cyan' },
   ]}
-/>
+/>;
 ```
 
 ---
@@ -112,14 +116,11 @@ Grid-based heat map with color intensity scaling.
 | `colLabels` | `string[]` | `—` | — |
 
 **Usage:**
-```tsx
-import { HeatMap } from 'termui/components'
 
-<HeatMap
-  data={matrix}
-  rowLabels={['Mon', 'Tue', 'Wed']}
-  colLabels={['08:00', '12:00', '16:00']}
-/>
+```tsx
+import { HeatMap } from 'termui/components';
+
+<HeatMap data={matrix} rowLabels={['Mon', 'Tue', 'Wed']} colLabels={['08:00', '12:00', '16:00']} />;
 ```
 
 ---
@@ -138,8 +139,9 @@ Speedometer-style gauge meter.
 | `width` | `number` | `30` | — |
 
 **Usage:**
-```tsx
-import { Gauge } from 'termui/components'
 
-<Gauge value={72} max={100} label="CPU" color="yellow" />
+```tsx
+import { Gauge } from 'termui/components';
+
+<Gauge value={72} max={100} label="CPU" color="yellow" />;
 ```

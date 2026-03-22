@@ -1,5 +1,5 @@
 ---
-title: "Overlays Components"
+title: 'Overlays Components'
 ---
 
 # Overlays Components
@@ -19,12 +19,13 @@ Focus-trapped overlay with Esc to close.
 | `closeHint` | `string | false` | `'Esc to close'` | — |
 
 **Usage:**
+
 ```tsx
-import { Modal } from 'termui/components'
+import { Modal } from 'termui/components';
 
 <Modal open={showModal} onClose={() => setShow(false)} title="Confirm">
   <Text>Are you sure?</Text>
-</Modal>
+</Modal>;
 ```
 
 ---
@@ -46,8 +47,9 @@ Confirm dialog with OK/Cancel buttons.
 | `isOpen` | `boolean` | `false` | — |
 
 **Usage:**
+
 ```tsx
-import { Dialog } from 'termui/components'
+import { Dialog } from 'termui/components';
 
 <Dialog
   title="Delete file?"
@@ -57,7 +59,7 @@ import { Dialog } from 'termui/components'
   onCancel={() => setOpen(false)}
 >
   This cannot be undone.
-</Dialog>
+</Dialog>;
 ```
 
 ---
@@ -77,17 +79,13 @@ Slide-in panel from any edge (top/right/bottom/left).
 | `size` | `number` | `—` | — |
 
 **Usage:**
-```tsx
-import { Drawer } from 'termui/components'
 
-<Drawer
-  open={drawerOpen}
-  onClose={() => setDrawer(false)}
-  position="right"
-  title="Settings"
->
+```tsx
+import { Drawer } from 'termui/components';
+
+<Drawer open={drawerOpen} onClose={() => setDrawer(false)} position="right" title="Settings">
   <SettingsForm />
-</Drawer>
+</Drawer>;
 ```
 
 ---
@@ -106,12 +104,13 @@ Contextual tooltip rendered above/below/left/right of its trigger.
 | `borderStyle` | `'single' | 'double' | 'round' | 'bold'` | `—` | — |
 
 **Usage:**
+
 ```tsx
-import { Tooltip } from 'termui/components'
+import { Tooltip } from 'termui/components';
 
 <Tooltip content="Click to copy" position="top">
   <Text>[ Copy ]</Text>
-</Tooltip>
+</Tooltip>;
 ```
 
 ---
@@ -130,14 +129,11 @@ Positioned overlay panel anchored to a trigger element.
 | `position` | `'top' | 'bottom' | 'left' | 'right'` | `'bottom'` | — |
 
 **Usage:**
-```tsx
-import { Popover } from 'termui/components'
 
-<Popover
-  isOpen={open}
-  onClose={() => setOpen(false)}
-  content={<MenuItems />}
->
+```tsx
+import { Popover } from 'termui/components';
+
+<Popover isOpen={open} onClose={() => setOpen(false)} content={<MenuItems />}>
   <Text>[ Open ]</Text>
-</Popover>
+</Popover>;
 ```

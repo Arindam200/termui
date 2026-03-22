@@ -1,5 +1,5 @@
 ---
-title: "Input Components"
+title: 'Input Components'
 ---
 
 # Input Components
@@ -20,8 +20,9 @@ Single-line input with placeholder, validation, and optional masking.
 | `validate` | `(value: string) => string | null` | `—` | — |
 
 **Usage:**
+
 ```tsx
-import { TextInput } from 'termui/components'
+import { TextInput } from 'termui/components';
 
 const [value, setValue] = useState('');
 <TextInput
@@ -29,7 +30,7 @@ const [value, setValue] = useState('');
   onChange={setValue}
   onSubmit={(v) => console.log(v)}
   placeholder="Enter name..."
-/>
+/>;
 ```
 
 ---
@@ -48,15 +49,11 @@ Multi-line text editor with scrolling and line wrapping.
 | `focus` | `boolean` | `—` | — |
 
 **Usage:**
-```tsx
-import { TextArea } from 'termui/components'
 
-<TextArea
-  value={text}
-  onChange={setText}
-  placeholder="Write here..."
-  rows={6}
-/>
+```tsx
+import { TextArea } from 'termui/components';
+
+<TextArea value={text} onChange={setText} placeholder="Write here..." rows={6} />;
 ```
 
 ---
@@ -76,14 +73,11 @@ Masked password input with reveal toggle.
 | `showToggle` | `boolean` | `true` | — |
 
 **Usage:**
-```tsx
-import { PasswordInput } from 'termui/components'
 
-<PasswordInput
-  value={pass}
-  onChange={setPass}
-  placeholder="Enter password..."
-/>
+```tsx
+import { PasswordInput } from 'termui/components';
+
+<PasswordInput value={pass} onChange={setPass} placeholder="Enter password..." />;
 ```
 
 ---
@@ -102,14 +96,11 @@ Numeric input with ↑↓ increment/decrement and min/max clamping.
 | `step` | `number` | `1` | — |
 
 **Usage:**
-```tsx
-import { NumberInput } from 'termui/components'
 
-<NumberInput
-  value={count}
-  onChange={setCount}
-  min={0} max={100}
-/>
+```tsx
+import { NumberInput } from 'termui/components';
+
+<NumberInput value={count} onChange={setCount} min={0} max={100} />;
 ```
 
 ---
@@ -129,15 +120,16 @@ Fuzzy-search input with autocomplete dropdown.
 | `maxResults` | `number` | `5` | — |
 
 **Usage:**
+
 ```tsx
-import { SearchInput } from 'termui/components'
+import { SearchInput } from 'termui/components';
 
 <SearchInput
   value={query}
   onChange={setQuery}
   onSelect={handleSelect}
   options={['Apple', 'Banana', 'Cherry']}
-/>
+/>;
 ```
 
 ---
@@ -155,14 +147,11 @@ Format-constrained input for phone, date, credit card patterns.
 | `placeholder` | `string` | `—` | — |
 
 **Usage:**
-```tsx
-import { MaskedInput } from 'termui/components'
 
-<MaskedInput
-  value={phone}
-  onChange={setPhone}
-  mask="(999) 999-9999"
-/>
+```tsx
+import { MaskedInput } from 'termui/components';
+
+<MaskedInput value={phone} onChange={setPhone} mask="(999) 999-9999" />;
 ```
 
 ---
@@ -180,14 +169,11 @@ Email input with domain autocomplete and inline validation.
 | `suggestions` | `string[]` | `['gmail.com', 'yahoo.com', ...]` | — |
 
 **Usage:**
-```tsx
-import { EmailInput } from 'termui/components'
 
-<EmailInput
-  value={email}
-  onChange={setEmail}
-  onSubmit={handleSubmit}
-/>
+```tsx
+import { EmailInput } from 'termui/components';
+
+<EmailInput value={email} onChange={setEmail} onSubmit={handleSubmit} />;
 ```
 
 ---
@@ -206,12 +192,9 @@ Filesystem path input with Tab autocomplete.
 | `showHidden` | `boolean` | `false` | — |
 
 **Usage:**
-```tsx
-import { PathInput } from 'termui/components'
 
-<PathInput
-  value={path}
-  onChange={setPath}
-  onSubmit={handleSubmit}
-/>
+```tsx
+import { PathInput } from 'termui/components';
+
+<PathInput value={path} onChange={setPath} onSubmit={handleSubmit} />;
 ```

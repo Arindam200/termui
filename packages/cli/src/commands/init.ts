@@ -2,22 +2,32 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { writeConfig, type TermUIConfig } from '../utils/config.js';
 import {
-  printLogo, badge, intro, step, active, done, warn, outro,
-  hi, dim, bold, select,
+  printLogo,
+  badge,
+  intro,
+  step,
+  active,
+  done,
+  warn,
+  outro,
+  hi,
+  dim,
+  bold,
+  select,
 } from '../utils/ui.js';
 
 const THEMES = [
-  { value: 'default',     label: 'Default',      hint: 'clean neutral palette' },
-  { value: 'dracula',     label: 'Dracula',       hint: 'purple & pink dark theme' },
-  { value: 'nord',        label: 'Nord',          hint: 'cool arctic blues' },
-  { value: 'catppuccin',  label: 'Catppuccin',    hint: 'pastel mocha tones' },
-  { value: 'monokai',     label: 'Monokai',       hint: 'classic warm darks' },
-  { value: 'tokyo-night', label: 'Tokyo Night',   hint: 'vibrant neon city' },
-  { value: 'one-dark',    label: 'One Dark',      hint: 'Atom-inspired dark' },
-  { value: 'solarized',   label: 'Solarized',     hint: 'ethan schoonover classic' },
+  { value: 'default', label: 'Default', hint: 'clean neutral palette' },
+  { value: 'dracula', label: 'Dracula', hint: 'purple & pink dark theme' },
+  { value: 'nord', label: 'Nord', hint: 'cool arctic blues' },
+  { value: 'catppuccin', label: 'Catppuccin', hint: 'pastel mocha tones' },
+  { value: 'monokai', label: 'Monokai', hint: 'classic warm darks' },
+  { value: 'tokyo-night', label: 'Tokyo Night', hint: 'vibrant neon city' },
+  { value: 'one-dark', label: 'One Dark', hint: 'Atom-inspired dark' },
+  { value: 'solarized', label: 'Solarized', hint: 'ethan schoonover classic' },
 ] as const;
 
-type Theme = typeof THEMES[number]['value'];
+type Theme = (typeof THEMES)[number]['value'];
 
 export async function init(_args: string[]): Promise<void> {
   const cwd = process.cwd();
@@ -43,9 +53,9 @@ export async function init(_args: string[]): Promise<void> {
 
   // ─── Step 4: Write config ───────────────────────────────────────────────────
   const config: TermUIConfig = {
-    version:       '1.0.0',
+    version: '1.0.0',
     componentsDir: './components/ui',
-    registry:      'https://arindam200.github.io/termui',
+    registry: 'https://arindam200.github.io/termui',
     theme,
   };
 

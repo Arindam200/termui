@@ -1,5 +1,5 @@
 ---
-title: "Data Display Components"
+title: 'Data Display Components'
 ---
 
 # Data Display Components
@@ -19,14 +19,15 @@ Sortable, filterable, paginated data table with column config.
 | `onRowSelect` | `(row: Record<string, unknown>) => void` | `—` | — |
 
 **Usage:**
+
 ```tsx
-import { Table } from 'termui/components'
+import { Table } from 'termui/components';
 
 <Table
   columns={[{ key: 'name', header: 'Name' }]}
   data={[{ name: 'Alice' }, { name: 'Bob' }]}
   pageSize={5}
-/>
+/>;
 ```
 
 ---
@@ -44,10 +45,11 @@ Editable data grid with inline cell editing.
 | `editable` | `boolean` | `false` | — |
 
 **Usage:**
-```tsx
-import { DataGrid } from 'termui/components'
 
-<DataGrid columns={cols} data={rows} editable />
+```tsx
+import { DataGrid } from 'termui/components';
+
+<DataGrid columns={cols} data={rows} editable />;
 ```
 
 ---
@@ -65,13 +67,11 @@ Navigable list with optional filtering and item selection.
 | `renderItem` | `(item: ListItem, active: boolean) => ReactNode` | `—` | — |
 
 **Usage:**
-```tsx
-import { List } from 'termui/components'
 
-<List
-  items={[{ id: '1', label: 'Item 1' }]}
-  onSelect={handleSelect}
-/>
+```tsx
+import { List } from 'termui/components';
+
+<List items={[{ id: '1', label: 'Item 1' }]} onSelect={handleSelect} />;
 ```
 
 ---
@@ -89,14 +89,11 @@ Virtualized list for 10k+ items with a fixed viewport.
 | `onSelect` | `(item: T) => void` | `—` | — |
 
 **Usage:**
-```tsx
-import { VirtualList } from 'termui/components'
 
-<VirtualList
-  items={largeArray}
-  height={20}
-  renderItem={(item) => <Text>{item.name}</Text>}
-/>
+```tsx
+import { VirtualList } from 'termui/components';
+
+<VirtualList items={largeArray} height={20} renderItem={(item) => <Text>{item.name}</Text>} />;
 ```
 
 ---
@@ -114,10 +111,11 @@ Expandable/collapsible tree view.
 | `renderLabel` | `(node: TreeNode) => ReactNode` | `—` | — |
 
 **Usage:**
-```tsx
-import { Tree } from 'termui/components'
 
-<Tree nodes={treeData} onSelect={handleSelect} />
+```tsx
+import { Tree } from 'termui/components';
+
+<Tree nodes={treeData} onSelect={handleSelect} />;
 ```
 
 ---
@@ -135,13 +133,11 @@ Filesystem browser tree using glob patterns.
 | `filter` | `string` | `—` | — |
 
 **Usage:**
-```tsx
-import { DirectoryTree } from 'termui/components'
 
-<DirectoryTree
-  root={process.cwd()}
-  onSelect={(path) => console.log(path)}
-/>
+```tsx
+import { DirectoryTree } from 'termui/components';
+
+<DirectoryTree root={process.cwd()} onSelect={(path) => console.log(path)} />;
 ```
 
 ---
@@ -159,13 +155,11 @@ Aligned key-value pair display.
 | `keyColor` | `string` | `—` | — |
 
 **Usage:**
-```tsx
-import { KeyValue } from 'termui/components'
 
-<KeyValue
-  data={{ version: '1.0.0', author: 'Alice' }}
-  keyColor="cyan"
-/>
+```tsx
+import { KeyValue } from 'termui/components';
+
+<KeyValue data={{ version: '1.0.0', author: 'Alice' }} keyColor="cyan" />;
 ```
 
 ---
@@ -182,12 +176,11 @@ Term-description pair list (like a glossary).
 | `termColor` | `string` | `—` | — |
 
 **Usage:**
-```tsx
-import { Definition } from 'termui/components'
 
-<Definition
-  items={[{ term: '--verbose', description: 'Enable verbose output' }]}
-/>
+```tsx
+import { Definition } from 'termui/components';
+
+<Definition items={[{ term: '--verbose', description: 'Enable verbose output' }]} />;
 ```
 
 ---
@@ -207,12 +200,13 @@ Bordered card with header, body, and footer slots.
 | `padding` | `number` | `1` | — |
 
 **Usage:**
+
 ```tsx
-import { Card } from 'termui/components'
+import { Card } from 'termui/components';
 
 <Card title="Summary" borderStyle="round">
   <Text>Card content here</Text>
-</Card>
+</Card>;
 ```
 
 ---
@@ -232,12 +226,13 @@ Titled panel with a border and optional padding.
 | `paddingY` | `number` | `0` | — |
 
 **Usage:**
+
 ```tsx
-import { Panel } from 'termui/components'
+import { Panel } from 'termui/components';
 
 <Panel title="Output" borderStyle="round" borderColor="cyan">
   <Text>Content</Text>
-</Panel>
+</Panel>;
 ```
 
 ---
@@ -254,8 +249,9 @@ Displays git status output in a structured, colored layout.
 | `showUntracked` | `boolean` | `true` | — |
 
 **Usage:**
-```tsx
-import { GitStatus } from 'termui/components'
 
-<GitStatus cwd={process.cwd()} />
+```tsx
+import { GitStatus } from 'termui/components';
+
+<GitStatus cwd={process.cwd()} />;
 ```

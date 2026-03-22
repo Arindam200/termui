@@ -58,15 +58,25 @@ class CaptureStream extends Writable {
 }
 
 /** Build a minimal TTY-like stream Ink accepts */
-function makeMockStdout(cols = 80, rows = 24): CaptureStream & { columns: number; rows: number; isTTY: boolean } {
-  const stream = new CaptureStream() as CaptureStream & { columns: number; rows: number; isTTY: boolean };
+function makeMockStdout(
+  cols = 80,
+  rows = 24
+): CaptureStream & { columns: number; rows: number; isTTY: boolean } {
+  const stream = new CaptureStream() as CaptureStream & {
+    columns: number;
+    rows: number;
+    isTTY: boolean;
+  };
   stream.columns = cols;
   stream.rows = rows;
   stream.isTTY = true;
   return stream;
 }
 
-function buildResult(stream: CaptureStream & { columns: number; rows: number; isTTY: boolean }, instance: Instance): RenderResult {
+function buildResult(
+  stream: CaptureStream & { columns: number; rows: number; isTTY: boolean },
+  instance: Instance
+): RenderResult {
   const rawOutput = stream.value;
   const output = stripAnsi(rawOutput).trim();
 
@@ -91,7 +101,10 @@ export async function renderToString(
   const { cols = 80, rows = 24, waitMs = 50 } = options;
   const stream = makeMockStdout(cols, rows);
 
-  const instance = inkRender(element, { stdout: stream as unknown as NodeJS.WriteStream, exitOnCtrlC: false });
+  const instance = inkRender(element, {
+    stdout: stream as unknown as NodeJS.WriteStream,
+    exitOnCtrlC: false,
+  });
 
   // Wait one tick for React to flush
   await new Promise<void>((r) => setTimeout(r, waitMs));
@@ -130,7 +143,11 @@ export function createTestRenderer(options: { cols?: number; rows?: number } = {
 
     cleanup() {
       for (const inst of instances) {
-        try { inst.unmount(); } catch { /* already unmounted */ }
+        try {
+          inst.unmount();
+        } catch {
+          /* already unmounted */
+        }
       }
       instances.length = 0;
     },

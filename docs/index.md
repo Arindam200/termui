@@ -22,19 +22,19 @@ npx termui preview
 
 ## Component Catalog
 
-| Category | Components |
-|----------|------------|
-| [Layout](./layout.md) | Box, Stack, Grid, ScrollView, Divider, Spacer, Columns, Center, AspectRatio |
-| [Typography](./typography.md) | Text, Heading, Code, Link, Badge, Tag, Markdown, JSON, Gradient, BigText, Digits |
-| [Input](./input.md) | TextInput, TextArea, PasswordInput, NumberInput, SearchInput, MaskedInput, EmailInput, PathInput |
-| [Selection](./selection.md) | Select, MultiSelect, RadioGroup, Checkbox, CheckboxGroup, Toggle, TreeSelect, TagInput, ColorPicker |
-| [Data Display](./data.md) | Table, DataGrid, List, VirtualList, Tree, DirectoryTree, KeyValue, Definition, Card, Panel, GitStatus |
-| [Feedback](./feedback.md) | Spinner, ProgressBar, ProgressCircle, StatusMessage, Toast, Alert, Banner, Skeleton |
-| [Navigation](./navigation.md) | Tabs, TabbedContent, Breadcrumb, Pagination, CommandPalette, Menu, Sidebar |
-| [Overlays](./overlays.md) | Modal, Dialog, Drawer, Tooltip, Popover |
-| [Forms](./forms.md) | Form, FormField, Wizard, Confirm, DatePicker, TimePicker, FilePicker |
-| [Charts](./charts.md) | Sparkline, BarChart, LineChart, PieChart, HeatMap, Gauge |
-| [Utility](./utility.md) | Timer, Stopwatch, Clock, Clipboard, KeyboardShortcuts, Help, ErrorBoundary, Log, Image, QRCode, EmbeddedTerminal, Profiler |
+| Category                      | Components                                                                                                                 |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [Layout](./layout.md)         | Box, Stack, Grid, ScrollView, Divider, Spacer, Columns, Center, AspectRatio                                                |
+| [Typography](./typography.md) | Text, Heading, Code, Link, Badge, Tag, Markdown, JSON, Gradient, BigText, Digits                                           |
+| [Input](./input.md)           | TextInput, TextArea, PasswordInput, NumberInput, SearchInput, MaskedInput, EmailInput, PathInput                           |
+| [Selection](./selection.md)   | Select, MultiSelect, RadioGroup, Checkbox, CheckboxGroup, Toggle, TreeSelect, TagInput, ColorPicker                        |
+| [Data Display](./data.md)     | Table, DataGrid, List, VirtualList, Tree, DirectoryTree, KeyValue, Definition, Card, Panel, GitStatus                      |
+| [Feedback](./feedback.md)     | Spinner, ProgressBar, ProgressCircle, StatusMessage, Toast, Alert, Banner, Skeleton                                        |
+| [Navigation](./navigation.md) | Tabs, TabbedContent, Breadcrumb, Pagination, CommandPalette, Menu, Sidebar                                                 |
+| [Overlays](./overlays.md)     | Modal, Dialog, Drawer, Tooltip, Popover                                                                                    |
+| [Forms](./forms.md)           | Form, FormField, Wizard, Confirm, DatePicker, TimePicker, FilePicker                                                       |
+| [Charts](./charts.md)         | Sparkline, BarChart, LineChart, PieChart, HeatMap, Gauge                                                                   |
+| [Utility](./utility.md)       | Timer, Stopwatch, Clock, Clipboard, KeyboardShortcuts, Help, ErrorBoundary, Log, Image, QRCode, EmbeddedTerminal, Profiler |
 
 ## API Reference
 

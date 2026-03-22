@@ -1,30 +1,35 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { getConfig } from '../utils/config.js';
+import { fetchManifest, fetchComponentFile, type ComponentMeta } from '../registry/client.js';
 import {
-  fetchManifest,
-  fetchComponentFile,
-  type ComponentMeta,
-} from '../registry/client.js';
-import {
-  printLogo, intro, step, active, done, warn, fail, outro,
-  hi, dim, bold,
+  printLogo,
+  intro,
+  step,
+  active,
+  done,
+  warn,
+  fail,
+  outro,
+  hi,
+  dim,
+  bold,
 } from '../utils/ui.js';
 
 // Category → source subdirectory
 const CATEGORY_DIR: Record<string, string> = {
-  layout:     'layout',
+  layout: 'layout',
   typography: 'typography',
-  input:      'input',
-  selection:  'selection',
-  data:       'data',
-  feedback:   'feedback',
+  input: 'input',
+  selection: 'selection',
+  data: 'data',
+  feedback: 'feedback',
   navigation: 'navigation',
-  overlays:   'overlays',
-  forms:      'forms',
-  utility:    'utility',
-  charts:     'charts',
-  templates:  'templates',
+  overlays: 'overlays',
+  forms: 'forms',
+  utility: 'utility',
+  charts: 'charts',
+  templates: 'templates',
 };
 
 export async function add(args: string[]): Promise<void> {
@@ -46,9 +51,7 @@ export async function add(args: string[]): Promise<void> {
   const registry = await fetchManifest(registryUrl);
 
   const installAll = args.includes('--all');
-  const targets = installAll
-    ? Object.keys(registry.components)
-    : args.filter((a) => a !== '--all');
+  const targets = installAll ? Object.keys(registry.components) : args.filter((a) => a !== '--all');
 
   if (installAll) {
     step(`Found ${hi(String(targets.length))} components`);
@@ -67,17 +70,26 @@ export async function add(args: string[]): Promise<void> {
       fail(`Unknown component: ${bold(componentName)}`);
       continue;
     }
-    const result = await installComponent(meta, config.componentsDir, cwd, registry, registryUrl, installed);
-    addedCount   += result.added;
+    const result = await installComponent(
+      meta,
+      config.componentsDir,
+      cwd,
+      registry,
+      registryUrl,
+      installed
+    );
+    addedCount += result.added;
     skippedCount += result.skipped;
   }
 
   done(
     `Added ${hi(String(addedCount))} file${addedCount !== 1 ? 's' : ''}` +
-    (skippedCount > 0 ? `  ${dim(`(${skippedCount} already existed)`)}` : '')
+      (skippedCount > 0 ? `  ${dim(`(${skippedCount} already existed)`)}` : '')
   );
 
-  outro(`Import from ${hi(`'./components/ui'`)}  ·  ${hi('npx termui list')} to see all components`);
+  outro(
+    `Import from ${hi(`'./components/ui'`)}  ·  ${hi('npx termui list')} to see all components`
+  );
 }
 
 async function installComponent(
@@ -99,8 +111,15 @@ async function installComponent(
     for (const peer of meta.peerComponents) {
       const peerMeta = registry.components[peer];
       if (peerMeta) {
-        const r = await installComponent(peerMeta, componentsDir, cwd, registry, registryUrl, installed);
-        added   += r.added;
+        const r = await installComponent(
+          peerMeta,
+          componentsDir,
+          cwd,
+          registry,
+          registryUrl,
+          installed
+        );
+        added += r.added;
         skipped += r.skipped;
       }
     }

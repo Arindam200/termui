@@ -39,7 +39,9 @@ export async function list(_args: string[]): Promise<void> {
     }
   }
 
-  outro(`${hi(String(components.length))} components total  ·  ${hi('npx termui add <name>')} to install`);
+  outro(
+    `${hi(String(components.length))} components total  ·  ${hi('npx termui add <name>')} to install`
+  );
 }
 
 function capitalize(str: string): string {

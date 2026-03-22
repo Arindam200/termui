@@ -80,6 +80,7 @@ npx termui preview
 ```
 
 **Keybindings:**
+
 - `↑↓` / `jk` — navigate list
 - `→` / `Enter` / `l` — select / drill in
 - `←` / `Esc` / `h` — back

@@ -25,7 +25,10 @@ function matchLine(line: string, query: string | RegExp): boolean {
 
 export const screen: ScreenQueries = {
   getLines(output: string): string[] {
-    return output.split('\n').map((l) => l.trim()).filter(Boolean);
+    return output
+      .split('\n')
+      .map((l) => l.trim())
+      .filter(Boolean);
   },
 
   queryByText(text: string | RegExp, output: string): string | null {

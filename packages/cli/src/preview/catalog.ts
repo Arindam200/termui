@@ -1918,7 +1918,8 @@ expect(output).toContain('⠋');`,
       },
       {
         name: 'screen',
-        description: 'Testing util — query helpers (getByText, hasText, getLines) for plain-text output.',
+        description:
+          'Testing util — query helpers (getByText, hasText, getLines) for plain-text output.',
         props: [],
         usage: `import { renderToString, screen } from '@termui/testing'
 
@@ -1928,7 +1929,8 @@ expect(screen.hasText('Error', out)).toBe(false);`,
       },
       {
         name: 'fireEvent',
-        description: 'Testing util — simulate keyboard input (key, type, press) in component tests.',
+        description:
+          'Testing util — simulate keyboard input (key, type, press) in component tests.',
         props: [],
         usage: `import { fireEvent } from '@termui/testing'
 

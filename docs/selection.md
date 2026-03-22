@@ -1,5 +1,5 @@
 ---
-title: "Selection Components"
+title: 'Selection Components'
 ---
 
 # Selection Components
@@ -19,8 +19,9 @@ Single-select dropdown with keyboard search and grouping.
 | `searchable` | `boolean` | `false` | — |
 
 **Usage:**
+
 ```tsx
-import { Select } from 'termui/components'
+import { Select } from 'termui/components';
 
 <Select
   options={[
@@ -28,7 +29,7 @@ import { Select } from 'termui/components'
     { value: 'b', label: 'Option B' },
   ]}
   onChange={handleChange}
-/>
+/>;
 ```
 
 ---
@@ -49,14 +50,11 @@ Multi-select list with Space to toggle, Enter to submit.
 | `height` | `number` | `—` | — |
 
 **Usage:**
-```tsx
-import { MultiSelect } from 'termui/components'
 
-<MultiSelect
-  options={options}
-  onChange={setSelected}
-  onSubmit={handleSubmit}
-/>
+```tsx
+import { MultiSelect } from 'termui/components';
+
+<MultiSelect options={options} onChange={setSelected} onSubmit={handleSubmit} />;
 ```
 
 ---
@@ -74,8 +72,9 @@ Mutually-exclusive radio button group.
 | `cursor` | `string` | `'›'` | — |
 
 **Usage:**
+
 ```tsx
-import { RadioGroup } from 'termui/components'
+import { RadioGroup } from 'termui/components';
 
 <RadioGroup
   options={[
@@ -83,7 +82,7 @@ import { RadioGroup } from 'termui/components'
     { value: 'dark', label: 'Dark mode' },
   ]}
   onChange={setTheme}
-/>
+/>;
 ```
 
 ---
@@ -102,14 +101,11 @@ Single checkbox with indeterminate state support.
 | `disabled` | `boolean` | `—` | — |
 
 **Usage:**
-```tsx
-import { Checkbox } from 'termui/components'
 
-<Checkbox
-  checked={accepted}
-  onChange={setAccepted}
-  label="I accept the terms"
-/>
+```tsx
+import { Checkbox } from 'termui/components';
+
+<Checkbox checked={accepted} onChange={setAccepted} label="I accept the terms" />;
 ```
 
 ---
@@ -129,15 +125,11 @@ Group of checkboxes with optional min/max selection constraints.
 | `max` | `number` | `—` | — |
 
 **Usage:**
-```tsx
-import { CheckboxGroup } from 'termui/components'
 
-<CheckboxGroup
-  label="Features"
-  options={featureOptions}
-  onChange={setFeatures}
-  min={1} max={3}
-/>
+```tsx
+import { CheckboxGroup } from 'termui/components';
+
+<CheckboxGroup label="Features" options={featureOptions} onChange={setFeatures} min={1} max={3} />;
 ```
 
 ---
@@ -156,14 +148,11 @@ On/off toggle switch.
 | `offLabel` | `string` | `'OFF'` | — |
 
 **Usage:**
-```tsx
-import { Toggle } from 'termui/components'
 
-<Toggle
-  value={enabled}
-  onChange={setEnabled}
-  label="Notifications"
-/>
+```tsx
+import { Toggle } from 'termui/components';
+
+<Toggle value={enabled} onChange={setEnabled} label="Notifications" />;
 ```
 
 ---
@@ -181,14 +170,11 @@ Hierarchical tree selection with expand/collapse.
 | `expandedByDefault` | `boolean` | `false` | — |
 
 **Usage:**
-```tsx
-import { TreeSelect } from 'termui/components'
 
-<TreeSelect
-  nodes={treeData}
-  onChange={setValue}
-  expandedByDefault
-/>
+```tsx
+import { TreeSelect } from 'termui/components';
+
+<TreeSelect nodes={treeData} onChange={setValue} expandedByDefault />;
 ```
 
 ---
@@ -206,14 +192,11 @@ Multi-tag input — type and press Enter to add, Backspace to remove.
 | `maxTags` | `number` | `—` | — |
 
 **Usage:**
-```tsx
-import { TagInput } from 'termui/components'
 
-<TagInput
-  value={tags}
-  onChange={setTags}
-  maxTags={5}
-/>
+```tsx
+import { TagInput } from 'termui/components';
+
+<TagInput value={tags} onChange={setTags} maxTags={5} />;
 ```
 
 ---
@@ -231,11 +214,9 @@ Color palette picker with hex/RGB input.
 | `format` | `'hex' | 'rgb'` | `'hex'` | — |
 
 **Usage:**
-```tsx
-import { ColorPicker } from 'termui/components'
 
-<ColorPicker
-  value={color}
-  onChange={setColor}
-/>
+```tsx
+import { ColorPicker } from 'termui/components';
+
+<ColorPicker value={color} onChange={setColor} />;
 ```

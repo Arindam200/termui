@@ -1,5 +1,5 @@
 ---
-title: "Typography Components"
+title: 'Typography Components'
 ---
 
 # Typography Components
@@ -21,10 +21,13 @@ Rich inline text with bold, italic, color, and dimming support.
 | `wrap` | `'wrap' | 'truncate' | 'truncate-end'` | `—` | — |
 
 **Usage:**
-```tsx
-import { Text } from 'termui/components'
 
-<Text bold color="cyan">Hello, world!</Text>
+```tsx
+import { Text } from 'termui/components';
+
+<Text bold color="cyan">
+  Hello, world!
+</Text>;
 ```
 
 ---
@@ -43,6 +46,7 @@ Section heading with h1–h4 levels and optional figlet ASCII art.
 | `color` | `string` | `—` | — |
 
 **Usage:**
+
 ```tsx
 import { Heading } from 'termui/components'
 
@@ -65,12 +69,11 @@ Syntax-highlighted code block with 50+ language support.
 | `theme` | `string` | `'auto'` | — |
 
 **Usage:**
-```tsx
-import { Code } from 'termui/components'
 
-<Code language="typescript">
-  {'const x: number = 42;'}
-</Code>
+```tsx
+import { Code } from 'termui/components';
+
+<Code language="typescript">{'const x: number = 42;'}</Code>;
 ```
 
 ---
@@ -87,12 +90,13 @@ Clickable hyperlink using OSC 8 terminal hyperlink protocol.
 | `color` | `string` | `—` | — |
 
 **Usage:**
+
 ```tsx
-import { Link } from 'termui/components'
+import { Link } from 'termui/components';
 
 <Link href="https://termui.dev" color="cyan">
   termui.dev
-</Link>
+</Link>;
 ```
 
 ---
@@ -109,6 +113,7 @@ Semantic status badge with color presets.
 | `color` | `string` | `—` | — |
 
 **Usage:**
+
 ```tsx
 import { Badge } from 'termui/components'
 
@@ -130,12 +135,11 @@ Removable chip/tag with optional close callback.
 | `color` | `string` | `—` | — |
 
 **Usage:**
-```tsx
-import { Tag } from 'termui/components'
 
-<Tag onRemove={() => remove('typescript')}>
-  typescript
-</Tag>
+```tsx
+import { Tag } from 'termui/components';
+
+<Tag onRemove={() => remove('typescript')}>typescript</Tag>;
 ```
 
 ---
@@ -151,10 +155,11 @@ Full Markdown renderer — headings, bold, italic, code, lists, links.
 | `theme` | `MarkdownTheme` | `—` | — |
 
 **Usage:**
-```tsx
-import { Markdown } from 'termui/components'
 
-<Markdown>{'# Hello\n\nThis is **bold** text.'}</Markdown>
+```tsx
+import { Markdown } from 'termui/components';
+
+<Markdown>{'# Hello\n\nThis is **bold** text.'}</Markdown>;
 ```
 
 ---
@@ -171,10 +176,11 @@ Pretty-print JSON with syntax coloring and collapsible nodes.
 | `collapsed` | `boolean` | `false` | — |
 
 **Usage:**
-```tsx
-import { JSONView } from 'termui/components'
 
-<JSONView value={{ name: 'Alice', age: 30 }} />
+```tsx
+import { JSONView } from 'termui/components';
+
+<JSONView value={{ name: 'Alice', age: 30 }} />;
 ```
 
 ---
@@ -190,12 +196,11 @@ Renders text with a smooth color gradient.
 | `colors` | `string[]` | `—` | ✓ |
 
 **Usage:**
-```tsx
-import { Gradient } from 'termui/components'
 
-<Gradient colors={['#ff6b6b', '#4ecdc4']}>
-  Gradient Text
-</Gradient>
+```tsx
+import { Gradient } from 'termui/components';
+
+<Gradient colors={['#ff6b6b', '#4ecdc4']}>Gradient Text</Gradient>;
 ```
 
 ---
@@ -212,10 +217,13 @@ Renders large ASCII-art text using figlet fonts.
 | `color` | `string` | `—` | — |
 
 **Usage:**
-```tsx
-import { BigText } from 'termui/components'
 
-<BigText font="Big" color="cyan">HELLO</BigText>
+```tsx
+import { BigText } from 'termui/components';
+
+<BigText font="Big" color="cyan">
+  HELLO
+</BigText>;
 ```
 
 ---
@@ -232,8 +240,9 @@ Renders numbers using box-drawing characters.
 | `size` | `number` | `1` | — |
 
 **Usage:**
-```tsx
-import { Digits } from 'termui/components'
 
-<Digits value={42} color="green" />
+```tsx
+import { Digits } from 'termui/components';
+
+<Digits value={42} color="green" />;
 ```

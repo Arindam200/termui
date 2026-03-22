@@ -14,36 +14,36 @@ import readline from 'readline';
 // ─── ANSI helpers ─────────────────────────────────────────────────────────────
 
 export const c = {
-  reset:   '\x1b[0m',
-  bold:    '\x1b[1m',
-  dim:     '\x1b[2m',
+  reset: '\x1b[0m',
+  bold: '\x1b[1m',
+  dim: '\x1b[2m',
   // Foreground
-  gray:    '\x1b[90m',
-  white:   '\x1b[97m',
-  cyan:    '\x1b[36m',
+  gray: '\x1b[90m',
+  white: '\x1b[97m',
+  cyan: '\x1b[36m',
   magenta: '\x1b[35m',
-  green:   '\x1b[32m',
-  yellow:  '\x1b[33m',
-  red:     '\x1b[31m',
-  blue:    '\x1b[34m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  red: '\x1b[31m',
+  blue: '\x1b[34m',
   // Background
-  bgCyan:  '\x1b[46m',
+  bgCyan: '\x1b[46m',
   bgGreen: '\x1b[42m',
-  bgRed:   '\x1b[41m',
+  bgRed: '\x1b[41m',
   // 256-color foreground (medium gray for logo)
   logoGray: '\x1b[38;5;245m',
 };
 
 export const sym = {
-  pipe:    `${c.gray}│${c.reset}`,
-  hollow:  `${c.gray}◇${c.reset}`,
-  filled:  `${c.cyan}◆${c.reset}`,
-  done:    `${c.green}◆${c.reset}`,
-  warn:    `${c.yellow}◇${c.reset}`,
-  error:   `${c.red}◆${c.reset}`,
-  corner:  `${c.gray}└${c.reset}`,
-  tick:    `${c.green}✓${c.reset}`,
-  skip:    `${c.yellow}~${c.reset}`,
+  pipe: `${c.gray}│${c.reset}`,
+  hollow: `${c.gray}◇${c.reset}`,
+  filled: `${c.cyan}◆${c.reset}`,
+  done: `${c.green}◆${c.reset}`,
+  warn: `${c.yellow}◇${c.reset}`,
+  error: `${c.red}◆${c.reset}`,
+  corner: `${c.gray}└${c.reset}`,
+  tick: `${c.green}✓${c.reset}`,
+  skip: `${c.yellow}~${c.reset}`,
 };
 
 // ─── ASCII art logo ────────────────────────────────────────────────────────────
@@ -112,10 +112,18 @@ export function outro(text: string): void {
 
 // ─── Inline highlights ────────────────────────────────────────────────────────
 
-export function hi(text: string): string   { return `${c.cyan}${text}${c.reset}`; }
-export function dim(text: string): string  { return `${c.dim}${text}${c.reset}`; }
-export function bold(text: string): string { return `${c.bold}${text}${c.reset}`; }
-export function gr(text: string): string   { return `${c.green}${text}${c.reset}`; }
+export function hi(text: string): string {
+  return `${c.cyan}${text}${c.reset}`;
+}
+export function dim(text: string): string {
+  return `${c.dim}${text}${c.reset}`;
+}
+export function bold(text: string): string {
+  return `${c.bold}${text}${c.reset}`;
+}
+export function gr(text: string): string {
+  return `${c.green}${text}${c.reset}`;
+}
 
 // ─── Interactive: single-choice select ────────────────────────────────────────
 
@@ -145,7 +153,9 @@ export async function select<T extends string>(
         const opt = options[i]!;
         const selected = i === idx;
         const indicator = selected ? `${c.cyan}●${c.reset}` : `${c.gray}○${c.reset}`;
-        const label = selected ? `${c.bold}${c.white}${opt.label}${c.reset}` : `${c.gray}${opt.label}${c.reset}`;
+        const label = selected
+          ? `${c.bold}${c.white}${opt.label}${c.reset}`
+          : `${c.gray}${opt.label}${c.reset}`;
         const hint = opt.hint ? ` ${dim(opt.hint)}` : '';
         console.log(`  ${indicator} ${label}${hint}`);
       }
@@ -218,8 +228,8 @@ export async function multiselect<T extends string>(
         const label = isActive
           ? `${c.bold}${c.white}${opt.label}${c.reset}`
           : isSelected
-          ? `${c.white}${opt.label}${c.reset}`
-          : `${c.gray}${opt.label}${c.reset}`;
+            ? `${c.white}${opt.label}${c.reset}`
+            : `${c.gray}${opt.label}${c.reset}`;
         const hint = opt.hint ? ` ${dim(opt.hint)}` : '';
         const cursor_indicator = isActive ? `${c.cyan}▶${c.reset}` : ' ';
         console.log(`  ${cursor_indicator} ${box} ${label}${hint}`);

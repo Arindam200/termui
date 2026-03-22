@@ -1,5 +1,5 @@
 ---
-title: "@termui/testing"
+title: '@termui/testing'
 ---
 
 # @termui/testing
@@ -27,6 +27,7 @@ renderToString(element: ReactElement, options?: {
 ```
 
 **Example:**
+
 ```tsx
 import { renderToString } from '@termui/testing';
 import { Spinner } from '@termui/components';
@@ -63,14 +64,14 @@ createTestRenderer(options?: { cols?: number; rows?: number }): {
 
 Query helpers for plain-text output.
 
-| Method | Signature | Description |
-|--------|-----------|-------------|
-| `getByText` | `(text, output) => string` | Returns first matching line; throws if not found |
-| `queryByText` | `(text, output) => string \| null` | Returns first matching line or null |
-| `getAllByText` | `(text, output) => string[]` | Returns all matching lines |
-| `hasText` | `(text, output) => boolean` | True if any line matches |
-| `countByText` | `(text, output) => number` | Count of matching lines |
-| `getLines` | `(output) => string[]` | Trimmed non-empty lines |
+| Method         | Signature                          | Description                                      |
+| -------------- | ---------------------------------- | ------------------------------------------------ |
+| `getByText`    | `(text, output) => string`         | Returns first matching line; throws if not found |
+| `queryByText`  | `(text, output) => string \| null` | Returns first matching line or null              |
+| `getAllByText` | `(text, output) => string[]`       | Returns all matching lines                       |
+| `hasText`      | `(text, output) => boolean`        | True if any line matches                         |
+| `countByText`  | `(text, output) => number`         | Count of matching lines                          |
+| `getLines`     | `(output) => string[]`             | Trimmed non-empty lines                          |
 
 Accepts `string` or `RegExp` for `text`.
 
@@ -102,6 +103,7 @@ waitFor(fn: () => void | Promise<void>, options?: {
 ```
 
 **Example:**
+
 ```tsx
 await waitFor(() => {
   expect(result.rerender().output).toContain('Loading complete');
@@ -124,7 +126,7 @@ describe('Counter', () => {
 
   it('renders initial count', async () => {
     const result = render(<Counter initialCount={0} />);
-    await new Promise(r => setTimeout(r, 50));
+    await new Promise((r) => setTimeout(r, 50));
     expect(screen.hasText('Count: 0', result.output)).toBe(true);
   });
 });
