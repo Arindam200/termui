@@ -34,6 +34,8 @@ import {
   Gradient,
   Tag,
   // Input
+  TextInput,
+  PasswordInput,
   NumberInput,
   SearchInput,
   // Selection
@@ -221,11 +223,19 @@ function TypographyTab() {
 }
 
 function InputsTab({
+  textValue,
+  setTextValue,
+  passwordValue,
+  setPasswordValue,
   count,
   setCount,
   searchQuery,
   setSearchQuery,
 }: {
+  textValue: string;
+  setTextValue: (s: string) => void;
+  passwordValue: string;
+  setPasswordValue: (s: string) => void;
   count: number;
   setCount: (n: number) => void;
   searchQuery: string;
@@ -235,31 +245,41 @@ function InputsTab({
   return (
     <Stack direction="vertical" gap={1}>
       <Text color={theme.colors.mutedForeground} dimColor>
-        Use ↑↓ to change number · type to search · Tab switches fields
+        Tab to move between inputs · ↑↓ for number · Esc quits
       </Text>
 
-      <Panel title="Number Input">
+      <Panel title="Text Input">
+        <TextInput
+          value={textValue}
+          onChange={setTextValue}
+          placeholder="Type something…"
+          label="Name"
+          autoFocus
+          width={36}
+        />
+      </Panel>
+
+      <Panel title="Password Input  (Ctrl+H to reveal)">
+        <PasswordInput
+          value={passwordValue}
+          onChange={setPasswordValue}
+          placeholder="Enter password…"
+          label="Password"
+          showToggle
+        />
+      </Panel>
+
+      <Panel title="Number Input  (↑↓ to step)">
         <NumberInput value={count} onChange={setCount} min={0} max={100} step={5} label="Threads" />
       </Panel>
 
-      <Panel title="Search Input">
+      <Panel title="Search Input  (type to filter)">
         <SearchInput
           value={searchQuery}
           onChange={setSearchQuery}
           options={SEARCH_OPTIONS}
           placeholder="Search packages…"
           maxResults={4}
-        />
-      </Panel>
-
-      <Panel title="KeyValue Display">
-        <KeyValue
-          items={[
-            { key: 'Node.js', value: 'v22.0.0' },
-            { key: 'pnpm', value: 'v9.1.0' },
-            { key: 'TypeScript', value: 'v5.4.0' },
-            { key: 'Threads', value: String(count) },
-          ]}
         />
       </Panel>
     </Stack>
@@ -382,6 +402,8 @@ function Demo() {
 
   const [activeTab, setActiveTab] = useState('feedback');
   const [progress, setProgress] = useState(0);
+  const [textValue, setTextValue] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
   const [count, setCount] = useState(4);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>(['ts', 'fmt']);
@@ -393,8 +415,8 @@ function Demo() {
     setProgress((p) => (p >= 100 ? 0 : p + 1));
   }, 80);
 
-  useInput((input) => {
-    if (input === 'q') exit();
+  useInput((_input, key) => {
+    if (key.escape) exit();
   });
 
   const tabs = [
@@ -413,6 +435,10 @@ function Demo() {
       label: 'Inputs',
       content: (
         <InputsTab
+          textValue={textValue}
+          setTextValue={setTextValue}
+          passwordValue={passwordValue}
+          setPasswordValue={setPasswordValue}
           count={count}
           setCount={setCount}
           searchQuery={searchQuery}
@@ -453,7 +479,7 @@ function Demo() {
         <Text bold color={theme.colors.primary}>
           ◆ TermUI v0.2.0 — Phase 2 Demo
         </Text>
-        <Text color={theme.colors.mutedForeground}> ←/→ tabs · q quit</Text>
+        <Text color={theme.colors.mutedForeground}> ←/→ tabs · Esc quit</Text>
       </Box>
 
       <Tabs activeTab={activeTab} onTabChange={setActiveTab} tabs={tabs} />
