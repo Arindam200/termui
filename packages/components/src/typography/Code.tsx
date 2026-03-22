@@ -1,0 +1,260 @@
+import React from 'react';
+import { Box, Text } from 'ink';
+import { useTheme } from '@termui/core';
+
+export interface CodeProps {
+  children: string;
+  language?: string;
+  inline?: boolean;
+}
+
+const KEYWORDS = new Set([
+  'const',
+  'let',
+  'var',
+  'function',
+  'return',
+  'if',
+  'else',
+  'import',
+  'export',
+  'from',
+  'class',
+  'interface',
+  'type',
+  'async',
+  'await',
+  'new',
+  'this',
+  'true',
+  'false',
+  'null',
+  'undefined',
+  'void',
+  'typeof',
+  'instanceof',
+  'in',
+  'of',
+  'for',
+  'while',
+  'do',
+  'switch',
+  'case',
+  'break',
+  'continue',
+  'try',
+  'catch',
+  'finally',
+  'throw',
+  'extends',
+  'implements',
+  'static',
+  'public',
+  'private',
+  'protected',
+  'readonly',
+  'enum',
+  'default',
+  'delete',
+  'yield',
+  'super',
+]);
+
+const OPERATORS = /^[=+\-*/<>!&|?%^~]+$/;
+
+type Token = {
+  text: string;
+  kind: 'keyword' | 'string' | 'number' | 'comment' | 'operator' | 'plain';
+};
+
+function tokenizeLine(line: string): Token[] {
+  // Handle full-line comments
+  const trimmed = line.trimStart();
+  if (trimmed.startsWith('//')) {
+    return [{ text: line, kind: 'comment' }];
+  }
+
+  const tokens: Token[] = [];
+  let i = 0;
+
+  while (i < line.length) {
+    // Inline comment
+    if (line[i] === '/' && line[i + 1] === '/') {
+      tokens.push({ text: line.slice(i), kind: 'comment' });
+      break;
+    }
+
+    // String literals
+    const quote = line[i];
+    if (quote === '"' || quote === "'" || quote === '`') {
+      let j = i + 1;
+      while (j < line.length && line[j] !== quote) {
+        if (line[j] === '\\') j++; // skip escaped char
+        j++;
+      }
+      j++; // include closing quote
+      tokens.push({ text: line.slice(i, j), kind: 'string' });
+      i = j;
+      continue;
+    }
+
+    // Numbers
+    if (/[0-9]/.test(line[i])) {
+      let j = i;
+      while (j < line.length && /[0-9._xXa-fA-FbBoO]/.test(line[j])) j++;
+      tokens.push({ text: line.slice(i, j), kind: 'number' });
+      i = j;
+      continue;
+    }
+
+    // Identifiers / keywords
+    if (/[a-zA-Z_$]/.test(line[i])) {
+      let j = i;
+      while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+      const word = line.slice(i, j);
+      tokens.push({ text: word, kind: KEYWORDS.has(word) ? 'keyword' : 'plain' });
+      i = j;
+      continue;
+    }
+
+    // Operators
+    if (/[=+\-*/<>!&|?%^~]/.test(line[i])) {
+      let j = i;
+      while (j < line.length && OPERATORS.test(line[j])) j++;
+      tokens.push({ text: line.slice(i, j), kind: 'operator' });
+      i = j;
+      continue;
+    }
+
+    // Everything else — whitespace, punctuation
+    tokens.push({ text: line[i], kind: 'plain' });
+    i++;
+  }
+
+  return tokens;
+}
+
+function CodeLine({
+  line,
+  keywordColor,
+  stringColor,
+  numberColor,
+  commentColor,
+  operatorColor,
+  plainColor,
+}: {
+  line: string;
+  keywordColor: string;
+  stringColor: string;
+  numberColor: string;
+  commentColor: string;
+  operatorColor: string;
+  plainColor: string;
+}) {
+  const tokens = tokenizeLine(line);
+
+  return (
+    <Box flexDirection="row">
+      {tokens.map((token, idx) => {
+        switch (token.kind) {
+          case 'keyword':
+            return (
+              <Text key={idx} color={keywordColor}>
+                {token.text}
+              </Text>
+            );
+          case 'string':
+            return (
+              <Text key={idx} color={stringColor}>
+                {token.text}
+              </Text>
+            );
+          case 'number':
+            return (
+              <Text key={idx} color={numberColor}>
+                {token.text}
+              </Text>
+            );
+          case 'comment':
+            return (
+              <Text key={idx} dimColor>
+                {token.text}
+              </Text>
+            );
+          case 'operator':
+            return (
+              <Text key={idx} color={operatorColor}>
+                {token.text}
+              </Text>
+            );
+          default:
+            return (
+              <Text key={idx} color={plainColor}>
+                {token.text}
+              </Text>
+            );
+        }
+      })}
+    </Box>
+  );
+}
+
+export function Code({ children, language, inline = false }: CodeProps) {
+  const theme = useTheme();
+
+  const keywordColor = theme.colors.accent;
+  const stringColor = theme.colors.success;
+  const numberColor = theme.colors.warning;
+  const commentColor = theme.colors.mutedForeground;
+  const operatorColor = theme.colors.info;
+  const plainColor = theme.colors.foreground;
+
+  const lines = children.split('\n');
+
+  if (inline) {
+    // Inline: single line, no border, no line numbers
+    const displayLine = lines[0] ?? '';
+    return (
+      <Box borderStyle="single" borderColor={theme.colors.border} paddingX={1}>
+        <CodeLine
+          line={displayLine}
+          keywordColor={keywordColor}
+          stringColor={stringColor}
+          numberColor={numberColor}
+          commentColor={commentColor}
+          operatorColor={operatorColor}
+          plainColor={plainColor}
+        />
+      </Box>
+    );
+  }
+
+  const lineNumberWidth = String(lines.length).length;
+
+  return (
+    <Box flexDirection="column" borderStyle="single" borderColor={theme.colors.border}>
+      {language && (
+        <Box justifyContent="flex-end" paddingX={1}>
+          <Text color={theme.colors.mutedForeground}>{language}</Text>
+        </Box>
+      )}
+      {lines.map((line, idx) => (
+        <Box key={idx} flexDirection="row" paddingX={1}>
+          <Text color={theme.colors.mutedForeground}>
+            {String(idx + 1).padStart(lineNumberWidth, ' ')}{' '}
+          </Text>
+          <Text color={theme.colors.mutedForeground}>{'│ '}</Text>
+          <CodeLine
+            line={line}
+            keywordColor={keywordColor}
+            stringColor={stringColor}
+            numberColor={numberColor}
+            commentColor={commentColor}
+            operatorColor={operatorColor}
+            plainColor={plainColor}
+          />
+        </Box>
+      ))}
+    </Box>
+  );
+}

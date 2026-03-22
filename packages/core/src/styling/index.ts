@@ -4,3 +4,8 @@ export * from './style.js';
 export { defaultTheme } from './themes/default.js';
 export { draculaTheme } from './themes/dracula.js';
 export { nordTheme } from './themes/nord.js';
+export { catppuccinTheme } from './themes/catppuccin.js';
+export { monokaiTheme } from './themes/monokai.js';
+export { solarizedTheme } from './themes/solarized.js';
+export { tokyoNightTheme } from './themes/tokyoNight.js';
+export { oneDarkTheme } from './themes/oneDark.js';

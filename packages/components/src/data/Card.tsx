@@ -1,0 +1,51 @@
+import React from 'react';
+import { Box, Text } from 'ink';
+import { useTheme } from '@termui/core';
+import type { ReactNode } from 'react';
+
+export interface CardProps {
+  title?: string;
+  subtitle?: string;
+  children: ReactNode;
+  footer?: ReactNode;
+  borderColor?: string;
+  width?: number;
+}
+
+export function Card({ title, subtitle, children, footer, borderColor, width }: CardProps) {
+  const theme = useTheme();
+  const resolvedBorderColor = borderColor ?? theme.colors.border;
+
+  return (
+    <Box
+      flexDirection="column"
+      borderStyle="round"
+      borderColor={resolvedBorderColor}
+      width={width}
+      paddingX={1}
+      paddingY={0}
+    >
+      {(title || subtitle) && (
+        <Box flexDirection="column" paddingBottom={1}>
+          {title && (
+            <Text bold color={theme.colors.foreground}>
+              {title}
+            </Text>
+          )}
+          {subtitle && (
+            <Text dimColor color={theme.colors.mutedForeground}>
+              {subtitle}
+            </Text>
+          )}
+        </Box>
+      )}
+      <Box flexDirection="column">{children}</Box>
+      {footer && (
+        <Box flexDirection="column" marginTop={1} paddingTop={1}>
+          <Text color={resolvedBorderColor}>{'─'.repeat(30)}</Text>
+          <Box marginTop={0}>{footer}</Box>
+        </Box>
+      )}
+    </Box>
+  );
+}
