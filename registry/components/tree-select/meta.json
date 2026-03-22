@@ -3,7 +3,9 @@
   "description": "Hierarchical tree selection",
   "version": "1.0.0",
   "category": "selection",
-  "files": ["TreeSelect.tsx"],
+  "files": [
+    "TreeSelect.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

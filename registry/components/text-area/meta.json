@@ -3,7 +3,9 @@
   "description": "Multi-line text editor with word wrap",
   "version": "1.0.0",
   "category": "input",
-  "files": ["TextArea.tsx"],
+  "files": [
+    "TextArea.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

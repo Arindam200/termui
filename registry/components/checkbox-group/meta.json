@@ -3,7 +3,11 @@
   "description": "Checkbox group with min/max selection",
   "version": "1.0.0",
   "category": "selection",
-  "files": ["CheckboxGroup.tsx"],
+  "files": [
+    "CheckboxGroup.tsx"
+  ],
   "deps": [],
-  "peerComponents": ["checkbox"]
+  "peerComponents": [
+    "checkbox"
+  ]
 }

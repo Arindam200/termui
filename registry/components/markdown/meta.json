@@ -3,7 +3,11 @@
   "description": "Full markdown renderer for terminal",
   "version": "1.0.0",
   "category": "typography",
-  "files": ["Markdown.tsx"],
-  "deps": ["marked"],
+  "files": [
+    "Markdown.tsx"
+  ],
+  "deps": [
+    "marked"
+  ],
   "peerComponents": []
 }

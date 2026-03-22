@@ -3,7 +3,9 @@
   "description": "Shimmer loading placeholder",
   "version": "1.0.0",
   "category": "feedback",
-  "files": ["Skeleton.tsx"],
+  "files": [
+    "Skeleton.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

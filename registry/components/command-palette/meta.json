@@ -3,7 +3,11 @@
   "description": "VS Code–style command palette with fuzzy search",
   "version": "1.0.0",
   "category": "navigation",
-  "files": ["CommandPalette.tsx"],
-  "deps": ["mnemonist"],
+  "files": [
+    "CommandPalette.tsx"
+  ],
+  "deps": [
+    "mnemonist"
+  ],
   "peerComponents": []
 }

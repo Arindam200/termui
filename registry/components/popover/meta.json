@@ -3,7 +3,9 @@
   "description": "Positioned popover with arbitrary content",
   "version": "1.0.0",
   "category": "overlays",
-  "files": ["Popover.tsx"],
+  "files": [
+    "Popover.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

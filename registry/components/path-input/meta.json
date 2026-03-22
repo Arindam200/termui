@@ -3,7 +3,11 @@
   "description": "Filesystem path input with tab autocomplete",
   "version": "1.0.0",
   "category": "input",
-  "files": ["PathInput.tsx"],
-  "deps": ["glob"],
+  "files": [
+    "PathInput.tsx"
+  ],
+  "deps": [
+    "glob"
+  ],
   "peerComponents": []
 }

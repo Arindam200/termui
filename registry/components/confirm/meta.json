@@ -3,7 +3,9 @@
   "description": "Yes/No confirmation prompt",
   "version": "1.0.0",
   "category": "forms",
-  "files": ["Confirm.tsx"],
+  "files": [
+    "Confirm.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

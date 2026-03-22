@@ -3,7 +3,9 @@
   "description": "Circular progress indicator using Unicode braille",
   "version": "1.0.0",
   "category": "feedback",
-  "files": ["ProgressCircle.tsx"],
+  "files": [
+    "ProgressCircle.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

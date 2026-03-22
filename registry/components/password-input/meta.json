@@ -3,7 +3,9 @@
   "description": "Password input with masked characters and reveal toggle",
   "version": "1.0.0",
   "category": "input",
-  "files": ["PasswordInput.tsx"],
+  "files": [
+    "PasswordInput.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

@@ -3,7 +3,9 @@
   "description": "Email input with validation and domain suggestions",
   "version": "1.0.0",
   "category": "input",
-  "files": ["EmailInput.tsx"],
+  "files": [
+    "EmailInput.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

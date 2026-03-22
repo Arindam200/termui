@@ -3,7 +3,9 @@
   "description": "Sortable, selectable, paginated data table",
   "version": "0.1.0",
   "category": "data",
-  "files": ["Table.tsx"],
+  "files": [
+    "Table.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

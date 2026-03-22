@@ -3,7 +3,9 @@
   "description": "Aligned key–value pairs",
   "version": "1.0.0",
   "category": "data",
-  "files": ["KeyValue.tsx"],
+  "files": [
+    "KeyValue.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

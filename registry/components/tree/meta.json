@@ -3,7 +3,9 @@
   "description": "Expandable/collapsible tree view",
   "version": "1.0.0",
   "category": "data",
-  "files": ["Tree.tsx"],
+  "files": [
+    "Tree.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

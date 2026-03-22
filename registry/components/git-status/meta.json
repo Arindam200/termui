@@ -3,7 +3,9 @@
   "description": "Git status display (branch, staged, modified, ahead/behind)",
   "version": "1.0.0",
   "category": "data",
-  "files": ["GitStatus.tsx"],
+  "files": [
+    "GitStatus.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

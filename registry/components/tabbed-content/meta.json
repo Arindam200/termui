@@ -3,7 +3,11 @@
   "description": "Tab bar wired to content panels",
   "version": "1.0.0",
   "category": "navigation",
-  "files": ["TabbedContent.tsx"],
+  "files": [
+    "TabbedContent.tsx"
+  ],
   "deps": [],
-  "peerComponents": ["tabs"]
+  "peerComponents": [
+    "tabs"
+  ]
 }

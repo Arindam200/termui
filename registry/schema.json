@@ -8,7 +8,9 @@
       "description": "Enhanced flexbox container with theme-aware borders",
       "version": "0.1.0",
       "category": "layout",
-      "files": ["Box.tsx"],
+      "files": [
+        "Box.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -17,7 +19,9 @@
       "description": "Vertical/horizontal stack with gap",
       "version": "0.1.0",
       "category": "layout",
-      "files": ["Stack.tsx"],
+      "files": [
+        "Stack.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -26,7 +30,9 @@
       "description": "Rows × columns grid layout",
       "version": "0.1.0",
       "category": "layout",
-      "files": ["Grid.tsx"],
+      "files": [
+        "Grid.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -35,7 +41,9 @@
       "description": "Scrollable container with scrollbar",
       "version": "0.1.0",
       "category": "layout",
-      "files": ["ScrollView.tsx"],
+      "files": [
+        "ScrollView.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -44,7 +52,9 @@
       "description": "Rich inline text with bold, italic, color, dim formatting",
       "version": "0.1.0",
       "category": "typography",
-      "files": ["Text.tsx"],
+      "files": [
+        "Text.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -53,7 +63,9 @@
       "description": "Semantic status indicator badge (success/error/warning/info)",
       "version": "0.1.0",
       "category": "typography",
-      "files": ["Badge.tsx"],
+      "files": [
+        "Badge.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -62,7 +74,9 @@
       "description": "Single-line text input with placeholder, validation, mask",
       "version": "0.1.0",
       "category": "input",
-      "files": ["TextInput.tsx"],
+      "files": [
+        "TextInput.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -71,7 +85,9 @@
       "description": "Checkbox with indeterminate state",
       "version": "0.1.0",
       "category": "selection",
-      "files": ["Checkbox.tsx"],
+      "files": [
+        "Checkbox.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -80,7 +96,9 @@
       "description": "Single-select dropdown with arrow-key navigation",
       "version": "0.1.0",
       "category": "selection",
-      "files": ["Select.tsx"],
+      "files": [
+        "Select.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -89,7 +107,9 @@
       "description": "Navigable list with optional filtering",
       "version": "0.1.0",
       "category": "data",
-      "files": ["List.tsx"],
+      "files": [
+        "List.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -98,7 +118,9 @@
       "description": "Sortable, selectable, paginated data table",
       "version": "0.1.0",
       "category": "data",
-      "files": ["Table.tsx"],
+      "files": [
+        "Table.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -107,7 +129,9 @@
       "description": "Animated spinner with 12+ styles",
       "version": "0.1.0",
       "category": "feedback",
-      "files": ["Spinner.tsx"],
+      "files": [
+        "Spinner.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -116,7 +140,9 @@
       "description": "Determinate progress bar with percent and value/total display",
       "version": "0.1.0",
       "category": "feedback",
-      "files": ["ProgressBar.tsx"],
+      "files": [
+        "ProgressBar.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -125,7 +151,9 @@
       "description": "Alert box with success/error/warning/info variants",
       "version": "0.1.0",
       "category": "feedback",
-      "files": ["Alert.tsx"],
+      "files": [
+        "Alert.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -134,7 +162,9 @@
       "description": "Tab bar with left/right arrow and tab-key navigation",
       "version": "0.1.0",
       "category": "navigation",
-      "files": ["Tabs.tsx"],
+      "files": [
+        "Tabs.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -143,7 +173,9 @@
       "description": "Focus-trapped overlay modal, close with Esc",
       "version": "0.1.0",
       "category": "overlays",
-      "files": ["Modal.tsx"],
+      "files": [
+        "Modal.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -152,7 +184,9 @@
       "description": "Form container with validation, Ctrl+S submit, and dirty tracking",
       "version": "0.1.0",
       "category": "forms",
-      "files": ["Form.tsx"],
+      "files": [
+        "Form.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -161,7 +195,9 @@
       "description": "Titled bordered panel",
       "version": "0.1.0",
       "category": "utility",
-      "files": ["Panel.tsx"],
+      "files": [
+        "Panel.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -170,7 +206,9 @@
       "description": "Toggle/switch component with on/off labels",
       "version": "0.1.0",
       "category": "utility",
-      "files": ["Toggle.tsx"],
+      "files": [
+        "Toggle.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -179,7 +217,9 @@
       "description": "Horizontal or vertical divider / rule",
       "version": "1.0.0",
       "category": "layout",
-      "files": ["Divider.tsx"],
+      "files": [
+        "Divider.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -188,7 +228,9 @@
       "description": "Flexible space between flex children",
       "version": "1.0.0",
       "category": "layout",
-      "files": ["Spacer.tsx"],
+      "files": [
+        "Spacer.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -197,7 +239,9 @@
       "description": "Multi-column layout with configurable widths",
       "version": "1.0.0",
       "category": "layout",
-      "files": ["Columns.tsx"],
+      "files": [
+        "Columns.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -206,7 +250,9 @@
       "description": "Centers children horizontally and vertically",
       "version": "1.0.0",
       "category": "layout",
-      "files": ["Center.tsx"],
+      "files": [
+        "Center.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -215,7 +261,9 @@
       "description": "Constrains children to a given aspect ratio",
       "version": "1.0.0",
       "category": "layout",
-      "files": ["AspectRatio.tsx"],
+      "files": [
+        "AspectRatio.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -224,7 +272,9 @@
       "description": "h1–h4 styled headings with optional figlet ASCII art",
       "version": "1.0.0",
       "category": "typography",
-      "files": ["Heading.tsx"],
+      "files": [
+        "Heading.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -233,7 +283,9 @@
       "description": "Syntax-highlighted code block (50+ languages)",
       "version": "1.0.0",
       "category": "typography",
-      "files": ["Code.tsx"],
+      "files": [
+        "Code.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -242,7 +294,9 @@
       "description": "OSC 8 clickable hyperlink",
       "version": "1.0.0",
       "category": "typography",
-      "files": ["Link.tsx"],
+      "files": [
+        "Link.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -251,7 +305,9 @@
       "description": "Removable chip/tag",
       "version": "1.0.0",
       "category": "typography",
-      "files": ["Tag.tsx"],
+      "files": [
+        "Tag.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -260,8 +316,12 @@
       "description": "Full markdown renderer for terminal",
       "version": "1.0.0",
       "category": "typography",
-      "files": ["Markdown.tsx"],
-      "deps": ["marked"],
+      "files": [
+        "Markdown.tsx"
+      ],
+      "deps": [
+        "marked"
+      ],
       "peerComponents": []
     },
     "gradient": {
@@ -269,7 +329,9 @@
       "description": "Color gradient text",
       "version": "1.0.0",
       "category": "typography",
-      "files": ["Gradient.tsx"],
+      "files": [
+        "Gradient.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -278,7 +340,9 @@
       "description": "Figlet-style large ASCII art text",
       "version": "1.0.0",
       "category": "typography",
-      "files": ["BigText.tsx"],
+      "files": [
+        "BigText.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -287,7 +351,9 @@
       "description": "Box-drawing character numerals",
       "version": "1.0.0",
       "category": "typography",
-      "files": ["Digits.tsx"],
+      "files": [
+        "Digits.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -296,7 +362,9 @@
       "description": "Multi-line text editor with word wrap",
       "version": "1.0.0",
       "category": "input",
-      "files": ["TextArea.tsx"],
+      "files": [
+        "TextArea.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -305,7 +373,9 @@
       "description": "Password input with masked characters and reveal toggle",
       "version": "1.0.0",
       "category": "input",
-      "files": ["PasswordInput.tsx"],
+      "files": [
+        "PasswordInput.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -314,7 +384,9 @@
       "description": "Numeric input with increment/decrement and bounds",
       "version": "1.0.0",
       "category": "input",
-      "files": ["NumberInput.tsx"],
+      "files": [
+        "NumberInput.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -323,8 +395,12 @@
       "description": "Fuzzy search input with autocomplete",
       "version": "1.0.0",
       "category": "input",
-      "files": ["SearchInput.tsx"],
-      "deps": ["mnemonist"],
+      "files": [
+        "SearchInput.tsx"
+      ],
+      "deps": [
+        "mnemonist"
+      ],
       "peerComponents": []
     },
     "masked-input": {
@@ -332,7 +408,9 @@
       "description": "Masked input for phone, date, credit card formats",
       "version": "1.0.0",
       "category": "input",
-      "files": ["MaskedInput.tsx"],
+      "files": [
+        "MaskedInput.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -341,7 +419,9 @@
       "description": "Email input with validation and domain suggestions",
       "version": "1.0.0",
       "category": "input",
-      "files": ["EmailInput.tsx"],
+      "files": [
+        "EmailInput.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -350,8 +430,12 @@
       "description": "Filesystem path input with tab autocomplete",
       "version": "1.0.0",
       "category": "input",
-      "files": ["PathInput.tsx"],
-      "deps": ["glob"],
+      "files": [
+        "PathInput.tsx"
+      ],
+      "deps": [
+        "glob"
+      ],
       "peerComponents": []
     },
     "multi-select": {
@@ -359,7 +443,9 @@
       "description": "Multi-select list with checkboxes and select-all",
       "version": "1.0.0",
       "category": "selection",
-      "files": ["MultiSelect.tsx"],
+      "files": [
+        "MultiSelect.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -368,7 +454,9 @@
       "description": "Mutually exclusive radio button group",
       "version": "1.0.0",
       "category": "selection",
-      "files": ["RadioGroup.tsx"],
+      "files": [
+        "RadioGroup.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -377,16 +465,22 @@
       "description": "Checkbox group with min/max selection",
       "version": "1.0.0",
       "category": "selection",
-      "files": ["CheckboxGroup.tsx"],
+      "files": [
+        "CheckboxGroup.tsx"
+      ],
       "deps": [],
-      "peerComponents": ["checkbox"]
+      "peerComponents": [
+        "checkbox"
+      ]
     },
     "tree-select": {
       "name": "tree-select",
       "description": "Hierarchical tree selection",
       "version": "1.0.0",
       "category": "selection",
-      "files": ["TreeSelect.tsx"],
+      "files": [
+        "TreeSelect.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -395,7 +489,9 @@
       "description": "Add and remove tags inline",
       "version": "1.0.0",
       "category": "selection",
-      "files": ["TagInput.tsx"],
+      "files": [
+        "TagInput.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -404,7 +500,9 @@
       "description": "Color picker with palette, hex, and RGB input",
       "version": "1.0.0",
       "category": "selection",
-      "files": ["ColorPicker.tsx"],
+      "files": [
+        "ColorPicker.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -413,7 +511,9 @@
       "description": "Pretty-printed JSON with collapsible nodes",
       "version": "1.0.0",
       "category": "data",
-      "files": ["JSONView.tsx"],
+      "files": [
+        "JSONView.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -422,8 +522,12 @@
       "description": "Virtualized list for 10k+ items",
       "version": "1.0.0",
       "category": "data",
-      "files": ["VirtualList.tsx"],
-      "deps": ["mnemonist"],
+      "files": [
+        "VirtualList.tsx"
+      ],
+      "deps": [
+        "mnemonist"
+      ],
       "peerComponents": []
     },
     "tree": {
@@ -431,7 +535,9 @@
       "description": "Expandable/collapsible tree view",
       "version": "1.0.0",
       "category": "data",
-      "files": ["Tree.tsx"],
+      "files": [
+        "Tree.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -440,8 +546,12 @@
       "description": "Filesystem browser with expand/collapse",
       "version": "1.0.0",
       "category": "data",
-      "files": ["DirectoryTree.tsx"],
-      "deps": ["glob"],
+      "files": [
+        "DirectoryTree.tsx"
+      ],
+      "deps": [
+        "glob"
+      ],
       "peerComponents": []
     },
     "key-value": {
@@ -449,7 +559,9 @@
       "description": "Aligned key–value pairs",
       "version": "1.0.0",
       "category": "data",
-      "files": ["KeyValue.tsx"],
+      "files": [
+        "KeyValue.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -458,7 +570,9 @@
       "description": "Term–description definition list",
       "version": "1.0.0",
       "category": "data",
-      "files": ["Definition.tsx"],
+      "files": [
+        "Definition.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -467,7 +581,9 @@
       "description": "Card with header, body, and footer slots",
       "version": "1.0.0",
       "category": "data",
-      "files": ["Card.tsx"],
+      "files": [
+        "Card.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -476,7 +592,9 @@
       "description": "Git status display (branch, staged, modified, ahead/behind)",
       "version": "1.0.0",
       "category": "data",
-      "files": ["GitStatus.tsx"],
+      "files": [
+        "GitStatus.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -485,7 +603,9 @@
       "description": "Circular progress indicator using Unicode braille",
       "version": "1.0.0",
       "category": "feedback",
-      "files": ["ProgressCircle.tsx"],
+      "files": [
+        "ProgressCircle.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -494,7 +614,9 @@
       "description": "Inline status message with icon and color",
       "version": "1.0.0",
       "category": "feedback",
-      "files": ["StatusMessage.tsx"],
+      "files": [
+        "StatusMessage.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -503,7 +625,9 @@
       "description": "Auto-dismissing toast notification",
       "version": "1.0.0",
       "category": "feedback",
-      "files": ["Toast.tsx"],
+      "files": [
+        "Toast.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -512,7 +636,9 @@
       "description": "Full-width announcement banner",
       "version": "1.0.0",
       "category": "feedback",
-      "files": ["Banner.tsx"],
+      "files": [
+        "Banner.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -521,7 +647,9 @@
       "description": "Shimmer loading placeholder",
       "version": "1.0.0",
       "category": "feedback",
-      "files": ["Skeleton.tsx"],
+      "files": [
+        "Skeleton.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -530,16 +658,22 @@
       "description": "Tab bar wired to content panels",
       "version": "1.0.0",
       "category": "navigation",
-      "files": ["TabbedContent.tsx"],
+      "files": [
+        "TabbedContent.tsx"
+      ],
       "deps": [],
-      "peerComponents": ["tabs"]
+      "peerComponents": [
+        "tabs"
+      ]
     },
     "breadcrumb": {
       "name": "breadcrumb",
       "description": "Breadcrumb navigation trail",
       "version": "1.0.0",
       "category": "navigation",
-      "files": ["Breadcrumb.tsx"],
+      "files": [
+        "Breadcrumb.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -548,7 +682,9 @@
       "description": "Page navigation with prev/next and jump",
       "version": "1.0.0",
       "category": "navigation",
-      "files": ["Pagination.tsx"],
+      "files": [
+        "Pagination.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -557,8 +693,12 @@
       "description": "VS Code–style command palette with fuzzy search",
       "version": "1.0.0",
       "category": "navigation",
-      "files": ["CommandPalette.tsx"],
-      "deps": ["mnemonist"],
+      "files": [
+        "CommandPalette.tsx"
+      ],
+      "deps": [
+        "mnemonist"
+      ],
       "peerComponents": []
     },
     "menu": {
@@ -566,7 +706,9 @@
       "description": "Dropdown menu with nested submenus",
       "version": "1.0.0",
       "category": "navigation",
-      "files": ["Menu.tsx"],
+      "files": [
+        "Menu.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -575,7 +717,9 @@
       "description": "Collapsible navigation sidebar panel",
       "version": "1.0.0",
       "category": "navigation",
-      "files": ["Sidebar.tsx"],
+      "files": [
+        "Sidebar.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -584,7 +728,9 @@
       "description": "Confirmation dialog with OK/Cancel actions",
       "version": "1.0.0",
       "category": "overlays",
-      "files": ["Dialog.tsx"],
+      "files": [
+        "Dialog.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -593,7 +739,9 @@
       "description": "Slide-in panel from any edge",
       "version": "1.0.0",
       "category": "overlays",
-      "files": ["Drawer.tsx"],
+      "files": [
+        "Drawer.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -602,7 +750,9 @@
       "description": "Contextual tooltip on focus or hover",
       "version": "1.0.0",
       "category": "overlays",
-      "files": ["Tooltip.tsx"],
+      "files": [
+        "Tooltip.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -611,7 +761,9 @@
       "description": "Positioned popover with arbitrary content",
       "version": "1.0.0",
       "category": "overlays",
-      "files": ["Popover.tsx"],
+      "files": [
+        "Popover.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -620,16 +772,22 @@
       "description": "Form field wrapper with label, hint, and error",
       "version": "1.0.0",
       "category": "forms",
-      "files": ["FormField.tsx"],
+      "files": [
+        "FormField.tsx"
+      ],
       "deps": [],
-      "peerComponents": ["form"]
+      "peerComponents": [
+        "form"
+      ]
     },
     "wizard": {
       "name": "wizard",
       "description": "Multi-step wizard with per-step validation",
       "version": "1.0.0",
       "category": "forms",
-      "files": ["Wizard.tsx"],
+      "files": [
+        "Wizard.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -638,7 +796,9 @@
       "description": "Yes/No confirmation prompt",
       "version": "1.0.0",
       "category": "forms",
-      "files": ["Confirm.tsx"],
+      "files": [
+        "Confirm.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -647,7 +807,9 @@
       "description": "Calendar date picker with keyboard navigation",
       "version": "1.0.0",
       "category": "forms",
-      "files": ["DatePicker.tsx"],
+      "files": [
+        "DatePicker.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -656,7 +818,9 @@
       "description": "Time picker with hour/minute/second spinners",
       "version": "1.0.0",
       "category": "forms",
-      "files": ["TimePicker.tsx"],
+      "files": [
+        "TimePicker.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     },
@@ -665,8 +829,12 @@
       "description": "Interactive file browser and picker",
       "version": "1.0.0",
       "category": "forms",
-      "files": ["FilePicker.tsx"],
-      "deps": ["glob"],
+      "files": [
+        "FilePicker.tsx"
+      ],
+      "deps": [
+        "glob"
+      ],
       "peerComponents": []
     },
     "embedded-terminal": {
@@ -674,7 +842,9 @@
       "description": "Embedded PTY terminal panel (requires node-pty peer)",
       "version": "1.0.0",
       "category": "utility",
-      "files": ["EmbeddedTerminal.tsx"],
+      "files": [
+        "EmbeddedTerminal.tsx"
+      ],
       "deps": [],
       "peerComponents": []
     }

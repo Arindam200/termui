@@ -3,7 +3,9 @@
   "description": "Color gradient text",
   "version": "1.0.0",
   "category": "typography",
-  "files": ["Gradient.tsx"],
+  "files": [
+    "Gradient.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

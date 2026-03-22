@@ -3,7 +3,9 @@
   "description": "Animated spinner with 12+ styles",
   "version": "0.1.0",
   "category": "feedback",
-  "files": ["Spinner.tsx"],
+  "files": [
+    "Spinner.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

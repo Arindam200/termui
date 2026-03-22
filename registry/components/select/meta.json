@@ -3,7 +3,9 @@
   "description": "Single-select dropdown with arrow-key navigation",
   "version": "0.1.0",
   "category": "selection",
-  "files": ["Select.tsx"],
+  "files": [
+    "Select.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

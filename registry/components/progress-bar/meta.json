@@ -3,7 +3,9 @@
   "description": "Determinate progress bar with percent and value/total display",
   "version": "0.1.0",
   "category": "feedback",
-  "files": ["ProgressBar.tsx"],
+  "files": [
+    "ProgressBar.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

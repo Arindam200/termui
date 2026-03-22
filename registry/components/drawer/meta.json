@@ -3,7 +3,9 @@
   "description": "Slide-in panel from any edge",
   "version": "1.0.0",
   "category": "overlays",
-  "files": ["Drawer.tsx"],
+  "files": [
+    "Drawer.tsx"
+  ],
   "deps": [],
   "peerComponents": []
 }

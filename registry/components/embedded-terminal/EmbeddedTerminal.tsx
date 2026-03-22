@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Text } from 'ink';
 import stripAnsi from 'strip-ansi';
+import type { IPty } from 'node-pty';
 
 export interface EmbeddedTerminalProps {
   command: string;
@@ -28,27 +29,24 @@ export function EmbeddedTerminal({
   const argsKey = args.join('\0');
 
   useEffect(() => {
-    let p: {
-      onData: (cb: (d: string) => void) => void;
-      onExit: (cb: (e: { exitCode: number }) => void) => void;
-      kill: () => void;
-    } | null = null;
+    let p: IPty | null = null;
     let cancelled = false;
 
     (async () => {
       try {
         const mod = await import('node-pty');
         if (cancelled) return;
-        p = mod.spawn(command, args, {
+        const pty = mod.spawn(command, args, {
           name: 'xterm-color',
           cols: width,
           rows: height,
           cwd,
         });
-        p.onData((d: string) => {
+        p = pty;
+        pty.onData((d: string) => {
           setRaw((prev) => (prev + d).slice(-500_000));
         });
-        p.onExit((e) => {
+        pty.onExit((e: { exitCode: number }) => {
           onExit?.(e.exitCode);
         });
       } catch {

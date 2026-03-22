@@ -3,7 +3,11 @@
   "description": "Interactive file browser and picker",
   "version": "1.0.0",
   "category": "forms",
-  "files": ["FilePicker.tsx"],
-  "deps": ["glob"],
+  "files": [
+    "FilePicker.tsx"
+  ],
+  "deps": [
+    "glob"
+  ],
   "peerComponents": []
 }
