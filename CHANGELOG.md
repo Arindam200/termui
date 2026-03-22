@@ -2,6 +2,28 @@
 
 All notable changes to TermUI are documented here.
 
+## [1.1.3] — 2026-03-23
+
+### Fixed
+
+- **CLI — Duplicate logo in interactive menu**: `add`, `init`, and `list` commands no longer re-print the logo and intro line when invoked from the interactive menu (`npx termui` with no args); added `skipHeader` option to each command
+
+**Testing — Full test suite for `@termui/testing`**
+
+- Added 37 tests across 4 files: `screen`, `waitFor`, `fireEvent`, and `renderToString`/`createTestRenderer`
+- Added `vitest.config.ts` to `@termui/testing` package
+- Fixed stale registry version assertion in CLI tests (`0.1.0` → `1.0.0`)
+
+---
+
+## [1.1.2] — 2026-03-23
+
+### Fixed
+
+- Bumped `packages/cli` version to `1.1.2` to stay in sync with root
+
+---
+
 ## [1.1.1] — 2026-03-23
 
 ### Changed
