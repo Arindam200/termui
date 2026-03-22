@@ -9,8 +9,6 @@ import {
   reset,
 } from '../terminal/ansi.js';
 
-type BorderStyle = 'single' | 'double' | 'round' | 'bold' | 'classic';
-
 /**
  * Chainable style builder for ANSI-styled strings.
  *

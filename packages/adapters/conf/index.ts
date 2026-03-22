@@ -3,9 +3,10 @@
  * Requires optional peers `conf` and `env-paths`.
  */
 
-export async function createConf<T extends Record<string, unknown>>(
-  opts: { projectName: string; defaults?: T }
-): Promise<unknown> {
+export async function createConf<T extends Record<string, unknown>>(opts: {
+  projectName: string;
+  defaults?: T;
+}): Promise<unknown> {
   const Conf = (await import('conf')).default;
   return new Conf({ projectName: opts.projectName, defaults: opts.defaults });
 }

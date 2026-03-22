@@ -4,7 +4,15 @@
  * Run: npx tsx examples/with-clack/index.ts
  */
 
-import { intro, outro, text, confirm, select, spinner, log } from '../../packages/adapters/clack/index.js';
+import {
+  intro,
+  outro,
+  text,
+  confirm,
+  select,
+  spinner,
+  log,
+} from '../../packages/adapters/clack/index.js';
 
 async function main() {
   intro('TermUI Clack Example');

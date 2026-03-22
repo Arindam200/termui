@@ -182,9 +182,9 @@ tags:
 `;
     const result = matter(input);
     expect(Array.isArray(result.data['tags'])).toBe(true);
-    expect((result.data['tags'] as string[])).toContain('alpha');
-    expect((result.data['tags'] as string[])).toContain('beta');
-    expect((result.data['tags'] as string[])).toContain('gamma');
+    expect(result.data['tags'] as string[]).toContain('alpha');
+    expect(result.data['tags'] as string[]).toContain('beta');
+    expect(result.data['tags'] as string[]).toContain('gamma');
   });
 });
 

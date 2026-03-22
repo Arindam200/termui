@@ -191,10 +191,7 @@ function colorizePlainHelp(text: string): string {
  * Apply TermUI-style usage banner and script name to a yargs argv chain.
  * Requires optional peer `yargs`.
  */
-export async function applyYargsStyledHelp(
-  y: unknown,
-  meta: HelpThemeMeta
-): Promise<unknown> {
+export async function applyYargsStyledHelp(y: unknown, meta: HelpThemeMeta): Promise<unknown> {
   const argv = y as { scriptName: (n: string) => unknown; usage: (s: string) => unknown };
   const banner = `${c.bold(c.magenta(meta.name))} ${c.dim(`v${meta.version}`)}${meta.description ? `\n${meta.description}` : ''}`;
   return (argv.scriptName(meta.name) as { usage: (s: string) => unknown }).usage(banner);

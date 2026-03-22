@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export type MouseButton = 'left' | 'middle' | 'right' | 'scrollUp' | 'scrollDown';
 
@@ -20,11 +20,8 @@ type MouseHandler = (event: MouseEvent) => void;
  * Enables mouse tracking on mount, disables on unmount.
  */
 export function useMouse(handler: MouseHandler): void {
-  const handlerRef = { current: handler };
-
-  useEffect(() => {
-    handlerRef.current = handler;
-  });
+  const handlerRef = useRef(handler);
+  handlerRef.current = handler;
 
   useEffect(() => {
     if (!process.stdout.isTTY) return;

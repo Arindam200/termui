@@ -12,6 +12,7 @@
 ## Why TermUI?
 
 The TypeScript/JS terminal UI ecosystem is fragmented:
+
 - **Ink** ships ~5 basic primitives
 - **Blessed** is abandoned
 - Nothing has shadcn-style copy-paste distribution
@@ -69,18 +70,18 @@ render(<App />);
 
 ## Components (v0.1.0 — 19 components)
 
-| Category | Components |
-|---|---|
-| Layout | `Box` `Stack` `Grid` `ScrollView` |
-| Typography | `Text` `Badge` |
-| Input | `TextInput` |
-| Selection | `Select` `Checkbox` |
-| Data | `List` `Table` |
-| Feedback | `Spinner` `ProgressBar` `Alert` |
-| Navigation | `Tabs` |
-| Overlays | `Modal` |
-| Forms | `Form` |
-| Utility | `Panel` `Toggle` |
+| Category   | Components                        |
+| ---------- | --------------------------------- |
+| Layout     | `Box` `Stack` `Grid` `ScrollView` |
+| Typography | `Text` `Badge`                    |
+| Input      | `TextInput`                       |
+| Selection  | `Select` `Checkbox`               |
+| Data       | `List` `Table`                    |
+| Feedback   | `Spinner` `ProgressBar` `Alert`   |
+| Navigation | `Tabs`                            |
+| Overlays   | `Modal`                           |
+| Forms      | `Form`                            |
+| Utility    | `Panel` `Toggle`                  |
 
 ---
 
@@ -94,7 +95,7 @@ import { ThemeProvider, draculaTheme, nordTheme } from '@termui/core';
 // Wrap your app
 <ThemeProvider theme={draculaTheme}>
   <App />
-</ThemeProvider>
+</ThemeProvider>;
 ```
 
 ### Custom theme
@@ -117,18 +118,18 @@ const myTheme = createTheme({
 
 ```ts
 import {
-  useInput,        // keyboard input
-  useFocus,        // component focus state
+  useInput, // keyboard input
+  useFocus, // component focus state
   useFocusManager, // programmatic focus
-  useTheme,        // access theme tokens
-  useTerminal,     // cols, rows, color depth
-  useAnimation,    // frame-based animation
-  useInterval,     // safe setInterval
-  useClipboard,    // OSC 52 clipboard
-  useKeymap,       // declarative keybindings
-  useMouse,        // mouse events
-  useResize,       // terminal resize
-  useAsync,        // async data loading
+  useTheme, // access theme tokens
+  useTerminal, // cols, rows, color depth
+  useAnimation, // frame-based animation
+  useInterval, // safe setInterval
+  useClipboard, // OSC 52 clipboard
+  useKeymap, // declarative keybindings
+  useMouse, // mouse events
+  useResize, // terminal resize
+  useAsync, // async data loading
 } from '@termui/core';
 ```
 
@@ -136,13 +137,13 @@ import {
 
 ## Stack
 
-| Layer | Technology |
-|---|---|
-| Language | TypeScript (ESM-only) |
-| Renderer | [Ink](https://github.com/vadimdemedes/ink) (React for terminal) |
-| Layout | Yoga (Facebook's flexbox engine) |
-| Distribution | shadcn/ui-style CLI |
-| Runtime | Node.js 18+ |
+| Layer        | Technology                                                      |
+| ------------ | --------------------------------------------------------------- |
+| Language     | TypeScript (ESM-only)                                           |
+| Renderer     | [Ink](https://github.com/vadimdemedes/ink) (React for terminal) |
+| Layout       | Yoga (Facebook's flexbox engine)                                |
+| Distribution | shadcn/ui-style CLI                                             |
+| Runtime      | Node.js 18+                                                     |
 
 ---
 
@@ -184,12 +185,12 @@ node --import tsx/esm packages/cli/src/cli.ts list
 
 ## Roadmap
 
-| Phase | Status | Description |
-|---|---|---|
+| Phase       | Status      | Description                                            |
+| ----------- | ----------- | ------------------------------------------------------ |
 | **Phase 1** | ✅ **Done** | 19 components, CLI (init/add/list), 3 themes, 12 hooks |
-| **Phase 2** | 🔜 Planned | 50+ components, full theming, docs site — v1.0 |
-| **Phase 3** | 🔜 Planned | All 90+ components, charts, dev tools, templates |
-| **Phase 4** | 🔜 Planned | Plugin system, community registry, Vue/Svelte adapters |
+| **Phase 2** | 🔜 Planned  | 50+ components, full theming, docs site — v1.0         |
+| **Phase 3** | 🔜 Planned  | All 90+ components, charts, dev tools, templates       |
+| **Phase 4** | 🔜 Planned  | Plugin system, community registry, Vue/Svelte adapters |
 
 ---
 

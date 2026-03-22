@@ -4,7 +4,10 @@
  * Run: npx tsx examples/with-completion/index.ts
  */
 
-import { generateBashCompletion, generateZshCompletion } from '../../packages/adapters/completion/index.js';
+import {
+  generateBashCompletion,
+  generateZshCompletion,
+} from '../../packages/adapters/completion/index.js';
 
 const config = {
   name: 'my-tool',

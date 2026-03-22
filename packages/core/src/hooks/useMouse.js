@@ -1,14 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 /**
  * Mouse events hook (click, scroll, drag).
  * Requires terminal to support xterm mouse protocol.
  * Enables mouse tracking on mount, disables on unmount.
  */
 export function useMouse(handler) {
-    const handlerRef = { current: handler };
-    useEffect(() => {
-        handlerRef.current = handler;
-    });
+    const handlerRef = useRef(handler);
+    handlerRef.current = handler;
     useEffect(() => {
         if (!process.stdout.isTTY)
             return;

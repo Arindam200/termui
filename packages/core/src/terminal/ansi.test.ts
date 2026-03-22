@@ -1,15 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  fg,
-  bg,
-  fgHex,
-  bgHex,
-  fgRgb,
-  parseHex,
-  stripAnsi,
-  visibleWidth,
-  style as ansiStyle,
-} from './ansi.js';
+import { fg, bg, parseHex, stripAnsi, visibleWidth, style as ansiStyle } from './ansi.js';
 
 describe('ANSI utilities', () => {
   it('produces correct foreground color codes', () => {

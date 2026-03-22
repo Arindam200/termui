@@ -170,8 +170,8 @@ describe('spinner()', () => {
     s.stop('finished!');
     // In non-TTY test environments, stop() with a message calls console.log
     const calls = (console.log as ReturnType<typeof vi.fn>).mock.calls;
-    const hasFinished = calls.some(([arg]) =>
-      typeof arg === 'string' && stripAnsi(arg).includes('finished!'),
+    const hasFinished = calls.some(
+      ([arg]) => typeof arg === 'string' && stripAnsi(arg).includes('finished!')
     );
     expect(hasFinished).toBe(true);
     vi.restoreAllMocks();

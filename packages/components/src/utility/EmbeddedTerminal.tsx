@@ -62,18 +62,11 @@ export function EmbeddedTerminal({
     };
   }, [command, argsKey, cwd, width, height, onExit]);
 
-  const lines = useMemo(
-    () => stripAnsi(raw).split('\n').slice(-height),
-    [raw, height]
-  );
+  const lines = useMemo(() => stripAnsi(raw).split('\n').slice(-height), [raw, height]);
 
   return (
     <Box flexDirection="column" borderStyle="round" borderColor="cyan" width={width}>
-      {err ? (
-        <Text color="red">{err}</Text>
-      ) : (
-        lines.map((line, i) => <Text key={i}>{line}</Text>)
-      )}
+      {err ? <Text color="red">{err}</Text> : lines.map((line, i) => <Text key={i}>{line}</Text>)}
     </Box>
   );
 }

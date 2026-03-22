@@ -67,10 +67,7 @@ export async function text(opts: {
 }
 
 /** Prompt for boolean confirmation */
-export async function confirm(opts: {
-  message: string;
-  initialValue?: boolean;
-}): Promise<boolean> {
+export async function confirm(opts: { message: string; initialValue?: boolean }): Promise<boolean> {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,

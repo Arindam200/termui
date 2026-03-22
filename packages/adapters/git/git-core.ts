@@ -1,7 +1,9 @@
 import simpleGit from 'simple-git';
 
 export function getGitBranches(cwd: string): Promise<string[]> {
-  return simpleGit(cwd).branchLocal().then((b) => b.all);
+  return simpleGit(cwd)
+    .branchLocal()
+    .then((b) => b.all);
 }
 
 export async function getGitStatusShort(cwd: string): Promise<string> {

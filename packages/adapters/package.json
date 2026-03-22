@@ -94,22 +94,54 @@
     "yargs": "^17.7.2"
   },
   "peerDependenciesMeta": {
-    "@termui/components": { "optional": true },
-    "@termui/core": { "optional": true },
-    "ink": { "optional": true },
-    "react": { "optional": true },
-    "@octokit/rest": { "optional": true },
-    "commander": { "optional": true },
-    "conf": { "optional": true },
-    "env-paths": { "optional": true },
-    "execa": { "optional": true },
-    "keytar": { "optional": true },
-    "latest-version": { "optional": true },
-    "node-pty": { "optional": true },
-    "semver": { "optional": true },
-    "simple-git": { "optional": true },
-    "yaml": { "optional": true },
-    "yargs": { "optional": true }
+    "@termui/components": {
+      "optional": true
+    },
+    "@termui/core": {
+      "optional": true
+    },
+    "ink": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "@octokit/rest": {
+      "optional": true
+    },
+    "commander": {
+      "optional": true
+    },
+    "conf": {
+      "optional": true
+    },
+    "env-paths": {
+      "optional": true
+    },
+    "execa": {
+      "optional": true
+    },
+    "keytar": {
+      "optional": true
+    },
+    "latest-version": {
+      "optional": true
+    },
+    "node-pty": {
+      "optional": true
+    },
+    "semver": {
+      "optional": true
+    },
+    "simple-git": {
+      "optional": true
+    },
+    "yaml": {
+      "optional": true
+    },
+    "yargs": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@termui/components": "workspace:*",

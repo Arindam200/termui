@@ -82,7 +82,7 @@ export function validateThemeContrast(theme: Theme): ContrastReport[] {
     ['selectionForeground on selection', theme.colors.selectionForeground, theme.colors.selection],
   ];
 
-  return pairs.map(([_label, fg, bgColor]) => {
+  return pairs.map(([, fg, bgColor]) => {
     const ratio = contrastRatio(fg, bgColor);
     const level = wcagLevel(fg, bgColor);
     return {
