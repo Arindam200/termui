@@ -36,12 +36,14 @@ export interface SpinnerProps {
   label?: string;
   color?: string;
   fps?: number;
+  /** Custom animation frames (overrides style). Default: undefined */
+  frames?: string[];
 }
 
-export function Spinner({ style: spinnerStyle = 'dots', label, color, fps = 12 }: SpinnerProps) {
+export function Spinner({ style: spinnerStyle = 'dots', label, color, fps = 12, frames: customFrames }: SpinnerProps) {
   const theme = useTheme();
   const frame = useAnimation(fps);
-  const frames = FRAMES[spinnerStyle];
+  const frames = customFrames ?? FRAMES[spinnerStyle];
   const icon = frames[frame % frames.length];
   const resolvedColor = color ?? theme.colors.primary;
 

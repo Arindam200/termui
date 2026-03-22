@@ -12,6 +12,16 @@ export interface SearchInputProps<T = string> {
   label?: string;
   maxResults?: number;
   id?: string;
+  /** Border style. Default: 'round' */
+  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  /** Horizontal padding. Default: 1 */
+  paddingX?: number;
+  /** Cursor character shown when focused. Default: '█' */
+  cursor?: string;
+  /** Icon shown before the search input. Default: '🔍 ' */
+  searchIcon?: string;
+  /** Cursor shown before selected result. Default: '› ' */
+  resultCursor?: string;
 }
 
 export function SearchInput<T = string>({
@@ -24,6 +34,11 @@ export function SearchInput<T = string>({
   label,
   maxResults = 5,
   id,
+  borderStyle = 'round',
+  paddingX = 1,
+  cursor = '█',
+  searchIcon = '🔍 ',
+  resultCursor = '› ',
 }: SearchInputProps<T>) {
   const [internalValue, setInternalValue] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -114,12 +129,12 @@ export function SearchInput<T = string>({
   return (
     <Box flexDirection="column">
       {label && <Text bold>{label}</Text>}
-      <Box borderStyle="round" borderColor={borderColor} paddingX={1}>
-        <Text color={theme.colors.mutedForeground}>{'🔍 '}</Text>
+      <Box borderStyle={borderStyle} borderColor={borderColor} paddingX={paddingX}>
+        <Text color={theme.colors.mutedForeground}>{searchIcon}</Text>
         <Text color={query ? theme.colors.foreground : theme.colors.mutedForeground}>
           {query || placeholder}
         </Text>
-        {isFocused && <Text color={theme.colors.focusRing}>█</Text>}
+        {isFocused && <Text color={theme.colors.focusRing}>{cursor}</Text>}
       </Box>
       {hasResults && (
         <Box flexDirection="column" paddingLeft={2}>
@@ -128,7 +143,7 @@ export function SearchInput<T = string>({
             return (
               <Box key={idx} flexDirection="row">
                 <Text color={isSelected ? theme.colors.focusRing : theme.colors.mutedForeground}>
-                  {isSelected ? '› ' : '  '}
+                  {isSelected ? resultCursor : ' '.repeat(resultCursor.length)}
                 </Text>
                 <Text color={isSelected ? theme.colors.foreground : theme.colors.mutedForeground}>
                   {getItemValue(item)}

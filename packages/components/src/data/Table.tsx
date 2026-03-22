@@ -17,6 +17,12 @@ export interface TableProps<T extends Record<string, unknown> = Record<string, u
   onSelect?: (row: T) => void;
   maxRows?: number;
   borderColor?: string;
+  /** Border style. Default: 'round' */
+  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  /** Column separator string. Default: ' │ ' */
+  columnSeparator?: string;
+  /** Row separator fill character. Default: '─' */
+  rowSeparatorChar?: string;
 }
 
 function pad(str: string, width: number, align: 'left' | 'right' | 'center' = 'left'): string {
@@ -40,6 +46,9 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
   onSelect,
   maxRows = 20,
   borderColor,
+  borderStyle = 'round',
+  columnSeparator = ' │ ',
+  rowSeparatorChar = '─',
 }: TableProps<T>) {
   const theme = useTheme();
   const [sortKey, setSortKey] = useState<string | null>(null);
@@ -87,11 +96,11 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
 
   const headerRow = columns
     .map((col, i) => pad(col.header, colWidths[i] ?? col.header.length, col.align))
-    .join(' │ ');
-  const separator = colWidths.map((w) => '─'.repeat(w)).join('─┼─');
+    .join(columnSeparator);
+  const separator = colWidths.map((w) => rowSeparatorChar.repeat(w)).join(`${rowSeparatorChar}┼${rowSeparatorChar}`);
 
   return (
-    <Box flexDirection="column" borderStyle="round" borderColor={resolvedBorderColor}>
+    <Box flexDirection="column" borderStyle={borderStyle} borderColor={resolvedBorderColor}>
       {/* Header */}
       <Box paddingX={1}>
         <Text bold color={theme.colors.primary}>
@@ -106,7 +115,7 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
         const isActive = rowIdx === activeRow && selectable;
         const cells = columns
           .map((col, i) => pad(String(row[col.key] ?? ''), colWidths[i] ?? 8, col.align))
-          .join(' │ ');
+          .join(columnSeparator);
         return (
           <Box key={rowIdx} paddingX={1}>
             <Text

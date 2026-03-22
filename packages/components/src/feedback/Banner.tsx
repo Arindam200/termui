@@ -20,6 +20,12 @@ export interface BannerProps {
   title?: string;
   dismissible?: boolean;
   onDismiss?: () => void;
+  /** Override the variant color */
+  color?: string;
+  /** Left accent bar character. Default: '┃' */
+  accentChar?: string;
+  /** Gap between accent bar and content. Default: 1 */
+  gap?: number;
 }
 
 export function Banner({
@@ -29,24 +35,29 @@ export function Banner({
   title,
   dismissible = false,
   onDismiss,
+  color,
+  accentChar = '┃',
+  gap = 1,
 }: BannerProps) {
   const theme = useTheme();
   const [dismissed, setDismissed] = useState(false);
 
-  const variantColor = (() => {
-    switch (variant) {
-      case 'success':
-        return theme.colors.success;
-      case 'error':
-        return theme.colors.error;
-      case 'warning':
-        return theme.colors.warning;
-      case 'neutral':
-        return theme.colors.muted;
-      default:
-        return theme.colors.info;
-    }
-  })();
+  const variantColor =
+    color ??
+    (() => {
+      switch (variant) {
+        case 'success':
+          return theme.colors.success;
+        case 'error':
+          return theme.colors.error;
+        case 'warning':
+          return theme.colors.warning;
+        case 'neutral':
+          return theme.colors.muted;
+        default:
+          return theme.colors.info;
+      }
+    })();
 
   useInput((_, key) => {
     if (dismissible && key.escape) {
@@ -61,8 +72,8 @@ export function Banner({
 
   return (
     <Box flexDirection="column">
-      <Box flexDirection="row" gap={1}>
-        <Text color={variantColor}>┃</Text>
+      <Box flexDirection="row" gap={gap}>
+        <Text color={variantColor}>{accentChar}</Text>
         <Box flexDirection="column">
           <Box flexDirection="row" gap={1}>
             <Text color={variantColor}>{resolvedIcon}</Text>

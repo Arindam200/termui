@@ -9,10 +9,35 @@ export interface ModalProps {
   title?: string;
   width?: number;
   children?: ReactNode;
+  /** Border style. Default: 'round' */
+  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  /** Border color. Default: theme.colors.primary */
+  borderColor?: string;
+  /** Horizontal padding. Default: 1 */
+  paddingX?: number;
+  /** Vertical padding. Default: 0 */
+  paddingY?: number;
+  /** Title bar border style. Default: 'single' */
+  titleBorderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  /** Close hint text. Set to false to hide, or a string to customize. Default: 'Press Esc to close' */
+  closeHint?: string | false;
 }
 
-export function Modal({ open, onClose, title, width = 60, children }: ModalProps) {
+export function Modal({
+  open,
+  onClose,
+  title,
+  width = 60,
+  children,
+  borderStyle = 'round',
+  borderColor,
+  paddingX = 1,
+  paddingY = 0,
+  titleBorderStyle = 'single',
+  closeHint = 'Press Esc to close',
+}: ModalProps) {
   const theme = useTheme();
+  const resolvedBorderColor = borderColor ?? theme.colors.primary;
 
   useInput(
     (input, key) => {
@@ -27,25 +52,27 @@ export function Modal({ open, onClose, title, width = 60, children }: ModalProps
   return (
     <Box
       flexDirection="column"
-      borderStyle="round"
-      borderColor={theme.colors.primary}
+      borderStyle={borderStyle}
+      borderColor={resolvedBorderColor}
       width={width}
-      paddingX={1}
-      paddingY={0}
+      paddingX={paddingX}
+      paddingY={paddingY}
     >
       {title && (
-        <Box marginBottom={1} borderStyle="single" borderColor={theme.colors.border} paddingX={1}>
-          <Text bold color={theme.colors.primary}>
+        <Box marginBottom={1} borderStyle={titleBorderStyle} borderColor={theme.colors.border} paddingX={1}>
+          <Text bold color={resolvedBorderColor}>
             {title}
           </Text>
         </Box>
       )}
       <Box flexDirection="column">{children}</Box>
-      <Box marginTop={1}>
-        <Text color={theme.colors.mutedForeground} dimColor>
-          Press Esc to close
-        </Text>
-      </Box>
+      {closeHint !== false && (
+        <Box marginTop={1}>
+          <Text color={theme.colors.mutedForeground} dimColor>
+            {closeHint}
+          </Text>
+        </Box>
+      )}
     </Box>
   );
 }

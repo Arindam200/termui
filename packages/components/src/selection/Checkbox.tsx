@@ -9,6 +9,12 @@ export interface CheckboxProps {
   indeterminate?: boolean;
   disabled?: boolean;
   id?: string;
+  /** Character shown when checked. Default: '■' */
+  checkedIcon?: string;
+  /** Character shown when unchecked. Default: '□' */
+  uncheckedIcon?: string;
+  /** Character shown when indeterminate. Default: '▪' */
+  indeterminateIcon?: string;
 }
 
 export function Checkbox({
@@ -18,6 +24,9 @@ export function Checkbox({
   indeterminate = false,
   disabled = false,
   id,
+  checkedIcon = '■',
+  uncheckedIcon = '□',
+  indeterminateIcon = '▪',
 }: CheckboxProps) {
   const [internalChecked, setInternalChecked] = useState(false);
   const theme = useTheme();
@@ -33,7 +42,7 @@ export function Checkbox({
     }
   });
 
-  const icon = indeterminate ? '▪' : checked ? '■' : '□';
+  const icon = indeterminate ? indeterminateIcon : checked ? checkedIcon : uncheckedIcon;
   const iconColor = disabled
     ? theme.colors.mutedForeground
     : checked || indeterminate

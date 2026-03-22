@@ -10,6 +10,14 @@ export interface ToggleProps {
   offLabel?: string;
   id?: string;
   disabled?: boolean;
+  /** Icon shown when checked. Default: '●' */
+  checkedIcon?: string;
+  /** Icon shown when unchecked. Default: '○' */
+  uncheckedIcon?: string;
+  /** Border style. Default: 'round' */
+  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  /** Horizontal padding. Default: 1 */
+  paddingX?: number;
 }
 
 export function Toggle({
@@ -20,6 +28,10 @@ export function Toggle({
   offLabel = 'OFF',
   id,
   disabled = false,
+  checkedIcon = '●',
+  uncheckedIcon = '○',
+  borderStyle = 'round',
+  paddingX = 1,
 }: ToggleProps) {
   const theme = useTheme();
   const { isFocused } = useFocus({ id });
@@ -40,9 +52,9 @@ export function Toggle({
 
   return (
     <Box gap={1} alignItems="center">
-      <Box borderStyle="round" borderColor={focusColor} paddingX={1}>
+      <Box borderStyle={borderStyle} borderColor={focusColor} paddingX={paddingX}>
         <Text color={focusColor} bold={checked}>
-          {checked ? '●' : '○'} {stateLabel}
+          {checked ? checkedIcon : uncheckedIcon} {stateLabel}
         </Text>
       </Box>
       {label && (

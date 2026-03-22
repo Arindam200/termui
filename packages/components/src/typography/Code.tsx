@@ -6,6 +6,24 @@ export interface CodeProps {
   children: string;
   language?: string;
   inline?: boolean;
+  /** Border style. Default: 'single' */
+  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  /** Whether to show line numbers. Default: true */
+  showLineNumbers?: boolean;
+  /** Line number separator string. Default: '│ ' */
+  lineNumberSeparator?: string;
+  /** Override color for keyword tokens. Default: theme.colors.accent */
+  keywordColor?: string;
+  /** Override color for string tokens. Default: theme.colors.success */
+  stringColor?: string;
+  /** Override color for number tokens. Default: theme.colors.warning */
+  numberColor?: string;
+  /** Override color for comment tokens. Default: theme.colors.mutedForeground */
+  commentColor?: string;
+  /** Override color for operator tokens. Default: theme.colors.info */
+  operatorColor?: string;
+  /** Override color for plain tokens. Default: theme.colors.foreground */
+  plainColor?: string;
 }
 
 const KEYWORDS = new Set([
@@ -199,15 +217,28 @@ function CodeLine({
   );
 }
 
-export function Code({ children, language, inline = false }: CodeProps) {
+export function Code({
+  children,
+  language,
+  inline = false,
+  borderStyle = 'single',
+  showLineNumbers = true,
+  lineNumberSeparator = '│ ',
+  keywordColor: keywordColorProp,
+  stringColor: stringColorProp,
+  numberColor: numberColorProp,
+  commentColor: commentColorProp,
+  operatorColor: operatorColorProp,
+  plainColor: plainColorProp,
+}: CodeProps) {
   const theme = useTheme();
 
-  const keywordColor = theme.colors.accent;
-  const stringColor = theme.colors.success;
-  const numberColor = theme.colors.warning;
-  const commentColor = theme.colors.mutedForeground;
-  const operatorColor = theme.colors.info;
-  const plainColor = theme.colors.foreground;
+  const keywordColor = keywordColorProp ?? theme.colors.accent;
+  const stringColor = stringColorProp ?? theme.colors.success;
+  const numberColor = numberColorProp ?? theme.colors.warning;
+  const commentColor = commentColorProp ?? theme.colors.mutedForeground;
+  const operatorColor = operatorColorProp ?? theme.colors.info;
+  const plainColor = plainColorProp ?? theme.colors.foreground;
 
   const lines = children.split('\n');
 
@@ -215,7 +246,7 @@ export function Code({ children, language, inline = false }: CodeProps) {
     // Inline: single line, no border, no line numbers
     const displayLine = lines[0] ?? '';
     return (
-      <Box borderStyle="single" borderColor={theme.colors.border} paddingX={1}>
+      <Box borderStyle={borderStyle} borderColor={theme.colors.border} paddingX={1}>
         <CodeLine
           line={displayLine}
           keywordColor={keywordColor}
@@ -232,7 +263,7 @@ export function Code({ children, language, inline = false }: CodeProps) {
   const lineNumberWidth = String(lines.length).length;
 
   return (
-    <Box flexDirection="column" borderStyle="single" borderColor={theme.colors.border}>
+    <Box flexDirection="column" borderStyle={borderStyle} borderColor={theme.colors.border}>
       {language && (
         <Box justifyContent="flex-end" paddingX={1}>
           <Text color={theme.colors.mutedForeground}>{language}</Text>
@@ -240,10 +271,14 @@ export function Code({ children, language, inline = false }: CodeProps) {
       )}
       {lines.map((line, idx) => (
         <Box key={idx} flexDirection="row" paddingX={1}>
-          <Text color={theme.colors.mutedForeground}>
-            {String(idx + 1).padStart(lineNumberWidth, ' ')}{' '}
-          </Text>
-          <Text color={theme.colors.mutedForeground}>{'│ '}</Text>
+          {showLineNumbers && (
+            <>
+              <Text color={theme.colors.mutedForeground}>
+                {String(idx + 1).padStart(lineNumberWidth, ' ')}{' '}
+              </Text>
+              <Text color={theme.colors.mutedForeground}>{lineNumberSeparator}</Text>
+            </>
+          )}
           <CodeLine
             line={line}
             keywordColor={keywordColor}

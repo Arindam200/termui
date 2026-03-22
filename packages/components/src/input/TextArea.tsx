@@ -10,6 +10,12 @@ export interface TextAreaProps {
   rows?: number;
   label?: string;
   id?: string;
+  /** Border style. Default: 'round' */
+  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  /** Horizontal padding. Default: 1 */
+  paddingX?: number;
+  /** Cursor character shown when focused. Default: '█' */
+  cursor?: string;
 }
 
 export function TextArea({
@@ -20,6 +26,9 @@ export function TextArea({
   rows = 4,
   label,
   id,
+  borderStyle = 'round',
+  paddingX = 1,
+  cursor = '█',
 }: TextAreaProps) {
   const [internalValue, setInternalValue] = useState('');
   const [cursorLine, setCursorLine] = useState(0);
@@ -194,7 +203,7 @@ export function TextArea({
   return (
     <Box flexDirection="column">
       {label && <Text bold>{label}</Text>}
-      <Box flexDirection="column" borderStyle="round" borderColor={borderColor} paddingX={1}>
+      <Box flexDirection="column" borderStyle={borderStyle} borderColor={borderColor} paddingX={paddingX}>
         {paddedLines.map((line, rowIdx) => {
           const absoluteLineIdx = rowIdx + scrollOffset;
           const isActiveLine = isFocused && absoluteLineIdx === cursorLine;
@@ -203,7 +212,7 @@ export function TextArea({
             return (
               <Box key={rowIdx} flexDirection="row">
                 <Text color={theme.colors.mutedForeground}>{placeholder}</Text>
-                {isFocused && <Text color={theme.colors.focusRing}>█</Text>}
+                {isFocused && <Text color={theme.colors.focusRing}>{cursor}</Text>}
               </Box>
             );
           }
@@ -214,7 +223,7 @@ export function TextArea({
             return (
               <Box key={rowIdx} flexDirection="row">
                 <Text color={theme.colors.foreground}>{before}</Text>
-                <Text color={theme.colors.focusRing}>█</Text>
+                <Text color={theme.colors.focusRing}>{cursor}</Text>
                 <Text color={theme.colors.foreground}>{after}</Text>
               </Box>
             );

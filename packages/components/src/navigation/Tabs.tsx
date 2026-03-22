@@ -15,6 +15,16 @@ export interface TabsProps {
   activeTab?: string;
   onTabChange?: (key: string) => void;
   borderColor?: string;
+  /** Border style of the content panel. Default: 'single' */
+  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  /** Separator between tab labels. Default: ' │ ' */
+  separator?: string;
+  /** Horizontal padding of the tab bar. Default: 2 */
+  tabBarPaddingX?: number;
+  /** Horizontal padding of the content panel. Default: 1 */
+  paddingX?: number;
+  /** Vertical padding of the content panel. Default: 0 */
+  paddingY?: number;
 }
 
 export function Tabs({
@@ -23,6 +33,11 @@ export function Tabs({
   activeTab: controlledTab,
   onTabChange,
   borderColor,
+  borderStyle = 'single',
+  separator = ' │ ',
+  tabBarPaddingX = 2,
+  paddingX = 1,
+  paddingY = 0,
 }: TabsProps) {
   const theme = useTheme();
   const { stdout } = useStdout();
@@ -53,7 +68,7 @@ export function Tabs({
   return (
     <Box flexDirection="column">
       {/* Tab bar — plain row, no border */}
-      <Box paddingX={2} gap={0}>
+      <Box paddingX={tabBarPaddingX} gap={0}>
         {tabs.map((tab, idx) => {
           const isActive = tab.key === activeKey;
           return (
@@ -65,13 +80,13 @@ export function Tabs({
               >
                 {tab.label}
               </Text>
-              {idx < tabs.length - 1 && <Text color={resolvedBorderColor}> │ </Text>}
+              {idx < tabs.length - 1 && <Text color={resolvedBorderColor}>{separator}</Text>}
             </Box>
           );
         })}
       </Box>
       {/* Only the active tab's content is rendered */}
-      <Box borderStyle="single" borderColor={resolvedBorderColor} paddingX={1} paddingY={0}>
+      <Box borderStyle={borderStyle} borderColor={resolvedBorderColor} paddingX={paddingX} paddingY={paddingY}>
         {activeTab?.content}
       </Box>
     </Box>

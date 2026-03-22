@@ -13,6 +13,12 @@ export interface TreeProps {
   nodes: TreeNode[];
   onSelect?: (node: TreeNode) => void;
   defaultExpanded?: string[];
+  /** Icon shown for expanded branch nodes. Default: '▼' */
+  expandedIcon?: string;
+  /** Icon shown for collapsed branch nodes. Default: '▶' */
+  collapsedIcon?: string;
+  /** Default icon for leaf nodes (overridden by node.icon). Default: '•' */
+  leafIcon?: string;
 }
 
 interface FlatNode {
@@ -34,7 +40,14 @@ function flattenTree(nodes: TreeNode[], expandedKeys: Set<string>, depth = 0): F
   return result;
 }
 
-export function Tree({ nodes, onSelect, defaultExpanded = [] }: TreeProps) {
+export function Tree({
+  nodes,
+  onSelect,
+  defaultExpanded = [],
+  expandedIcon = '▼',
+  collapsedIcon = '▶',
+  leafIcon = '•',
+}: TreeProps) {
   const theme = useTheme();
   const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set(defaultExpanded));
   const [activeIndex, setActiveIndex] = useState(0);
@@ -78,9 +91,9 @@ export function Tree({ nodes, onSelect, defaultExpanded = [] }: TreeProps) {
         let prefix = '  '.repeat(depth);
         let indicator: string;
         if (hasChildren) {
-          indicator = isExpanded ? '▼' : '▶';
+          indicator = isExpanded ? expandedIcon : collapsedIcon;
         } else {
-          indicator = node.icon ?? '•';
+          indicator = node.icon ?? leafIcon;
         }
 
         return (

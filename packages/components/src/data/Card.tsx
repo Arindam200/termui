@@ -10,20 +10,39 @@ export interface CardProps {
   footer?: ReactNode;
   borderColor?: string;
   width?: number;
+  /** Border style. Default: 'round' */
+  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  /** Horizontal padding. Default: 1 */
+  paddingX?: number;
+  /** Vertical padding. Default: 0 */
+  paddingY?: number;
+  /** Character used for the footer divider. Default: '─' */
+  footerDividerChar?: string;
 }
 
-export function Card({ title, subtitle, children, footer, borderColor, width }: CardProps) {
+export function Card({
+  title,
+  subtitle,
+  children,
+  footer,
+  borderColor,
+  width,
+  borderStyle = 'round',
+  paddingX = 1,
+  paddingY = 0,
+  footerDividerChar = '─',
+}: CardProps) {
   const theme = useTheme();
   const resolvedBorderColor = borderColor ?? theme.colors.border;
 
   return (
     <Box
       flexDirection="column"
-      borderStyle="round"
+      borderStyle={borderStyle}
       borderColor={resolvedBorderColor}
       width={width}
-      paddingX={1}
-      paddingY={0}
+      paddingX={paddingX}
+      paddingY={paddingY}
     >
       {(title || subtitle) && (
         <Box flexDirection="column" paddingBottom={1}>
@@ -42,7 +61,7 @@ export function Card({ title, subtitle, children, footer, borderColor, width }: 
       <Box flexDirection="column">{children}</Box>
       {footer && (
         <Box flexDirection="column" marginTop={1} paddingTop={1}>
-          <Text color={resolvedBorderColor}>{'─'.repeat(30)}</Text>
+          <Text color={resolvedBorderColor}>{footerDividerChar.repeat(30)}</Text>
           <Box marginTop={0}>{footer}</Box>
         </Box>
       )}

@@ -15,6 +15,8 @@ export interface PanelProps {
     | 'singleDouble'
     | 'doubleSingle'
     | 'classic';
+  /** Show a border around the panel. Default: true */
+  bordered?: boolean;
   width?: number;
   height?: number;
   paddingX?: number;
@@ -27,6 +29,7 @@ export function Panel({
   titleColor,
   borderColor,
   borderStyle,
+  bordered = true,
   width,
   height,
   paddingX = 1,
@@ -35,14 +38,8 @@ export function Panel({
 }: PanelProps) {
   const theme = useTheme();
 
-  return (
-    <Box
-      flexDirection="column"
-      borderStyle={borderStyle ?? theme.border.style}
-      borderColor={borderColor ?? theme.colors.border}
-      width={width}
-      height={height}
-    >
+  const inner = (
+    <>
       {title && (
         <Box
           paddingX={paddingX}
@@ -57,6 +54,26 @@ export function Panel({
       <Box flexDirection="column" paddingX={paddingX} paddingY={paddingY}>
         {children}
       </Box>
+    </>
+  );
+
+  if (!bordered) {
+    return (
+      <Box flexDirection="column" width={width} height={height}>
+        {inner}
+      </Box>
+    );
+  }
+
+  return (
+    <Box
+      flexDirection="column"
+      borderStyle={borderStyle ?? theme.border.style}
+      borderColor={borderColor ?? theme.colors.border}
+      width={width}
+      height={height}
+    >
+      {inner}
     </Box>
   );
 }

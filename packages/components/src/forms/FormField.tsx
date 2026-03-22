@@ -9,15 +9,31 @@ export interface FormFieldProps {
   error?: string;
   hint?: string;
   required?: boolean;
+  /** Gap between label, input, and hint/error. Default: 0 */
+  gap?: number;
+  /** Icon shown before error message. Default: '✗' */
+  errorIcon?: string;
+  /** Color override for the label. Default: theme.colors.foreground */
+  labelColor?: string;
 }
 
-export function FormField({ label, children, error, hint, required }: FormFieldProps) {
+export function FormField({
+  label,
+  children,
+  error,
+  hint,
+  required,
+  gap = 0,
+  errorIcon = '✗',
+  labelColor,
+}: FormFieldProps) {
   const theme = useTheme();
+  const resolvedLabelColor = labelColor ?? theme.colors.foreground;
 
   return (
-    <Box flexDirection="column" gap={0}>
+    <Box flexDirection="column" gap={gap}>
       <Box gap={0}>
-        <Text bold>{label}</Text>
+        <Text bold color={resolvedLabelColor}>{label}</Text>
         {required && <Text color={theme.colors.error}> *</Text>}
       </Box>
       <Box>{children}</Box>
@@ -28,7 +44,7 @@ export function FormField({ label, children, error, hint, required }: FormFieldP
       )}
       {error && (
         <Text color={theme.colors.error}>
-          {'✗ '}
+          {errorIcon}{' '}
           {error}
         </Text>
       )}

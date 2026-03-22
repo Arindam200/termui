@@ -9,9 +9,30 @@ export interface BadgeProps {
   variant?: BadgeVariant;
   color?: string;
   bold?: boolean;
+  /** Show a border around the badge. Default: true */
+  bordered?: boolean;
+  /** Border style. Default: 'round' */
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
+  /** Horizontal padding. Default: 1 */
+  paddingX?: number;
 }
 
-export function Badge({ children, variant = 'default', color, bold = false }: BadgeProps) {
+export function Badge({
+  children,
+  variant = 'default',
+  color,
+  bold = false,
+  bordered = true,
+  borderStyle = 'round',
+  paddingX = 1,
+}: BadgeProps) {
   const theme = useTheme();
 
   const variantColor =
@@ -33,8 +54,16 @@ export function Badge({ children, variant = 'default', color, bold = false }: Ba
       }
     })();
 
+  if (!bordered) {
+    return (
+      <Text color={variantColor} bold={bold}>
+        {children}
+      </Text>
+    );
+  }
+
   return (
-    <Box borderStyle="round" borderColor={variantColor} paddingX={1}>
+    <Box borderStyle={borderStyle} borderColor={variantColor} paddingX={paddingX}>
       <Text color={variantColor} bold={bold}>
         {children}
       </Text>

@@ -13,6 +13,14 @@ export interface NumberInputProps {
   label?: string;
   id?: string;
   format?: (n: number) => string;
+  /** Border style. Default: 'round' */
+  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  /** Horizontal padding. Default: 1 */
+  paddingX?: number;
+  /** Cursor character shown when focused. Default: '█' */
+  cursor?: string;
+  /** Step hint format. Default: '↑ +{step}  ↓ -{step}' */
+  stepHint?: string;
 }
 
 export function NumberInput({
@@ -26,6 +34,10 @@ export function NumberInput({
   label,
   id,
   format,
+  borderStyle = 'round',
+  paddingX = 1,
+  cursor = '█',
+  stepHint,
 }: NumberInputProps) {
   const [internalValue, setInternalValue] = useState<number | undefined>(undefined);
   // Buffer holds raw digit string while user is typing
@@ -113,19 +125,19 @@ export function NumberInput({
     displayValue = format ? format(value) : String(value);
   }
 
-  const stepHint = `↑ +${step}  ↓ -${step}`;
+  const resolvedStepHint = stepHint ?? `↑ +${step}  ↓ -${step}`;
 
   return (
     <Box flexDirection="column">
       {label && <Text bold>{label}</Text>}
       <Box flexDirection="row" alignItems="center" gap={1}>
-        <Box borderStyle="round" borderColor={borderColor} paddingX={1}>
+        <Box borderStyle={borderStyle} borderColor={borderColor} paddingX={paddingX}>
           <Text color={displayValue ? theme.colors.foreground : theme.colors.mutedForeground}>
             {displayValue || placeholder}
           </Text>
-          {isFocused && <Text color={theme.colors.focusRing}>█</Text>}
+          {isFocused && <Text color={theme.colors.focusRing}>{cursor}</Text>}
         </Box>
-        {isFocused && <Text color={theme.colors.mutedForeground}>{stepHint}</Text>}
+        {isFocused && <Text color={theme.colors.mutedForeground}>{resolvedStepHint}</Text>}
       </Box>
     </Box>
   );

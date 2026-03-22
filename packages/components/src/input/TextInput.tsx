@@ -13,6 +13,21 @@ export interface TextInputProps {
   label?: string;
   autoFocus?: boolean;
   id?: string;
+  /** Show a border around the input. Default: true */
+  bordered?: boolean;
+  /** Border style. Default: 'round' */
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
+  /** Horizontal padding. Default: 1 */
+  paddingX?: number;
+  /** Cursor character shown when focused. Default: '█' */
+  cursor?: string;
 }
 
 export function TextInput({
@@ -26,6 +41,10 @@ export function TextInput({
   label,
   autoFocus = false,
   id,
+  bordered = true,
+  borderStyle = 'round',
+  paddingX = 1,
+  cursor = '█',
 }: TextInputProps) {
   const [internalValue, setInternalValue] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -68,15 +87,27 @@ export function TextInput({
       ? theme.colors.focusRing
       : theme.colors.border;
 
+  const inputContent = (
+    <>
+      <Text color={value ? theme.colors.foreground : theme.colors.mutedForeground}>
+        {displayValue || placeholder}
+      </Text>
+      {isFocused && <Text color={theme.colors.focusRing}>{cursor}</Text>}
+    </>
+  );
+
   return (
     <Box flexDirection="column">
       {label && <Text bold>{label}</Text>}
-      <Box borderStyle="round" borderColor={borderColor} width={width} paddingX={1}>
-        <Text color={value ? theme.colors.foreground : theme.colors.mutedForeground}>
-          {displayValue || placeholder}
-        </Text>
-        {isFocused && <Text color={theme.colors.focusRing}>█</Text>}
-      </Box>
+      {bordered ? (
+        <Box borderStyle={borderStyle} borderColor={borderColor} width={width} paddingX={paddingX}>
+          {inputContent}
+        </Box>
+      ) : (
+        <Box width={width} paddingX={paddingX}>
+          {inputContent}
+        </Box>
+      )}
       {error && <Text color={theme.colors.error}>{error}</Text>}
     </Box>
   );

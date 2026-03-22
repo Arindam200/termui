@@ -11,6 +11,14 @@ export interface PasswordInputProps {
   showToggle?: boolean;
   label?: string;
   id?: string;
+  /** Border style. Default: 'round' */
+  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  /** Horizontal padding. Default: 1 */
+  paddingX?: number;
+  /** Width of the input box. Default: undefined (auto) */
+  width?: number;
+  /** Cursor character shown when focused. Default: '█' */
+  cursor?: string;
 }
 
 export function PasswordInput({
@@ -22,6 +30,10 @@ export function PasswordInput({
   showToggle = false,
   label,
   id,
+  borderStyle = 'round',
+  paddingX = 1,
+  width,
+  cursor = '█',
 }: PasswordInputProps) {
   const [internalValue, setInternalValue] = useState('');
   const [isVisible, setIsVisible] = useState(false);
@@ -67,11 +79,11 @@ export function PasswordInput({
     <Box flexDirection="column">
       {label && <Text bold>{label}</Text>}
       <Box flexDirection="row" alignItems="center" gap={1}>
-        <Box borderStyle="round" borderColor={borderColor} paddingX={1}>
+        <Box borderStyle={borderStyle} borderColor={borderColor} paddingX={paddingX} width={width}>
           <Text color={value ? theme.colors.foreground : theme.colors.mutedForeground}>
             {displayValue || placeholder}
           </Text>
-          {isFocused && <Text color={theme.colors.focusRing}>█</Text>}
+          {isFocused && <Text color={theme.colors.focusRing}>{cursor}</Text>}
         </Box>
         {showToggle && isFocused && (
           <Text color={theme.colors.mutedForeground}>

@@ -9,9 +9,25 @@ export interface HeadingProps {
   level?: HeadingLevel;
   children: ReactNode;
   color?: string;
+  /** Prefix symbol for level 1 headings. Default: '██ ' */
+  prefix1?: string;
+  /** Prefix symbol for level 2 headings. Default: '▌ ' */
+  prefix2?: string;
+  /** Prefix symbol for level 3 headings. Default: '› ' */
+  prefix3?: string;
+  /** Whether to uppercase level 1 heading text. Default: true */
+  uppercase?: boolean;
 }
 
-export function Heading({ level = 1, children, color }: HeadingProps) {
+export function Heading({
+  level = 1,
+  children,
+  color,
+  prefix1 = '██ ',
+  prefix2 = '▌ ',
+  prefix3 = '› ',
+  uppercase = true,
+}: HeadingProps) {
   const theme = useTheme();
   const resolvedColor = color ?? theme.colors.primary;
 
@@ -20,10 +36,10 @@ export function Heading({ level = 1, children, color }: HeadingProps) {
       return (
         <Box>
           <Text color={resolvedColor} bold>
-            {'██ '}
+            {prefix1}
           </Text>
           <Text color={resolvedColor} bold>
-            {typeof children === 'string' ? children.toUpperCase() : children}
+            {uppercase && typeof children === 'string' ? children.toUpperCase() : children}
           </Text>
         </Box>
       );
@@ -32,7 +48,7 @@ export function Heading({ level = 1, children, color }: HeadingProps) {
       return (
         <Box>
           <Text color={resolvedColor} bold>
-            {'▌ '}
+            {prefix2}
           </Text>
           <Text color={resolvedColor} bold>
             {children}
@@ -43,7 +59,7 @@ export function Heading({ level = 1, children, color }: HeadingProps) {
     case 3:
       return (
         <Box>
-          <Text bold>{'› '}</Text>
+          <Text bold>{prefix3}</Text>
           <Text bold>{children}</Text>
         </Box>
       );
