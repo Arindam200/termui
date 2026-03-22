@@ -11,9 +11,15 @@ importers:
       ink:
         specifier: ^5.0.0
         version: 5.2.1(@types/react@18.3.28)(react@18.3.1)
+      latest-version:
+        specifier: ^9.0.0
+        version: 9.0.0
       react:
         specifier: ^18.0.0
         version: 18.3.1
+      semver:
+        specifier: ^7.6.0
+        version: 7.7.4
       strip-ansi:
         specifier: ^7.1.0
         version: 7.2.0

@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * TermUI CLI — npx termui
  */
@@ -76,7 +75,7 @@ async function main() {
     case '-v': {
       const { createRequire } = await import('module');
       const require = createRequire(import.meta.url);
-      const pkg = require('../../package.json') as { version: string };
+      const pkg = require('../package.json') as { version: string };
       printLogo();
       intro('termui');
       step(`Version ${hi(`v${pkg.version}`)}`);

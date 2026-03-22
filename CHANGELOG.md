@@ -2,6 +2,15 @@
 
 All notable changes to TermUI are documented here.
 
+## [1.0.2] — 2026-03-23
+
+### Fixed
+
+- Added missing `bin` field to root `package.json` so `npx termui` works
+- Wired CLI entry point into the tsup build (`dist/cli.js` with shebang banner)
+- Fixed `package.json` path resolution for `--version` in bundled CLI
+- Added `semver` and `latest-version` as runtime dependencies
+
 ## [1.0.0] — 2026-03-23
 
 ### Added
