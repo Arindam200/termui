@@ -1,7 +1,7 @@
 {
   "name": "termui",
   "private": false,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -22,6 +22,14 @@
       "import": "./dist/hooks.js",
       "types": "./dist/hooks.d.ts"
     }
+  },
+  "dependencies": {
+    "ink": "^5.0.0",
+    "react": "^18.0.0",
+    "strip-ansi": "^7.1.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
   },
   "files": [
     "dist",
