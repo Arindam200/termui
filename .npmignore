@@ -1,0 +1,36 @@
+# Source (only ship dist/)
+src/
+
+# Tests
+**/*.test.ts
+**/*.spec.ts
+**/__tests__/
+coverage/
+
+# Config & tooling
+tsconfig.json
+tsconfig.build.json
+vitest.config.ts
+.eslintrc.json
+.prettierrc
+turbo.json
+
+# Workspace files
+pnpm-workspace.yaml
+pnpm-lock.yaml
+
+# CI/CD & GitHub
+.github/
+
+# Claude AI context
+.claude/
+
+# Planning files
+plan/
+
+# Examples
+examples/
+
+# Dev dependencies cache
+.turbo/
+node_modules/

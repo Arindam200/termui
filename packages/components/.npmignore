@@ -1,0 +1,17 @@
+# Source (only ship dist/)
+src/
+
+# Tests
+**/*.test.ts
+**/*.spec.ts
+**/__tests__/
+coverage/
+
+# Config & tooling
+tsconfig.json
+tsconfig.build.json
+vitest.config.ts
+
+# Dev cache
+.turbo/
+node_modules/
