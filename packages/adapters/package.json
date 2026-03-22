@@ -1,0 +1,128 @@
+{
+  "name": "@termui/adapters",
+  "version": "0.1.0",
+  "description": "TermUI ecosystem adapters — clack, picocolors, git, GitHub, PTY, and more",
+  "type": "module",
+  "main": "./dist/args/index.js",
+  "types": "./dist/args/index.d.ts",
+  "exports": {
+    "./args": {
+      "types": "./dist/args/index.d.ts",
+      "import": "./dist/args/index.js"
+    },
+    "./clack": {
+      "types": "./dist/clack/index.d.ts",
+      "import": "./dist/clack/index.js"
+    },
+    "./clack-ink": {
+      "types": "./dist/clack-ink/index.d.ts",
+      "import": "./dist/clack-ink/index.js"
+    },
+    "./picocolors": {
+      "types": "./dist/picocolors/index.d.ts",
+      "import": "./dist/picocolors/index.js"
+    },
+    "./gray-matter": {
+      "types": "./dist/gray-matter/index.d.ts",
+      "import": "./dist/gray-matter/index.js"
+    },
+    "./git": {
+      "types": "./dist/git/index.d.ts",
+      "import": "./dist/git/index.js"
+    },
+    "./github": {
+      "types": "./dist/github/index.d.ts",
+      "import": "./dist/github/index.js"
+    },
+    "./keychain": {
+      "types": "./dist/keychain/index.d.ts",
+      "import": "./dist/keychain/index.js"
+    },
+    "./pty": {
+      "types": "./dist/pty/index.d.ts",
+      "import": "./dist/pty/index.js"
+    },
+    "./execa": {
+      "types": "./dist/execa/index.d.ts",
+      "import": "./dist/execa/index.js"
+    },
+    "./link": {
+      "types": "./dist/link/index.d.ts",
+      "import": "./dist/link/index.js"
+    },
+    "./semver-update": {
+      "types": "./dist/semver-update/index.d.ts",
+      "import": "./dist/semver-update/index.js"
+    },
+    "./conf": {
+      "types": "./dist/conf/index.d.ts",
+      "import": "./dist/conf/index.js"
+    },
+    "./completion": {
+      "types": "./dist/completion/index.d.ts",
+      "import": "./dist/completion/index.js"
+    },
+    "./internal/color-env": {
+      "types": "./dist/internal/color-env.d.ts",
+      "import": "./dist/internal/color-env.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "@termui/components": "workspace:*",
+    "@termui/core": "workspace:*",
+    "ink": "^5.0.0",
+    "react": "^18.0.0",
+    "@octokit/rest": "^21.0.2",
+    "commander": "^12.1.0",
+    "conf": "^13.0.0",
+    "env-paths": "^3.0.0",
+    "execa": "^9.5.2",
+    "keytar": "^7.9.0",
+    "latest-version": "^9.0.0",
+    "node-pty": "^1.0.0",
+    "semver": "^7.6.3",
+    "simple-git": "^3.27.0",
+    "yaml": "^2.6.0",
+    "yargs": "^17.7.2"
+  },
+  "peerDependenciesMeta": {
+    "@termui/components": { "optional": true },
+    "@termui/core": { "optional": true },
+    "ink": { "optional": true },
+    "react": { "optional": true },
+    "@octokit/rest": { "optional": true },
+    "commander": { "optional": true },
+    "conf": { "optional": true },
+    "env-paths": { "optional": true },
+    "execa": { "optional": true },
+    "keytar": { "optional": true },
+    "latest-version": { "optional": true },
+    "node-pty": { "optional": true },
+    "semver": { "optional": true },
+    "simple-git": { "optional": true },
+    "yaml": { "optional": true },
+    "yargs": { "optional": true }
+  },
+  "devDependencies": {
+    "@termui/components": "workspace:*",
+    "@termui/core": "workspace:*",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "ink": "^5.0.0",
+    "react": "^18.0.0",
+    "simple-git": "^3.27.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.4.0",
+    "vitest": "^1.0.0",
+    "yaml": "^2.6.0"
+  }
+}

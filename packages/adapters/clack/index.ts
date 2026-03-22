@@ -164,3 +164,79 @@ export const log = {
     console.log(`${ansi.magenta('◆')} ${ansi.bold(msg)}`);
   },
 };
+
+/** Thrown when a prompt is cancelled (clack-compatible). */
+export class CancelError extends Error {
+  constructor(message = 'Prompt cancelled') {
+    super(message);
+    this.name = 'CancelError';
+  }
+}
+
+export function cancel(message = 'Cancelled'): never {
+  throw new CancelError(message);
+}
+
+/** Single-select by numeric index (portable without raw TTY). */
+export async function select<T>(opts: {
+  message: string;
+  options: { value: T; label: string; hint?: string }[];
+}): Promise<T> {
+  console.log(`\n${ansi.cyan('◆')}  ${ansi.bold(opts.message)}\n`);
+  opts.options.forEach((o, i) => {
+    const hint = o.hint ? ansi.dim(` ${o.hint}`) : '';
+    console.log(`  ${ansi.dim(`${i + 1}.`)} ${o.label}${hint}`);
+  });
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  return new Promise((resolve, reject) => {
+    rl.question(`${ansi.dim('›')} Enter number: `, (ans) => {
+      rl.close();
+      const n = parseInt(ans.trim(), 10);
+      const opt = opts.options[n - 1];
+      if (!opt) {
+        console.log(`${ansi.red('▲')} Invalid choice; using first option.\n`);
+        resolve(opts.options[0]!.value);
+        return;
+      }
+      console.log(`${ansi.green('◇')}  ${ansi.dim(String(opt.label))}\n`);
+      resolve(opt.value);
+    });
+    rl.on('error', reject);
+  });
+}
+
+/** Multi-select via comma-separated indices. */
+export async function multiselect<T>(opts: {
+  message: string;
+  options: { value: T; label: string }[];
+}): Promise<T[]> {
+  console.log(`\n${ansi.cyan('◆')}  ${ansi.bold(opts.message)}`);
+  console.log(`${ansi.dim('  (comma-separated numbers, e.g. 1,3)')}\n`);
+  opts.options.forEach((o, i) => {
+    console.log(`  ${ansi.dim(`${i + 1}.`)} ${o.label}`);
+  });
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  return new Promise((resolve, reject) => {
+    rl.question(`${ansi.dim('›')} `, (ans) => {
+      rl.close();
+      const parts = ans
+        .split(/[,\s]+/)
+        .map((s) => parseInt(s.trim(), 10))
+        .filter((n) => !Number.isNaN(n));
+      const picked: T[] = [];
+      for (const n of parts) {
+        const o = opts.options[n - 1];
+        if (o) picked.push(o.value);
+      }
+      console.log(`${ansi.green('◇')}  ${ansi.dim(`${picked.length} selected`)}\n`);
+      resolve(picked);
+    });
+    rl.on('error', reject);
+  });
+}
+
+/** Run nested prompts under a titled group. */
+export async function group<T>(opts: { title: string; prompts: () => Promise<T> }): Promise<T> {
+  console.log(`\n${ansi.magenta('◆')}  ${ansi.bold(opts.title)}\n`);
+  return opts.prompts();
+}

@@ -1,7 +1,7 @@
 {
   "name": "termui",
   "private": false,
-  "version": "0.1.4",
+  "version": "0.1.5",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -21,6 +21,66 @@
     "./hooks": {
       "import": "./dist/hooks.js",
       "types": "./dist/hooks.d.ts"
+    },
+    "./args": {
+      "import": "./dist/args.js",
+      "types": "./dist/args.d.ts"
+    },
+    "./clack": {
+      "import": "./dist/clack.js",
+      "types": "./dist/clack.d.ts"
+    },
+    "./clack-ink": {
+      "import": "./dist/clack-ink.js",
+      "types": "./dist/clack-ink.d.ts"
+    },
+    "./picocolors": {
+      "import": "./dist/picocolors.js",
+      "types": "./dist/picocolors.d.ts"
+    },
+    "./gray-matter": {
+      "import": "./dist/gray-matter.js",
+      "types": "./dist/gray-matter.d.ts"
+    },
+    "./git": {
+      "import": "./dist/git.js",
+      "types": "./dist/git.d.ts"
+    },
+    "./github": {
+      "import": "./dist/github.js",
+      "types": "./dist/github.d.ts"
+    },
+    "./keychain": {
+      "import": "./dist/keychain.js",
+      "types": "./dist/keychain.d.ts"
+    },
+    "./pty": {
+      "import": "./dist/pty.js",
+      "types": "./dist/pty.d.ts"
+    },
+    "./execa": {
+      "import": "./dist/execa.js",
+      "types": "./dist/execa.d.ts"
+    },
+    "./link": {
+      "import": "./dist/link.js",
+      "types": "./dist/link.d.ts"
+    },
+    "./semver-update": {
+      "import": "./dist/semver-update.js",
+      "types": "./dist/semver-update.d.ts"
+    },
+    "./conf": {
+      "import": "./dist/conf.js",
+      "types": "./dist/conf.d.ts"
+    },
+    "./completion": {
+      "import": "./dist/completion.js",
+      "types": "./dist/completion.d.ts"
+    },
+    "./color-env": {
+      "import": "./dist/color-env.js",
+      "types": "./dist/color-env.d.ts"
     }
   },
   "dependencies": {

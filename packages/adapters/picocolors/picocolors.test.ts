@@ -16,9 +16,13 @@ describe('picocolors (colours enabled)', () => {
   let pc: typeof import('./index.js').pc;
 
   beforeEach(async () => {
-    // Ensure NO_COLOR is not set for this suite
     delete process.env['NO_COLOR'];
+    process.env['FORCE_COLOR'] = '1';
     pc = (await import('./index.js')).pc;
+  });
+
+  afterEach(() => {
+    delete process.env['FORCE_COLOR'];
   });
 
   it('pc is exported', () => {

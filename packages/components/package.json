@@ -21,7 +21,8 @@
   "dependencies": {
     "@termui/core": "workspace:*",
     "ink": "^5.0.0",
-    "react": "^18.0.0"
+    "react": "^18.0.0",
+    "strip-ansi": "^7.1.0"
   },
   "peerDependencies": {
     "react": "^18.0.0"

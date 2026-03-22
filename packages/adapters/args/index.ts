@@ -1,8 +1,8 @@
 /**
  * termui/args adapter — createCLI helper with styled help output using ANSI codes.
+ * Optional bridges: yargs (applyYargsStyledHelp) and commander (createCommanderProgram).
  */
 
-// ANSI helpers
 const c = {
   bold: (s: string) => `\x1b[1m${s}\x1b[0m`,
   dim: (s: string) => `\x1b[2m${s}\x1b[0m`,
@@ -16,11 +16,14 @@ const c = {
 export interface CLICommand {
   name: string;
   description: string;
-  args?: Record<string, {
-    description: string;
-    required?: boolean;
-    default?: unknown;
-  }>;
+  args?: Record<
+    string,
+    {
+      description: string;
+      required?: boolean;
+      default?: unknown;
+    }
+  >;
 }
 
 export interface CLIConfig {
@@ -51,8 +54,11 @@ ${c.bold('Commands:')}`);
       if (cmd.args) {
         for (const [argKey, argDef] of Object.entries(cmd.args)) {
           const required = argDef.required ? c.yellow(' (required)') : '';
-          const defaultVal = argDef.default !== undefined ? c.dim(` [default: ${argDef.default}]`) : '';
-          console.log(`    ${c.green(`--${argKey}`)}  ${argDef.description}${required}${defaultVal}`);
+          const defaultVal =
+            argDef.default !== undefined ? c.dim(` [default: ${argDef.default}]`) : '';
+          console.log(
+            `    ${c.green(`--${argKey}`)}  ${argDef.description}${required}${defaultVal}`
+          );
         }
       }
     }
@@ -71,7 +77,12 @@ ${c.bold('Options:')}
   function parse(argv?: string[]): { command: string; args: Record<string, unknown> } | null {
     const rawArgs = argv ?? process.argv.slice(2);
 
-    if (rawArgs.length === 0 || rawArgs[0] === 'help' || rawArgs[0] === '--help' || rawArgs[0] === '-h') {
+    if (
+      rawArgs.length === 0 ||
+      rawArgs[0] === 'help' ||
+      rawArgs[0] === '--help' ||
+      rawArgs[0] === '-h'
+    ) {
       help();
       return null;
     }
@@ -92,7 +103,6 @@ ${c.bold('Options:')}
 
     const parsedArgs: Record<string, unknown> = {};
 
-    // Apply defaults
     if (commandDef.args) {
       for (const [key, def] of Object.entries(commandDef.args)) {
         if (def.default !== undefined) {
@@ -101,7 +111,6 @@ ${c.bold('Options:')}
       }
     }
 
-    // Parse --key value or --key=value
     const rest = rawArgs.slice(1);
     for (let i = 0; i < rest.length; i++) {
       const arg = rest[i]!;
@@ -133,7 +142,6 @@ ${c.bold('Options:')}
       }
     }
 
-    // Check required args
     if (commandDef.args) {
       for (const [key, def] of Object.entries(commandDef.args)) {
         if (def.required && parsedArgs[key] === undefined) {
@@ -149,10 +157,80 @@ ${c.bold('Options:')}
   return { parse, help, version };
 }
 
+/** Alias for {@link createCLI}. */
+export { createCLI as createMinimalCLI };
+
 function coerce(val: string): unknown {
   if (val === 'true') return true;
   if (val === 'false') return false;
   if (val === 'null') return null;
   if (/^-?\d+(\.\d+)?$/.test(val)) return parseFloat(val);
   return val;
+}
+
+export interface HelpThemeMeta {
+  name: string;
+  version: string;
+  description?: string;
+}
+
+function colorizePlainHelp(text: string): string {
+  return text
+    .split('\n')
+    .map((line) => {
+      if (/^Usage:/i.test(line)) return `${c.bold(c.cyan(line))}`;
+      if (/^Options:/i.test(line)) return `${c.bold(line)}`;
+      if (/^Commands:/i.test(line)) return `${c.bold(line)}`;
+      if (line.trim().startsWith('-')) return `${c.green(line)}`;
+      return line;
+    })
+    .join('\n');
+}
+
+/**
+ * Apply TermUI-style usage banner and script name to a yargs argv chain.
+ * Requires optional peer `yargs`.
+ */
+export async function applyYargsStyledHelp(
+  y: unknown,
+  meta: HelpThemeMeta
+): Promise<unknown> {
+  const argv = y as { scriptName: (n: string) => unknown; usage: (s: string) => unknown };
+  const banner = `${c.bold(c.magenta(meta.name))} ${c.dim(`v${meta.version}`)}${meta.description ? `\n${meta.description}` : ''}`;
+  return (argv.scriptName(meta.name) as { usage: (s: string) => unknown }).usage(banner);
+}
+
+/**
+ * Create a Commander program with colored stdout for help text.
+ * Requires optional peer `commander`.
+ */
+export async function createCommanderProgram(meta: HelpThemeMeta): Promise<unknown> {
+  const { Command } = await import('commander');
+  const program = new Command();
+  program.name(meta.name);
+  program.version(meta.version, '-v, --version');
+  if (meta.description) {
+    program.description(meta.description);
+  }
+  program.configureOutput({
+    writeOut: (str: string) => process.stdout.write(colorizePlainHelp(str)),
+    writeErr: (str: string) => process.stderr.write(str),
+  });
+  return program;
+}
+
+/**
+ * Build a yargs instance from process.argv with TermUI styling applied.
+ * Requires optional peer `yargs`.
+ */
+export async function createYargsCLI(
+  configure: (y: unknown) => unknown,
+  meta: HelpThemeMeta
+): Promise<unknown> {
+  const yargs = (await import('yargs')).default;
+  const { hideBin } = await import('yargs/helpers');
+  let chain = yargs(hideBin(process.argv));
+  chain = (await applyYargsStyledHelp(chain, meta)) as typeof chain;
+  chain = configure(chain) as typeof chain;
+  return chain;
 }

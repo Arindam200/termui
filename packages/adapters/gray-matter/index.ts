@@ -1,6 +1,6 @@
 /**
  * termui/gray-matter adapter — inline frontmatter parser compatible with gray-matter API.
- * Parses YAML-like frontmatter from --- delimiters. No external deps.
+ * Use {@link matterWithYaml} for full YAML (requires optional peer `yaml`).
  */
 
 export interface GrayMatterResult {
@@ -9,18 +9,13 @@ export interface GrayMatterResult {
   excerpt?: string;
 }
 
-/**
- * Parse a simple YAML-like key: value frontmatter block.
- * Supports: strings, numbers, booleans, null, arrays (- item), nested objects (indented key: val).
- */
-function parseYaml(yamlStr: string): Record<string, unknown> {
+function parseSimpleYaml(yamlStr: string): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   const lines = yamlStr.split('\n');
 
   let i = 0;
   while (i < lines.length) {
     const line = lines[i]!;
-    // Skip blank lines and comments
     if (!line.trim() || line.trim().startsWith('#')) {
       i++;
       continue;
@@ -36,12 +31,10 @@ function parseYaml(yamlStr: string): Record<string, unknown> {
     const rawVal = line.slice(colonIdx + 1).trim();
 
     if (rawVal === '' || rawVal === '|' || rawVal === '>') {
-      // Multi-line value or array — look ahead for indented lines
       const childLines: string[] = [];
       const baseIndent = line.match(/^(\s*)/)?.[1]?.length ?? 0;
       i++;
 
-      // Check if next lines are array items
       let isArray = false;
       while (i < lines.length) {
         const nextLine = lines[i]!;
@@ -74,18 +67,13 @@ function parseYaml(yamlStr: string): Record<string, unknown> {
 }
 
 function parseScalar(val: string): unknown {
-  // Remove surrounding quotes
   if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
     return val.slice(1, -1);
   }
-  // Boolean
   if (val === 'true') return true;
   if (val === 'false') return false;
-  // Null
   if (val === 'null' || val === '~') return null;
-  // Number
   if (/^-?\d+(\.\d+)?$/.test(val)) return parseFloat(val);
-  // Inline array [a, b, c]
   if (val.startsWith('[') && val.endsWith(']')) {
     return val
       .slice(1, -1)
@@ -95,43 +83,65 @@ function parseScalar(val: string): unknown {
   return val;
 }
 
-/**
- * Parse frontmatter + content from a string.
- * Compatible with the gray-matter API.
- */
-export function matter(input: string, opts?: { excerpt?: boolean }): GrayMatterResult {
+function extractFrontmatter(input: string): { yamlStr: string; content: string } | null {
   const DELIMITER = '---';
+  if (!input.startsWith(DELIMITER)) return null;
 
-  // Check if file starts with ---
-  if (!input.startsWith(DELIMITER)) {
-    return { data: {}, content: input };
-  }
-
-  // Find the closing ---
   const after = input.slice(DELIMITER.length);
   const closeIdx = after.indexOf('\n' + DELIMITER);
-
-  if (closeIdx === -1) {
-    // No closing delimiter found
-    return { data: {}, content: input };
-  }
+  if (closeIdx === -1) return null;
 
   const yamlStr = after.slice(0, closeIdx).trim();
   let content = after.slice(closeIdx + DELIMITER.length + 1).trimStart();
-
-  // Remove trailing --- if present (some formats have it)
   if (content.startsWith(DELIMITER)) {
     content = content.slice(DELIMITER.length).trimStart();
   }
 
-  const data = parseYaml(yamlStr);
+  return { yamlStr, content };
+}
 
-  let excerpt: string | undefined;
-  if (opts?.excerpt) {
-    // Excerpt is everything up to the first blank line or first ---
-    const excerptMatch = content.match(/^([\s\S]+?)(\n\n|^---)/m);
-    excerpt = excerptMatch ? excerptMatch[1]!.trim() : content.trim();
+function extractExcerpt(content: string): string | undefined {
+  const match = content.match(/^([\s\S]+?)(\n\n|^---)/m);
+  return match ? match[1]!.trim() : content.trim();
+}
+
+/**
+ * Parse frontmatter + content from a string (zero deps).
+ * Compatible with the gray-matter API.
+ */
+export function matter(input: string, opts?: { excerpt?: boolean }): GrayMatterResult {
+  const fm = extractFrontmatter(input);
+  if (!fm) return { data: {}, content: input };
+
+  const data = parseSimpleYaml(fm.yamlStr);
+  const excerpt = opts?.excerpt ? extractExcerpt(fm.content) : undefined;
+  return { data, content: fm.content, excerpt };
+}
+
+/**
+ * Parse frontmatter using the `yaml` package for full YAML compatibility.
+ * Falls back to {@link matter} if `yaml` is unavailable or parsing throws.
+ */
+export async function matterWithYaml(
+  input: string,
+  opts?: { excerpt?: boolean }
+): Promise<GrayMatterResult> {
+  const fm = extractFrontmatter(input);
+  if (!fm) return { data: {}, content: input };
+
+  let data: Record<string, unknown>;
+  try {
+    const yamlMod = await import('yaml');
+    const parsed = yamlMod.parse(fm.yamlStr);
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      data = parsed as Record<string, unknown>;
+    } else {
+      data = { value: parsed };
+    }
+  } catch {
+    return matter(input, opts);
   }
 
-  return { data, content, excerpt };
+  const excerpt = opts?.excerpt ? extractExcerpt(fm.content) : undefined;
+  return { data, content: fm.content, excerpt };
 }

@@ -1,20 +1,20 @@
 /**
  * termui/picocolors adapter — superset of picocolors API using ANSI escape codes.
- * Respects NO_COLOR env var.
+ * Respects NO_COLOR, FORCE_COLOR, CLICOLOR (via shared color-env detection).
  */
 
-const enabled = !process.env['NO_COLOR'] && process.stdout.isTTY !== false;
+import { isColorEnabled } from '../internal/color-env.js';
 
 function wrap(open: number, close: number) {
   return (str: string): string => {
-    if (!enabled) return str;
+    if (!isColorEnabled()) return str;
     return `\x1b[${open}m${str}\x1b[${close}m`;
   };
 }
 
 function wrapBg(open: number, close: number) {
   return (str: string): string => {
-    if (!enabled) return str;
+    if (!isColorEnabled()) return str;
     return `\x1b[${open}m${str}\x1b[${close}m`;
   };
 }
@@ -58,14 +58,14 @@ export const pc = {
     const g = parseInt(hex.slice(2, 4), 16);
     const b = parseInt(hex.slice(4, 6), 16);
     return (str: string): string => {
-      if (!enabled) return str;
+      if (!isColorEnabled()) return str;
       return `\x1b[38;2;${r};${g};${b}m${str}\x1b[39m`;
     };
   },
 
   ansi256(code: number): (str: string) => string {
     return (str: string): string => {
-      if (!enabled) return str;
+      if (!isColorEnabled()) return str;
       return `\x1b[38;5;${code}m${str}\x1b[39m`;
     };
   },

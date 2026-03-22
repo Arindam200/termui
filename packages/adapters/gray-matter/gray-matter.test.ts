@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { matter } from './index.js';
+import { matter, matterWithYaml } from './index.js';
 import type { GrayMatterResult } from './index.js';
 
 // ── Basic contract ─────────────────────────────────────────────────────────
@@ -267,6 +267,21 @@ Intro text.
 More content here.`;
     const result = matter(input, { excerpt: true });
     expect(result.excerpt).not.toContain('More content here.');
+  });
+});
+
+// ── matterWithYaml ─────────────────────────────────────────────────────────
+
+describe('matterWithYaml', () => {
+  it('parses nested YAML via yaml package', async () => {
+    const input = `---
+meta:
+  tags: [a, b]
+---
+Body`;
+    const r = await matterWithYaml(input);
+    expect(r.data['meta']).toEqual({ tags: ['a', 'b'] });
+    expect(r.content.trim()).toBe('Body');
   });
 });
 

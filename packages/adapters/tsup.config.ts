@@ -1,0 +1,57 @@
+import { defineConfig } from 'tsup';
+import path from 'path';
+
+export default defineConfig({
+  entry: {
+    'args/index': 'args/index.ts',
+    'clack/index': 'clack/index.ts',
+    'clack-ink/index': 'clack-ink/index.tsx',
+    'picocolors/index': 'picocolors/index.ts',
+    'gray-matter/index': 'gray-matter/index.ts',
+    'git/index': 'git/index.ts',
+    'github/index': 'github/index.ts',
+    'keychain/index': 'keychain/index.ts',
+    'pty/index': 'pty/index.ts',
+    'execa/index': 'execa/index.ts',
+    'link/index': 'link/index.ts',
+    'semver-update/index': 'semver-update/index.ts',
+    'conf/index': 'conf/index.ts',
+    'completion/index': 'completion/index.ts',
+    'internal/color-env': 'internal/color-env.ts',
+  },
+  format: ['esm'],
+  dts: true,
+  clean: true,
+  sourcemap: true,
+  external: [
+    'react',
+    'ink',
+    '@termui/core',
+    '@termui/core/hooks',
+    '@termui/core/styling',
+    '@termui/core/terminal',
+    '@termui/components',
+    '@octokit/rest',
+    'commander',
+    'conf',
+    'env-paths',
+    'execa',
+    'keytar',
+    'latest-version',
+    'node-pty',
+    'semver',
+    'simple-git',
+    'yaml',
+    'yargs',
+    'yargs/helpers',
+  ],
+  esbuildOptions(options) {
+    options.alias = {
+      '@termui/core': path.resolve(__dirname, '../core/src/index.ts'),
+      '@termui/core/hooks': path.resolve(__dirname, '../core/src/hooks/index.ts'),
+      '@termui/core/styling': path.resolve(__dirname, '../core/src/styling/index.ts'),
+      '@termui/core/terminal': path.resolve(__dirname, '../core/src/terminal/index.ts'),
+      '@termui/components': path.resolve(__dirname, '../components/src/index.ts'),
+    };
+  },
+});

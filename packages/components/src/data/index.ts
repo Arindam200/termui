@@ -17,3 +17,5 @@ export { JSONView } from './JSONView.js';
 export type { JSONViewProps } from './JSONView.js';
 export { DirectoryTree } from './DirectoryTree.js';
 export type { DirectoryTreeProps } from './DirectoryTree.js';
+export { GitStatus } from './GitStatus.js';
+export type { GitStatusProps } from './GitStatus.js';
