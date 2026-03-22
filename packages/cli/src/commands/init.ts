@@ -29,12 +29,14 @@ const THEMES = [
 
 type Theme = (typeof THEMES)[number]['value'];
 
-export async function init(_args: string[]): Promise<void> {
+export async function init(_args: string[], opts?: { skipHeader?: boolean }): Promise<void> {
   const cwd = process.cwd();
 
   // ─── Logo + badge ───────────────────────────────────────────────────────────
-  printLogo();
-  intro('termui');
+  if (!opts?.skipHeader) {
+    printLogo();
+    intro('termui');
+  }
 
   // ─── Step 1: Project info ───────────────────────────────────────────────────
   step(`Initializing in ${hi(cwd)}`);

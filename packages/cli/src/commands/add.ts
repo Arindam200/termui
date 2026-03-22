@@ -32,7 +32,7 @@ const CATEGORY_DIR: Record<string, string> = {
   templates: 'templates',
 };
 
-export async function add(args: string[]): Promise<void> {
+export async function add(args: string[], opts?: { skipHeader?: boolean }): Promise<void> {
   if (args.length === 0) {
     console.error(`\x1b[31mError:\x1b[0m Please specify a component name.`);
     console.error(`  Example: \x1b[36mnpx termui add spinner\x1b[0m\n`);
@@ -43,8 +43,10 @@ export async function add(args: string[]): Promise<void> {
   const config = getConfig(cwd);
   const registryUrl = config.registry ?? 'https://arindam200.github.io/termui';
 
-  printLogo();
-  intro('termui');
+  if (!opts?.skipHeader) {
+    printLogo();
+    intro('termui');
+  }
 
   // Resolve registry manifest
   active('Connecting to registry…');

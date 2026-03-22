@@ -16,7 +16,7 @@ const CATEGORY_ICONS: Record<string, string> = {
   templates: '🎨',
 };
 
-export async function list(_args: string[]): Promise<void> {
+export async function list(_args: string[], opts?: { skipHeader?: boolean }): Promise<void> {
   const registry = getLocalRegistry();
   const components = Object.values(registry.components);
 
@@ -27,8 +27,10 @@ export async function list(_args: string[]): Promise<void> {
     byCategory[comp.category]!.push(comp);
   }
 
-  printLogo();
-  intro('termui');
+  if (!opts?.skipHeader) {
+    printLogo();
+    intro('termui');
+  }
 
   for (const [category, comps] of Object.entries(byCategory)) {
     const icon = CATEGORY_ICONS[category] ?? '•';
