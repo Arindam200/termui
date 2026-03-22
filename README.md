@@ -24,14 +24,13 @@ TermUI fixes all three.
 ## Quick Start
 
 ```bash
-# 1. Initialize in your project
-npx termui init
+# Launch the interactive menu
+npx termui
 
-# 2. Add components
+# Or use commands directly
+npx termui init
 npx termui add spinner
 npx termui add table select alert
-
-# 3. Browse all components
 npx termui list
 ```
 
@@ -68,34 +67,87 @@ render(<App />);
 
 ---
 
-## Components (v0.1.0 — 19 components)
+## Components (v1.1.3 — 101 components)
 
-| Category   | Components                        |
-| ---------- | --------------------------------- |
-| Layout     | `Box` `Stack` `Grid` `ScrollView` |
-| Typography | `Text` `Badge`                    |
-| Input      | `TextInput`                       |
-| Selection  | `Select` `Checkbox`               |
-| Data       | `List` `Table`                    |
-| Feedback   | `Spinner` `ProgressBar` `Alert`   |
-| Navigation | `Tabs`                            |
-| Overlays   | `Modal`                           |
-| Forms      | `Form`                            |
-| Utility    | `Panel` `Toggle`                  |
+| Category   | Components                                                                                     |
+| ---------- | ---------------------------------------------------------------------------------------------- |
+| Layout     | `Box` `Stack` `Grid` `ScrollView`                                                              |
+| Typography | `Text` `Badge` + more                                                                          |
+| Input      | `TextInput` + more                                                                             |
+| Selection  | `Select` `Checkbox` `MultiSelect` + more                                                       |
+| Data       | `List` `Table` `DataGrid` + more                                                               |
+| Feedback   | `Spinner` `ProgressBar` `Alert` + more                                                         |
+| Navigation | `Tabs` + more                                                                                  |
+| Overlays   | `Modal` + more                                                                                 |
+| Forms      | `Form` `Wizard` `TimePicker` + more                                                            |
+| Charts     | `Sparkline` `BarChart` `LineChart` `PieChart` `HeatMap` `Gauge`                                |
+| Utility    | `Timer` `Stopwatch` `Clock` `Clipboard` `KeyboardShortcuts` `Help` `ErrorBoundary` `Log` `QRCode` `Image` |
+| Templates  | `SplashScreen` `InfoBox` `BulletList` `AppShell` `WelcomeScreen` `LoginFlow` `UsageMonitor` `SetupFlow` `HelpScreen` |
+
+Browse everything: `npx termui list` or `npx termui preview`
+
+---
+
+## CLI
+
+`npx termui` with no arguments launches a full interactive menu:
+
+```
+◆  What would you like to do?
+  ● Add a component        browse by category
+  ○ Use a template         starter layouts & pages
+  ○ Initialize project     set up termui.config.json
+  ○ Change theme           dracula, nord, catppuccin…
+  ○ Preview component gallery
+  ○ Browse all components
+  ○ Dev mode               watch & hot-reload
+  ○ Show help
+```
+
+| Command                        | Description                              |
+| ------------------------------ | ---------------------------------------- |
+| `npx termui`                   | Interactive menu                         |
+| `npx termui init`              | Initialize TermUI in your project        |
+| `npx termui add <component>`   | Add one or more components               |
+| `npx termui add --all`         | Add all 101 components at once           |
+| `npx termui update <component>`| Re-download a component from the registry|
+| `npx termui list`              | Browse all available components          |
+| `npx termui diff <component>`  | Show diff vs registry version            |
+| `npx termui theme [name]`      | List or apply a theme                    |
+| `npx termui preview`           | Interactive component gallery            |
+| `npx termui dev`               | Watch mode — hot-reload on file change   |
 
 ---
 
 ## Theming
 
-TermUI ships 3 built-in themes: **Default**, **Dracula**, **Nord**.
+TermUI ships 8 built-in themes.
+
+```bash
+npx termui theme dracula
+npx termui theme nord
+npx termui theme catppuccin
+```
+
+| Theme         | Description                        |
+| ------------- | ---------------------------------- |
+| `default`     | Clean, neutral palette             |
+| `dracula`     | Dark purple with vibrant colors    |
+| `nord`        | Arctic, north-bluish palette       |
+| `catppuccin`  | Soothing pastel mocha tones        |
+| `monokai`     | Classic warm dark theme            |
+| `tokyo-night` | Vibrant neon city                  |
+| `one-dark`    | Atom-inspired dark                 |
+| `solarized`   | Ethan Schoonover classic           |
+
+Or use a theme programmatically:
 
 ```tsx
-import { ThemeProvider, draculaTheme, nordTheme } from '@termui/core';
+import { ThemeProvider, draculaTheme } from '@termui/core';
 
-// Wrap your app
 <ThemeProvider theme={draculaTheme}>
   <App />
-</ThemeProvider>;
+</ThemeProvider>
 ```
 
 ### Custom theme
@@ -118,20 +170,41 @@ const myTheme = createTheme({
 
 ```ts
 import {
-  useInput, // keyboard input
-  useFocus, // component focus state
+  useInput,        // keyboard input
+  useFocus,        // component focus state
   useFocusManager, // programmatic focus
-  useTheme, // access theme tokens
-  useTerminal, // cols, rows, color depth
-  useAnimation, // frame-based animation
-  useInterval, // safe setInterval
-  useClipboard, // OSC 52 clipboard
-  useKeymap, // declarative keybindings
-  useMouse, // mouse events
-  useResize, // terminal resize
-  useAsync, // async data loading
+  useTheme,        // access theme tokens
+  useTerminal,     // cols, rows, color depth
+  useAnimation,    // frame-based animation
+  useInterval,     // safe setInterval
+  useClipboard,    // OSC 52 clipboard
+  useKeymap,       // declarative keybindings
+  useMouse,        // mouse events
+  useResize,       // terminal resize
+  useAsync,        // async data loading
 } from '@termui/core';
 ```
+
+---
+
+## Testing
+
+`@termui/testing` provides headless testing utilities for TermUI components:
+
+```ts
+import { renderToString, screen, waitFor, fireEvent } from '@termui/testing';
+
+const output = await renderToString(<Spinner style="dots" />);
+expect(screen.hasText('⠋', output)).toBe(true);
+```
+
+| Export                | Description                                      |
+| --------------------- | ------------------------------------------------ |
+| `renderToString`      | Render a component to a plain string (one frame) |
+| `createTestRenderer`  | Reusable renderer with `render` / `cleanup`      |
+| `screen`              | Query helpers: `getByText`, `hasText`, `getLines`, etc. |
+| `fireEvent`           | Simulate keyboard input: `key`, `type`, `press`  |
+| `waitFor`             | Poll an assertion until it passes or times out   |
 
 ---
 
@@ -153,9 +226,12 @@ import {
 termui/
 ├── packages/
 │   ├── core/          # Terminal layer, styling engine, 12 hooks
-│   ├── components/    # 19+ UI components
+│   ├── components/    # 101 UI components
+│   ├── testing/       # Headless testing utilities
+│   ├── adapters/      # Drop-in adapters (clack, picocolors, gray-matter…)
 │   └── cli/           # npx termui CLI tool
 ├── registry/          # Component registry (schema + meta)
+├── templates/         # Starter app templates
 ├── examples/
 │   └── demo/          # Interactive demo app
 └── .github/
@@ -173,24 +249,29 @@ pnpm install
 # Run all tests
 pnpm test
 
+# Type-check all packages
+pnpm typecheck
+
+# Build all packages
+pnpm build
+
 # Run interactive demo
 pnpm --filter @termui/demo start
 
-# Test CLI
-node --import tsx/esm packages/cli/src/cli.ts help
-node --import tsx/esm packages/cli/src/cli.ts list
+# Test CLI locally
+node --import tsx/esm packages/cli/src/cli.ts
 ```
 
 ---
 
 ## Roadmap
 
-| Phase       | Status      | Description                                            |
-| ----------- | ----------- | ------------------------------------------------------ |
-| **Phase 1** | ✅ **Done** | 19 components, CLI (init/add/list), 3 themes, 12 hooks |
-| **Phase 2** | 🔜 Planned  | 50+ components, full theming, docs site — v1.0         |
-| **Phase 3** | 🔜 Planned  | All 90+ components, charts, dev tools, templates       |
-| **Phase 4** | 🔜 Planned  | Plugin system, community registry, Vue/Svelte adapters |
+| Phase       | Status      | Description                                                          |
+| ----------- | ----------- | -------------------------------------------------------------------- |
+| **Phase 1** | ✅ **Done** | 19 components, CLI (init/add/list), 3 themes, 12 hooks               |
+| **Phase 2** | ✅ **Done** | 75 components, 8 themes, adapters, diff/update/theme commands        |
+| **Phase 3** | ✅ **Done** | 101 components, charts, dev tools, templates, testing package        |
+| **Phase 4** | 🔜 Planned  | Plugin system, community registry, Vue/Svelte adapters               |
 
 ---
 
