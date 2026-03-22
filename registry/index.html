@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TermUI Registry</title>
+  <style>
+    body { font-family: monospace; max-width: 860px; margin: 40px auto; padding: 0 20px; background: #0d0d0d; color: #cdd6f4; }
+    h1 { color: #cba6f7; } h2 { color: #89b4fa; border-bottom: 1px solid #313244; padding-bottom: 6px; }
+    a { color: #89dceb; text-decoration: none; } a:hover { text-decoration: underline; }
+    code { background: #181825; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    td { padding: 6px 10px; vertical-align: top; border-bottom: 1px solid #1e1e2e; }
+    .cat { color: #a6e3a1; white-space: nowrap; width: 120px; }
+    .meta { color: #6c7086; font-size: 0.85em; margin-top: 8px; }
+    pre { background: #181825; padding: 12px 16px; border-radius: 6px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>TermUI Registry</h1>
+  <p class="meta">75 components &nbsp;·&nbsp; v1.0.0 &nbsp;·&nbsp; Updated 2026-03-22</p>
+
+  <h2>Install a component</h2>
+  <pre>npx termui add spinner</pre>
+
+  <h2>API endpoints</h2>
+  <ul>
+    <li><a href="schema.json">schema.json</a> — full component manifest</li>
+    <li><code>components/&lt;name&gt;/meta.json</code> — component metadata</li>
+    <li><code>components/&lt;name&gt;/&lt;Name&gt;.tsx</code> — component source</li>
+  </ul>
+
+  <h2>Components (75)</h2>
+  <table><tr><td class="cat">layout</td><td><a href="components/box/meta.json"><code>box</code></a> <a href="components/stack/meta.json"><code>stack</code></a> <a href="components/grid/meta.json"><code>grid</code></a> <a href="components/scroll-view/meta.json"><code>scroll-view</code></a> <a href="components/divider/meta.json"><code>divider</code></a> <a href="components/spacer/meta.json"><code>spacer</code></a> <a href="components/columns/meta.json"><code>columns</code></a> <a href="components/center/meta.json"><code>center</code></a> <a href="components/aspect-ratio/meta.json"><code>aspect-ratio</code></a></td></tr>
+<tr><td class="cat">typography</td><td><a href="components/text/meta.json"><code>text</code></a> <a href="components/badge/meta.json"><code>badge</code></a> <a href="components/heading/meta.json"><code>heading</code></a> <a href="components/code/meta.json"><code>code</code></a> <a href="components/link/meta.json"><code>link</code></a> <a href="components/tag/meta.json"><code>tag</code></a> <a href="components/markdown/meta.json"><code>markdown</code></a> <a href="components/gradient/meta.json"><code>gradient</code></a> <a href="components/big-text/meta.json"><code>big-text</code></a> <a href="components/digits/meta.json"><code>digits</code></a></td></tr>
+<tr><td class="cat">input</td><td><a href="components/text-input/meta.json"><code>text-input</code></a> <a href="components/text-area/meta.json"><code>text-area</code></a> <a href="components/password-input/meta.json"><code>password-input</code></a> <a href="components/number-input/meta.json"><code>number-input</code></a> <a href="components/search-input/meta.json"><code>search-input</code></a> <a href="components/masked-input/meta.json"><code>masked-input</code></a> <a href="components/email-input/meta.json"><code>email-input</code></a> <a href="components/path-input/meta.json"><code>path-input</code></a></td></tr>
+<tr><td class="cat">selection</td><td><a href="components/checkbox/meta.json"><code>checkbox</code></a> <a href="components/select/meta.json"><code>select</code></a> <a href="components/multi-select/meta.json"><code>multi-select</code></a> <a href="components/radio-group/meta.json"><code>radio-group</code></a> <a href="components/checkbox-group/meta.json"><code>checkbox-group</code></a> <a href="components/tree-select/meta.json"><code>tree-select</code></a> <a href="components/tag-input/meta.json"><code>tag-input</code></a> <a href="components/color-picker/meta.json"><code>color-picker</code></a></td></tr>
+<tr><td class="cat">data</td><td><a href="components/list/meta.json"><code>list</code></a> <a href="components/table/meta.json"><code>table</code></a> <a href="components/json/meta.json"><code>json</code></a> <a href="components/virtual-list/meta.json"><code>virtual-list</code></a> <a href="components/tree/meta.json"><code>tree</code></a> <a href="components/directory-tree/meta.json"><code>directory-tree</code></a> <a href="components/key-value/meta.json"><code>key-value</code></a> <a href="components/definition/meta.json"><code>definition</code></a> <a href="components/card/meta.json"><code>card</code></a> <a href="components/git-status/meta.json"><code>git-status</code></a></td></tr>
+<tr><td class="cat">feedback</td><td><a href="components/spinner/meta.json"><code>spinner</code></a> <a href="components/progress-bar/meta.json"><code>progress-bar</code></a> <a href="components/alert/meta.json"><code>alert</code></a> <a href="components/progress-circle/meta.json"><code>progress-circle</code></a> <a href="components/status-message/meta.json"><code>status-message</code></a> <a href="components/toast/meta.json"><code>toast</code></a> <a href="components/banner/meta.json"><code>banner</code></a> <a href="components/skeleton/meta.json"><code>skeleton</code></a></td></tr>
+<tr><td class="cat">navigation</td><td><a href="components/tabs/meta.json"><code>tabs</code></a> <a href="components/tabbed-content/meta.json"><code>tabbed-content</code></a> <a href="components/breadcrumb/meta.json"><code>breadcrumb</code></a> <a href="components/pagination/meta.json"><code>pagination</code></a> <a href="components/command-palette/meta.json"><code>command-palette</code></a> <a href="components/menu/meta.json"><code>menu</code></a> <a href="components/sidebar/meta.json"><code>sidebar</code></a></td></tr>
+<tr><td class="cat">overlays</td><td><a href="components/modal/meta.json"><code>modal</code></a> <a href="components/dialog/meta.json"><code>dialog</code></a> <a href="components/drawer/meta.json"><code>drawer</code></a> <a href="components/tooltip/meta.json"><code>tooltip</code></a> <a href="components/popover/meta.json"><code>popover</code></a></td></tr>
+<tr><td class="cat">forms</td><td><a href="components/form/meta.json"><code>form</code></a> <a href="components/form-field/meta.json"><code>form-field</code></a> <a href="components/wizard/meta.json"><code>wizard</code></a> <a href="components/confirm/meta.json"><code>confirm</code></a> <a href="components/date-picker/meta.json"><code>date-picker</code></a> <a href="components/time-picker/meta.json"><code>time-picker</code></a> <a href="components/file-picker/meta.json"><code>file-picker</code></a></td></tr>
+<tr><td class="cat">utility</td><td><a href="components/panel/meta.json"><code>panel</code></a> <a href="components/toggle/meta.json"><code>toggle</code></a> <a href="components/embedded-terminal/meta.json"><code>embedded-terminal</code></a></td></tr></table>
+
+  <p class="meta">
+    <a href="https://github.com/arindam200/termui">GitHub</a>
+  </p>
+</body>
+</html>

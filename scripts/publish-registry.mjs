@@ -275,4 +275,65 @@ if (updated === clientSrc) {
   console.log(`Updated packages/cli/src/registry/client.ts (getLocalRegistry)`);
 }
 
+// ---------------------------------------------------------------------------
+// Generate registry/index.html (required by GitHub Pages)
+// ---------------------------------------------------------------------------
+
+const byCategory = {};
+for (const comp of COMPONENTS) {
+  if (!byCategory[comp.category]) byCategory[comp.category] = [];
+  byCategory[comp.category].push(comp);
+}
+
+const rows = Object.entries(byCategory).map(([cat, comps]) =>
+  `<tr><td class="cat">${cat}</td><td>${comps.map(c =>
+    `<a href="components/${c.name}/meta.json"><code>${c.name}</code></a>`
+  ).join(' ')}</td></tr>`
+).join('\n');
+
+const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TermUI Registry</title>
+  <style>
+    body { font-family: monospace; max-width: 860px; margin: 40px auto; padding: 0 20px; background: #0d0d0d; color: #cdd6f4; }
+    h1 { color: #cba6f7; } h2 { color: #89b4fa; border-bottom: 1px solid #313244; padding-bottom: 6px; }
+    a { color: #89dceb; text-decoration: none; } a:hover { text-decoration: underline; }
+    code { background: #181825; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    td { padding: 6px 10px; vertical-align: top; border-bottom: 1px solid #1e1e2e; }
+    .cat { color: #a6e3a1; white-space: nowrap; width: 120px; }
+    .meta { color: #6c7086; font-size: 0.85em; margin-top: 8px; }
+    pre { background: #181825; padding: 12px 16px; border-radius: 6px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>TermUI Registry</h1>
+  <p class="meta">${COMPONENTS.length} components &nbsp;·&nbsp; v1.0.0 &nbsp;·&nbsp; Updated ${new Date().toISOString().slice(0,10)}</p>
+
+  <h2>Install a component</h2>
+  <pre>npx termui add spinner</pre>
+
+  <h2>API endpoints</h2>
+  <ul>
+    <li><a href="schema.json">schema.json</a> — full component manifest</li>
+    <li><code>components/&lt;name&gt;/meta.json</code> — component metadata</li>
+    <li><code>components/&lt;name&gt;/&lt;Name&gt;.tsx</code> — component source</li>
+  </ul>
+
+  <h2>Components (${COMPONENTS.length})</h2>
+  <table>${rows}</table>
+
+  <p class="meta">
+    <a href="https://github.com/arindam200/termui">GitHub</a>
+  </p>
+</body>
+</html>
+`;
+
+writeFileSync(join(ROOT, 'registry/index.html'), html);
+console.log('Generated registry/index.html');
+
 console.log('\nDone.');
