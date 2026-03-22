@@ -1,0 +1,9 @@
+{
+  "name": "welcome-screen",
+  "description": "Two-panel welcome dashboard with titled border, logo, greeting, and sections",
+  "version": "0.1.0",
+  "category": "templates",
+  "files": ["WelcomeScreen.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

@@ -2,6 +2,31 @@
 
 All notable changes to TermUI are documented here.
 
+## [1.1.0] — 2026-03-23
+
+### Added
+
+**Templates (9 new components)**
+
+- `SplashScreen` — styled startup banner with big ASCII art title, alternating row colors for depth, subtitle, OSC 8 author hyperlink, and optional status line; install via `npx termui add splash-screen`
+- `InfoBox` — bordered info panel with `Header` (icon + label + version), `Row`, and `TreeRow` (`└ key: value`) sub-components; install via `npx termui add info-box`
+- `BulletList` — nested structured content with `●`/`└`/`□` prefixes; sub-components: `Item`, `Sub`, `TreeItem`, `CheckItem`; install via `npx termui add bullet-list`
+- `AppShell` — full-screen TUI layout with `Header`, `Tip`, `Input`, `Content` (scrollable), and `Hints` footer; pairs with `InfoBox` and `BulletList`; install via `npx termui add app-shell`
+- `WelcomeScreen` — two-panel welcome dashboard with titled border (`── AppName v1.0 ──`), `Left`/`Right` panels, `Greeting`, `Logo`, `Meta`, and `Section` sub-components; install via `npx termui add welcome-screen`
+- `LoginFlow` — full-page onboarding/auth screen with `Announcement` banner, big ASCII title, `Description` paragraphs, and `Select` list with `›` cursor + number key shortcuts; install via `npx termui add login-flow`
+- `UsageMonitor` — real-time resource dashboard with `Header` (◆✦ decorator + ═══ separator), `Tags` bracket display, `Section`, `Metric` (progress bars + status dots), `DistributionMetric` (multi-color segmented bar), `Stats`, `Predictions`, and live-clock `StatusBar`; driven by `refreshInterval` + `useInterval`; install via `npx termui add usage-monitor`
+- `SetupFlow` — `@clack/prompts`-style sequential step flow with `◇`/`◆`/`│` visual language, colored pill `Badge`, `Step` (status icons: ◇/◆/✓/✗), `Spinner`, and `MultiSelect` with space-to-toggle; install via `npx termui add setup-flow`
+- `HelpScreen` — static CLI help screen with figlet banner, tagline, usage line, description, and auto-aligned `Section`/`Row` columns (flagWidth auto-detected); install via `npx termui add help-screen`
+
+**Data Display**
+
+- `DataGrid` — advanced data grid extending `Table` with column sorting, global filter (`/` key), pagination (`n`/`p`), optional row numbers, and custom cell renderers; install via `npx termui add data-grid`
+
+**Registry**
+
+- Registry updated to v1.1.0 with all 10 new components (101 total)
+- Templates category added to `npx termui preview` catalog with full usage examples
+
 ## [1.0.2] — 2026-03-23
 
 ### Fixed

@@ -1,0 +1,9 @@
+{
+  "name": "app-shell",
+  "description": "Full-screen TUI layout with header, tip bar, full-width input, scrollable content, and hints footer",
+  "version": "0.1.0",
+  "category": "templates",
+  "files": ["AppShell.tsx"],
+  "deps": [],
+  "peerComponents": ["info-box", "bullet-list"]
+}

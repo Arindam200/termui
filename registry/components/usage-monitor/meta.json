@@ -1,0 +1,9 @@
+{
+  "name": "usage-monitor",
+  "description": "Real-time dashboard with diamond header, progress metrics, burn rate, predictions, and status bar",
+  "version": "0.1.0",
+  "category": "templates",
+  "files": ["UsageMonitor.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

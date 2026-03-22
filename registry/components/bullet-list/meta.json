@@ -1,0 +1,9 @@
+{
+  "name": "bullet-list",
+  "description": "Nested structured content with ●/└/□ bullet prefixes",
+  "version": "0.1.0",
+  "category": "templates",
+  "files": ["BulletList.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

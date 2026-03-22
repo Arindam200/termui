@@ -1,7 +1,7 @@
 {
   "name": "termui",
   "private": false,
-  "version": "1.0.2",
+  "version": "1.1.0",
   "type": "module",
   "bin": {
     "termui": "./dist/cli.js"
@@ -102,7 +102,7 @@
   ],
   "scripts": {
     "build": "turbo run build && tsup",
-    "build:root": "tsup",
+    "build:root": "tsup && chmod +x dist/cli.js",
     "dev": "turbo run dev --parallel",
     "test": "turbo run test",
     "lint": "turbo run lint",

@@ -30,3 +30,6 @@ export * from './utility/index.js';
 
 // Charts
 export * from './charts/index.js';
+
+// Templates
+export * from './templates/index.js';

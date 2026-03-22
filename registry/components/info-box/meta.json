@@ -1,0 +1,9 @@
+{
+  "name": "info-box",
+  "description": "Bordered info panel with header, key-value rows, and tree-prefix rows",
+  "version": "0.1.0",
+  "category": "templates",
+  "files": ["InfoBox.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

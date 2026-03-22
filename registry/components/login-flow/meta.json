@@ -1,0 +1,9 @@
+{
+  "name": "login-flow",
+  "description": "Full-page onboarding/login screen with announcement banner, big ASCII title, description, and numbered select",
+  "version": "0.1.0",
+  "category": "templates",
+  "files": ["LoginFlow.tsx"],
+  "deps": [],
+  "peerComponents": ["big-text"]
+}

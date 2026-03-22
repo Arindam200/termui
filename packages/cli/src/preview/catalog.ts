@@ -1951,6 +1951,234 @@ await waitFor(() => {
       },
     ],
   },
+  {
+    name: 'Templates',
+    components: [
+      {
+        name: 'SplashScreen',
+        description:
+          'Styled startup banner with big ASCII art title, subtitle, author credit with OSC 8 hyperlink, and optional status line.',
+        props: [
+          { name: 'title', type: 'string', required: true },
+          { name: 'font', type: "'block' | 'simple'", required: false, default: "'block'" },
+          { name: 'titleColor', type: 'string', required: false },
+          { name: 'titleColorAlt', type: 'string', required: false },
+          { name: 'subtitle', type: 'string', required: false },
+          { name: 'subtitleDim', type: 'boolean', required: false, default: 'true' },
+          { name: 'author', type: '{ name: string; href?: string }', required: false },
+          { name: 'statusLine', type: 'ReactNode', required: false },
+          { name: 'padding', type: 'number', required: false, default: '2' },
+        ],
+        usage: `import { SplashScreen } from '@termui/components'
+
+<SplashScreen
+  title="CC LENS"
+  titleColor="#FFA500"
+  titleColorAlt="#FFB84D"
+  subtitle="Claude Code Lens  —  your ~/.claude/ at a glance"
+  author={{ name: 'Arindam', href: 'https://github.com/Arindam200' }}
+  statusLine={<Text>Starting server on <Text color="orange">http://localhost:3000</Text></Text>}
+/>`,
+      },
+      {
+        name: 'InfoBox',
+        description:
+          'Bordered info panel with header row (icon + label + version) and tree rows (└ key: value). Used in AppShell and WelcomeScreen.',
+        props: [
+          {
+            name: 'borderStyle',
+            type: "'single' | 'rounded' | 'double' | 'bold'",
+            required: false,
+            default: "'single'",
+          },
+          { name: 'borderColor', type: 'string', required: false },
+          { name: 'padding', type: '[number, number]', required: false, default: '[0, 1]' },
+          { name: 'width', type: "number | 'full'", required: false },
+        ],
+        usage: `import { InfoBox } from '@termui/components'
+
+<InfoBox>
+  <InfoBox.Header icon="●" label="OpenAI Codex" description="(research preview)" version="v0.1.25" versionColor="cyan" />
+</InfoBox>
+
+<InfoBox>
+  <InfoBox.Row label="localhost" value="session:" valueDetail="5b703..." valueColor="magenta" />
+  <InfoBox.TreeRow label="workdir" value="~/myproject" />
+  <InfoBox.TreeRow label="model" value="gpt-4" bold />
+</InfoBox>`,
+      },
+      {
+        name: 'BulletList',
+        description:
+          'Nested structured content with ●/└/□ bullet prefixes. Used inside AppShell.Content.',
+        props: [],
+        usage: `import { BulletList } from '@termui/components'
+
+<BulletList>
+  <BulletList.Item label="Top-level item">
+    <BulletList.Sub>
+      <BulletList.TreeItem label="Sub-item with tree prefix" />
+      <BulletList.CheckItem done={false} color="cyan" label="Pending task" />
+      <BulletList.CheckItem done={true} label="Completed task" />
+    </BulletList.Sub>
+  </BulletList.Item>
+</BulletList>`,
+      },
+      {
+        name: 'AppShell',
+        description:
+          'Full-screen TUI layout: header info panel, scrollable content, full-width input bar, hints footer. Pairs with InfoBox and BulletList.',
+        props: [{ name: 'fullscreen', type: 'boolean', required: false, default: 'true' }],
+        usage: `import { AppShell, InfoBox, BulletList } from '@termui/components'
+
+<AppShell>
+  <AppShell.Header>
+    <InfoBox>
+      <InfoBox.Header icon=">_" label="MyApp" version="v0.0.0" />
+      <InfoBox.TreeRow label="model" value="gpt-4" />
+    </InfoBox>
+  </AppShell.Header>
+  <AppShell.Tip>Use /feedback to send logs.</AppShell.Tip>
+  <AppShell.Input value={input} onChange={setInput} onSubmit={handleSubmit} placeholder="Ask anything..." />
+  <AppShell.Content>
+    <BulletList>
+      <BulletList.Item label="Response content here" />
+    </BulletList>
+  </AppShell.Content>
+  <AppShell.Hints items={['explain this codebase', 'fix any build errors']} />
+</AppShell>`,
+      },
+      {
+        name: 'WelcomeScreen',
+        description:
+          'Two-panel welcome dashboard with titled border (── AppName v1.0 ──), left panel (greeting + logo + meta), right panel (sections). Inspired by Claude Code startup.',
+        props: [
+          { name: 'appName', type: 'string', required: true },
+          { name: 'appNameColor', type: 'string', required: false },
+          { name: 'version', type: 'string', required: false },
+          { name: 'borderColor', type: 'string', required: false },
+          { name: 'leftWidth', type: 'number', required: false, default: '26' },
+        ],
+        usage: `import { WelcomeScreen } from '@termui/components'
+
+<WelcomeScreen appName="Claude Code" version="v2.1.81" appNameColor="#CC7744" borderColor="#CC7744">
+  <WelcomeScreen.Left>
+    <WelcomeScreen.Greeting>Welcome back Arindam!</WelcomeScreen.Greeting>
+    <WelcomeScreen.Logo>{'  ┌──┐  ┌┐  \\n  │██│  ││  \\n  └──┘──┘│  '}</WelcomeScreen.Logo>
+    <WelcomeScreen.Meta items={['Sonnet 4.6', 'Claude Pro', '~/Developer']} separator=" · " dim />
+  </WelcomeScreen.Left>
+  <WelcomeScreen.Right>
+    <WelcomeScreen.Section title="Tips" titleColor="#CC7744">
+      Run /init to create a CLAUDE.md file.
+    </WelcomeScreen.Section>
+  </WelcomeScreen.Right>
+</WelcomeScreen>`,
+      },
+      {
+        name: 'LoginFlow',
+        description:
+          'Full-page onboarding/login screen with announcement banner, big ASCII title, description paragraphs, and numbered selection list with › cursor.',
+        props: [
+          { name: 'title', type: 'string', required: false },
+          { name: 'titleColor', type: 'string', required: false },
+          { name: 'padding', type: 'number', required: false, default: '2' },
+          { name: 'onSelect', type: '(index: number) => void', required: false },
+        ],
+        usage: `import { LoginFlow } from '@termui/components'
+
+<LoginFlow title="CLAUDE CODE" titleColor="#E8714A" onSelect={(i) => handleLogin(i)}>
+  <LoginFlow.Announcement icon="*" iconColor="#E8714A">
+    Welcome to <Text bold>Claude Code</Text> research preview!
+  </LoginFlow.Announcement>
+  <LoginFlow.Description bold>Claude Code can now be used with your Max subscription.</LoginFlow.Description>
+  <LoginFlow.Description dim>Pricing may evolve as we move towards general availability.</LoginFlow.Description>
+  <LoginFlow.Select
+    label="Select login method:"
+    options={['Anthropic Console (API usage billing)', 'Claude app (requires Max subscription)']}
+    activeColor="cyan"
+    onSelect={(i) => handleLogin(i)}
+  />
+</LoginFlow>`,
+      },
+      {
+        name: 'UsageMonitor',
+        description:
+          'Real-time dashboard: ◆✦ header, ═══ separator, bracket tags, emoji metric rows with progress bars, burn rate, predictions, and sticky clock status bar.',
+        props: [{ name: 'refreshInterval', type: 'number', required: false, default: '1000' }],
+        usage: `import { UsageMonitor } from '@termui/components'
+
+<UsageMonitor refreshInterval={1000}>
+  <UsageMonitor.Header title="CLAUDE CODE USAGE MONITOR" titleColor="cyan" />
+  <UsageMonitor.Tags items={['custom', 'europe/warsaw']} />
+  <UsageMonitor.Section icon="🗂" title="Session-Based Dynamic Limits">
+    <UsageMonitor.Metric icon="💰" label="Cost Usage:" value={44.49} max={164.32} percent={27.1} status="green" format="currency" />
+    <UsageMonitor.Metric icon="⏰" label="Time to Reset:" value={141} max={240} percent={58.75} status="yellow" format="duration" showMax={false} />
+  </UsageMonitor.Section>
+  <UsageMonitor.Stats>
+    <UsageMonitor.StatRow icon="🔥" label="Burn Rate:" value="2233.4 tokens/min" valueSuffix="⚡" />
+  </UsageMonitor.Stats>
+  <UsageMonitor.StatusBar clock sessionLabel="Active session" exitHint="Ctrl+C to exit" statusDot="green" />
+</UsageMonitor>`,
+      },
+      {
+        name: 'SetupFlow',
+        description:
+          '@clack/prompts-style sequential step flow with ◇/◆/│ visual language, colored pill badge, info steps, spinner, and multi-select.',
+        props: [
+          { name: 'title', type: 'string', required: false },
+          { name: 'titleColor', type: 'string', required: false, default: "'#888888'" },
+          { name: 'connectorChar', type: 'string', required: false, default: "'│'" },
+        ],
+        usage: `import { SetupFlow } from '@termui/components'
+
+<SetupFlow title="SKILLS" titleColor="#888888">
+  <SetupFlow.Badge label="skills" bg="cyan" color="black" />
+  <SetupFlow.Step status="done">Source: https://github.com/nuxt/ui.git</SetupFlow.Step>
+  <SetupFlow.Step status="done">Repository cloned</SetupFlow.Step>
+  <SetupFlow.MultiSelect
+    label="Select skills to install"
+    hint="space to toggle"
+    options={[
+      { value: 'nuxt-ui', label: 'nuxt-ui', description: 'Build UIs with @nuxt/ui v4' },
+      { value: 'contributing', label: 'contributing' },
+    ]}
+    onSubmit={(vals) => console.log(vals)}
+  />
+</SetupFlow>`,
+      },
+      {
+        name: 'HelpScreen',
+        description:
+          'Static CLI help screen with big figlet banner, tagline, usage line, description, and aligned Options/Commands sections.',
+        props: [
+          { name: 'title', type: 'string', required: true },
+          { name: 'titleColor', type: 'string', required: false },
+          { name: 'tagline', type: 'string', required: false },
+          { name: 'usage', type: 'string', required: false },
+          { name: 'description', type: 'string', required: false },
+          { name: 'flagWidth', type: 'number', required: false },
+        ],
+        usage: `import { HelpScreen } from '@termui/components'
+
+<HelpScreen
+  title="INSFORGE"
+  titleColor="#ffffff"
+  tagline="Welcome to InsForge CLI! Run \`insforge login\` to get started."
+  usage="insforge [options] [command]"
+  description="InsForge CLI — Command line tool for InsForge platform"
+>
+  <HelpScreen.Section label="Options:">
+    <HelpScreen.Row flag="-V, --version" description="output the version number" />
+    <HelpScreen.Row flag="-h, --help" description="display help for command" />
+  </HelpScreen.Section>
+  <HelpScreen.Section label="Commands:">
+    <HelpScreen.Row flag="login [options]" description="Authenticate with InsForge platform" />
+    <HelpScreen.Row flag="logout" description="Log out from InsForge platform" />
+  </HelpScreen.Section>
+</HelpScreen>`,
+      },
+    ],
+  },
 ];
 
 export function totalComponents(): number {

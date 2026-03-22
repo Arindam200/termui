@@ -1,0 +1,9 @@
+{
+  "name": "data-grid",
+  "description": "Advanced data grid with sorting, filtering, pagination, and cell editing",
+  "version": "0.1.0",
+  "category": "data",
+  "files": ["DataGrid.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

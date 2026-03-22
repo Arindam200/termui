@@ -1,0 +1,9 @@
+{
+  "name": "help-screen",
+  "description": "Figlet banner + tagline + aligned Options/Commands help sections",
+  "version": "0.1.0",
+  "category": "templates",
+  "files": ["HelpScreen.tsx"],
+  "deps": [],
+  "peerComponents": ["big-text"]
+}
