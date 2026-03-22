@@ -75,7 +75,7 @@ export async function fetchComponentFile(
 /** Local fallback registry — embedded in CLI for offline/initial use */
 export function getLocalRegistry(): RegistryManifest {
   return {
-    version: '0.1.0',
+    version: '1.0.0',
     components: {
       box: {
         name: 'box',

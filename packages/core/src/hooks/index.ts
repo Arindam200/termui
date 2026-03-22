@@ -16,3 +16,7 @@ export type { TerminalSize } from './useResize.js';
 export type { MouseEvent, MouseButton } from './useMouse.js';
 export type { KeyBinding } from './useKeymap.js';
 export type { AsyncState } from './useAsync.js';
+
+export { useRenderCount } from './useRenderCount.js';
+export { useRenderTime } from './useRenderTime.js';
+export type { RenderTiming } from './useRenderTime.js';

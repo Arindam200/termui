@@ -10,7 +10,9 @@ import { diff } from './commands/diff.js';
 import { update } from './commands/update.js';
 import { theme } from './commands/theme.js';
 import { preview, previewHelp } from './commands/preview.js';
+import { dev } from './commands/dev.js';
 import { checkForUpdates } from './utils/updates.js';
+import { printLogo, intro, step, outro, hi, dim, c, sym } from './utils/ui.js';
 
 const [, , command, ...args] = process.argv;
 
@@ -59,6 +61,10 @@ async function main() {
       }
       break;
 
+    case 'dev':
+      await dev(args);
+      break;
+
     case 'help':
     case '--help':
     case '-h':
@@ -67,51 +73,64 @@ async function main() {
       break;
 
     case '--version':
-    case '-v':
+    case '-v': {
       const { createRequire } = await import('module');
       const require = createRequire(import.meta.url);
       const pkg = require('../../package.json') as { version: string };
-      console.log(`termui v${pkg.version}`);
+      printLogo();
+      intro('termui');
+      step(`Version ${hi(`v${pkg.version}`)}`);
+      outro(`${hi('npx termui help')} for commands`);
       break;
+    }
 
     default:
-      console.error(`\x1b[31mUnknown command: ${command}\x1b[0m`);
-      console.error('Run \x1b[1mtermui help\x1b[0m to see available commands.\n');
+      printLogo();
+      intro('termui');
+      console.log(`${sym.pipe}`);
+      console.log(`${sym.error}  Unknown command: ${c.bold}${command}${c.reset}`);
+      outro(`Run ${hi('npx termui help')} to see available commands`);
       process.exit(1);
   }
 }
 
 function printHelp() {
-  console.log(`
-\x1b[1m\x1b[35mtermui\x1b[0m — Terminal UI framework for TypeScript
+  printLogo();
+  intro('termui');
 
-\x1b[1mUsage:\x1b[0m
-  npx termui <command> [options]
+  const cmds: [string, string][] = [
+    ['init',               'Initialize TermUI in your project'],
+    ['add <component>',    'Add one or more components from the registry'],
+    ['add --all',          'Add all 91 components at once'],
+    ['update <component>', 'Re-download a component from the registry'],
+    ['list',               'Browse all available components'],
+    ['diff <component>',   'Show diff between local and registry version'],
+    ['theme [name]',       'List or apply a theme'],
+    ['preview',            'Interactive component gallery (91 components)'],
+    ['dev',                'Watch mode — hot-reload on file change'],
+    ['help',               'Show this help message'],
+  ];
 
-\x1b[1mCommands:\x1b[0m
-  \x1b[36minit\x1b[0m                Initialize TermUI in your project
-  \x1b[36madd <component>\x1b[0m     Add a component from the registry
-  \x1b[36madd --all\x1b[0m           Add all available components
-  \x1b[36mupdate <component>\x1b[0m  Update (re-install) a component
-  \x1b[36mlist\x1b[0m                List all available components
-  \x1b[36mdiff <component>\x1b[0m    Show diff between local and registry version
-  \x1b[36mtheme [name]\x1b[0m        List or apply a theme
-  \x1b[36mpreview\x1b[0m             Interactive component gallery
-  \x1b[36mhelp\x1b[0m                Show this help message
+  step(`${c.bold}Usage${c.reset}  npx termui ${c.gray}<command>${c.reset}`);
+  console.log(`${sym.pipe}`);
+  console.log(`${sym.hollow}  ${c.bold}Commands${c.reset}`);
+  for (const [cmd, desc] of cmds) {
+    console.log(`${c.gray}│${c.reset}    ${hi(cmd.padEnd(24))}${dim(desc)}`);
+  }
 
-\x1b[1mExamples:\x1b[0m
-  npx termui init
-  npx termui add spinner
-  npx termui add table select
-  npx termui add --all
-  npx termui update spinner
-  npx termui diff table
-  npx termui list
-  npx termui theme dracula
-  npx termui preview
+  step(`${c.bold}Examples${c.reset}`);
+  const examples = [
+    'npx termui init',
+    'npx termui add spinner table',
+    'npx termui add --all',
+    'npx termui theme dracula',
+    'npx termui preview',
+  ];
+  for (const ex of examples) {
+    console.log(`${c.gray}│${c.reset}    ${hi(ex)}`);
+  }
 
-\x1b[2mDocs: https://termui.dev\x1b[0m
-`);
+  outro(`Docs: ${hi('https://arindam200.github.io/termui')}  ·  v1.0.0`);
 }
 
 main().catch((err) => {

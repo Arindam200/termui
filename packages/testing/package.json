@@ -1,7 +1,7 @@
 {
-  "name": "@termui/components",
+  "name": "@termui/testing",
   "version": "1.0.0",
-  "description": "TermUI component library — 90+ terminal UI components",
+  "description": "TermUI headless testing utilities",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,13 +13,10 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "dev": "tsc -p tsconfig.build.json --watch",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "typecheck": "tsc --noEmit -p tsconfig.build.json"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@termui/core": "workspace:*",
     "ink": "^5.0.0",
     "react": "^18.0.0",
     "strip-ansi": "^7.1.0"
@@ -30,8 +27,7 @@
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/node": "^20.0.0",
-    "vitest": "^1.0.0",
     "typescript": "^5.4.0",
-    "@vitest/coverage-v8": "^1.0.0"
+    "vitest": "^1.0.0"
   }
 }

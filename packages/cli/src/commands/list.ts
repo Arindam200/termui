@@ -1,5 +1,5 @@
-import { getConfig } from '../utils/config.js';
 import { getLocalRegistry } from '../registry/client.js';
+import { printLogo, intro, step, outro, hi, dim, c } from '../utils/ui.js';
 
 const CATEGORY_ICONS: Record<string, string> = {
   layout: '📐',
@@ -27,20 +27,19 @@ export async function list(_args: string[]): Promise<void> {
     byCategory[comp.category]!.push(comp);
   }
 
-  console.log('\n\x1b[1m\x1b[35m◆ TermUI Components\x1b[0m\n');
+  printLogo();
+  intro('termui');
 
   for (const [category, comps] of Object.entries(byCategory)) {
     const icon = CATEGORY_ICONS[category] ?? '•';
-    console.log(`\x1b[1m${icon}  ${capitalize(category)}\x1b[0m`);
+    step(`${c.bold}${icon}  ${capitalize(category)}${c.reset}  ${dim(`(${comps.length})`)}`);
     for (const comp of comps) {
-      const name = comp.name.padEnd(20);
-      console.log(`  \x1b[36m${name}\x1b[0m  \x1b[2m${comp.description}\x1b[0m`);
+      const name = comp.name.padEnd(22);
+      console.log(`${c.gray}│${c.reset}     ${hi(name)}  ${dim(comp.description)}`);
     }
-    console.log();
   }
 
-  console.log(`\x1b[2mTotal: ${components.length} components\x1b[0m`);
-  console.log(`\x1b[2mInstall: npx termui add <name>\x1b[0m\n`);
+  outro(`${hi(String(components.length))} components total  ·  ${hi('npx termui add <name>')} to install`);
 }
 
 function capitalize(str: string): string {

@@ -1,32 +1,28 @@
+#!/usr/bin/env node
 /**
- * Static component catalog for `npx termui preview`.
- * Each entry has description, props, and a usage snippet.
+ * generate-docs.mjs
+ * Generates docs/ markdown files from the hardcoded TermUI component catalog.
+ *
+ * Usage:
+ *   node scripts/generate-docs.mjs
  */
 
-export interface PropDef {
-  name: string;
-  type: string;
-  required?: boolean;
-  default?: string;
-}
+import { writeFileSync, mkdirSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-export interface ComponentEntry {
-  name: string;
-  description: string;
-  props: PropDef[];
-  usage: string;
-  /** ASCII art lines showing the component rendered in the terminal */
-  preview?: string[];
-}
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, '..');
+const DOCS = join(ROOT, 'docs');
 
-export interface Category {
-  name: string;
-  components: ComponentEntry[];
-}
+// ---------------------------------------------------------------------------
+// Catalog — hardcoded from packages/cli/src/preview/catalog.ts
+// ---------------------------------------------------------------------------
 
-export const CATALOG: Category[] = [
+const CATALOG = [
   {
     name: 'Layout',
+    slug: 'layout',
     components: [
       {
         name: 'Box',
@@ -43,42 +39,17 @@ export const CATALOG: Category[] = [
           { name: 'width', type: 'number | string' },
           { name: 'height', type: 'number | string' },
           { name: 'alignItems', type: "'flex-start' | 'center' | 'flex-end'" },
-          {
-            name: 'justifyContent',
-            type: "'flex-start' | 'center' | 'flex-end' | 'space-between'",
-          },
+          { name: 'justifyContent', type: "'flex-start' | 'center' | 'flex-end' | 'space-between'" },
         ],
         usage: `import { Box } from 'termui/components'
 
 <Box flexDirection="column" borderStyle="round" padding={1}>
   <Text>Content here</Text>
 </Box>`,
-        preview: [
-          '  ╭──────────────────────────╮',
-          '  │                          │',
-          '  │   Hello from Box!        │',
-          '  │                          │',
-          '  ╰──────────────────────────╯',
-          '',
-          '  ╭── row layout ────────────╮',
-          '  │ Left   │  Center  │ Right│',
-          '  ╰──────────────────────────╯',
-        ],
       },
       {
         name: 'Stack',
         description: 'Vertical or horizontal stack with configurable gap.',
-        preview: [
-          '  direction="column" gap={1}',
-          '',
-          '  ┌──────────────┐',
-          '  │  Item One    │',
-          '  ├──────────────┤',
-          '  │  Item Two    │',
-          '  ├──────────────┤',
-          '  │  Item Three  │',
-          '  └──────────────┘',
-        ],
         props: [
           { name: 'children', type: 'ReactNode', required: true },
           { name: 'direction', type: "'row' | 'column'", default: "'column'" },
@@ -95,16 +66,6 @@ export const CATALOG: Category[] = [
       {
         name: 'Grid',
         description: 'Rows × columns grid layout.',
-        preview: [
-          '  columns={3} gap={1}',
-          '',
-          '  ╭──────╮ ╭──────╮ ╭──────╮',
-          '  │  A   │ │  B   │ │  C   │',
-          '  ╰──────╯ ╰──────╯ ╰──────╯',
-          '  ╭──────╮ ╭──────╮ ╭──────╮',
-          '  │  D   │ │  E   │ │  F   │',
-          '  ╰──────╯ ╰──────╯ ╰──────╯',
-        ],
         props: [
           { name: 'children', type: 'ReactNode', required: true },
           { name: 'columns', type: 'number', required: true },
@@ -201,19 +162,11 @@ export const CATALOG: Category[] = [
   },
   {
     name: 'Typography',
+    slug: 'typography',
     components: [
       {
         name: 'Text',
         description: 'Rich inline text with bold, italic, color, and dimming support.',
-        preview: [
-          '  Regular text',
-          '  Bold text',
-          '  Italic text',
-          '  Underlined text',
-          '  ~~Strikethrough~~',
-          '  Colored text  ← cyan',
-          '  Dimmed text   ← gray',
-        ],
         props: [
           { name: 'children', type: 'ReactNode', required: true },
           { name: 'bold', type: 'boolean' },
@@ -275,14 +228,9 @@ export const CATALOG: Category[] = [
       {
         name: 'Badge',
         description: 'Semantic status badge with color presets.',
-        preview: ['', '  ● default    ● success', '', '  ● warning    ● error', '', '  ● info'],
         props: [
           { name: 'children', type: 'ReactNode', required: true },
-          {
-            name: 'variant',
-            type: "'default' | 'success' | 'warning' | 'error' | 'info'",
-            default: "'default'",
-          },
+          { name: 'variant', type: "'default' | 'success' | 'warning' | 'error' | 'info'", default: "'default'" },
           { name: 'color', type: 'string' },
         ],
         usage: `import { Badge } from 'termui/components'
@@ -368,21 +316,11 @@ export const CATALOG: Category[] = [
   },
   {
     name: 'Input',
+    slug: 'input',
     components: [
       {
         name: 'TextInput',
         description: 'Single-line input with placeholder, validation, and optional masking.',
-        preview: [
-          '  placeholder:',
-          '  ┌──────────────────────────┐',
-          '  │  Enter your name…        │',
-          '  └──────────────────────────┘',
-          '',
-          '  focused + value:',
-          '  ┌──────────────────────────┐',
-          '  │  Alice▌                  │',
-          '  └──────────────────────────┘',
-        ],
         props: [
           { name: 'value', type: 'string', required: true },
           { name: 'onChange', type: '(value: string) => void', required: true },
@@ -424,17 +362,6 @@ const [value, setValue] = useState('');
       {
         name: 'PasswordInput',
         description: 'Masked password input with reveal toggle.',
-        preview: [
-          '  masked:',
-          '  ┌──────────────────────────┐',
-          '  │  ••••••••▌               │',
-          '  └──────────────────────────┘',
-          '',
-          '  revealed (toggle with Tab):',
-          '  ┌──────────────────────────┐',
-          '  │  hunter2▌                │',
-          '  └──────────────────────────┘',
-        ],
         props: [
           { name: 'value', type: 'string', required: true },
           { name: 'onChange', type: '(value: string) => void', required: true },
@@ -545,20 +472,11 @@ const [value, setValue] = useState('');
   },
   {
     name: 'Selection',
+    slug: 'selection',
     components: [
       {
         name: 'Select',
         description: 'Single-select dropdown with keyboard search and grouping.',
-        preview: [
-          '  Choose a framework:',
-          '',
-          '  ▸ React',
-          '    Vue',
-          '    Svelte',
-          '    Angular',
-          '',
-          '  ↑↓ navigate  Enter select',
-        ],
         props: [
           { name: 'options', type: 'SelectOption[]', required: true },
           { name: 'value', type: 'string' },
@@ -580,16 +498,6 @@ const [value, setValue] = useState('');
       {
         name: 'MultiSelect',
         description: 'Multi-select list with Space to toggle, Enter to submit.',
-        preview: [
-          '  Pick your stack:',
-          '',
-          '  ▸ ◉ TypeScript    ✓ selected',
-          '    ◉ React         ✓ selected',
-          '    ○ Vue',
-          '    ○ Svelte',
-          '',
-          '  Space toggle  Enter confirm',
-        ],
         props: [
           { name: 'options', type: 'MultiSelectOption[]', required: true },
           { name: 'value', type: 'T[]' },
@@ -647,16 +555,6 @@ const [value, setValue] = useState('');
       {
         name: 'CheckboxGroup',
         description: 'Group of checkboxes with optional min/max selection constraints.',
-        preview: [
-          '  Features  (select 1–3)',
-          '',
-          '  ▸ ☑  TypeScript',
-          '    ☑  ESLint',
-          '    ☐  Prettier',
-          '    ☐  Husky',
-          '',
-          '  2 of 3 max selected',
-        ],
         props: [
           { name: 'options', type: 'CheckboxGroupOption[]', required: true },
           { name: 'value', type: 'string[]' },
@@ -712,13 +610,6 @@ const [value, setValue] = useState('');
       {
         name: 'TagInput',
         description: 'Multi-tag input — type and press Enter to add, Backspace to remove.',
-        preview: [
-          '  ┌────────────────────────────────────┐',
-          '  │ [typescript] [react] [cli] next▌   │',
-          '  └────────────────────────────────────┘',
-          '',
-          '  Enter to add  Backspace to remove',
-        ],
         props: [
           { name: 'value', type: 'string[]' },
           { name: 'onChange', type: '(tags: string[]) => void' },
@@ -753,20 +644,11 @@ const [value, setValue] = useState('');
   },
   {
     name: 'Data Display',
+    slug: 'data',
     components: [
       {
         name: 'Table',
         description: 'Sortable, filterable, paginated data table with column config.',
-        preview: [
-          '  ┌────┬───────────┬──────┬────────┐',
-          '  │ #  │ Name    ↑ │ Age  │ Role   │',
-          '  ├────┼───────────┼──────┼────────┤',
-          '  │ 1  │ Alice     │  30  │ Admin  │',
-          '  │ 2  │ Bob       │  25  │ User   │',
-          '  │ 3  │ Carol     │  28  │ User   │',
-          '  └────┴───────────┴──────┴────────┘',
-          '  Page 1/4  ↑↓ navigate  s sort',
-        ],
         props: [
           { name: 'columns', type: 'ColumnDef[]', required: true },
           { name: 'data', type: 'Record<string, unknown>[]', required: true },
@@ -891,17 +773,6 @@ const [value, setValue] = useState('');
       {
         name: 'Card',
         description: 'Bordered card with header, body, and footer slots.',
-        preview: [
-          '  ╭─ Summary ───────────────╮',
-          '  │                         │',
-          '  │  Total items:    42     │',
-          '  │  Completed:      38     │',
-          '  │  Pending:         4     │',
-          '  │                         │',
-          '  ├─────────────────────────┤',
-          '  │  Updated 2 mins ago     │',
-          '  ╰─────────────────────────╯',
-        ],
         props: [
           { name: 'children', type: 'ReactNode', required: true },
           { name: 'title', type: 'string' },
@@ -933,34 +804,30 @@ const [value, setValue] = useState('');
   <Text>Content</Text>
 </Panel>`,
       },
+      {
+        name: 'GitStatus',
+        description: 'Displays git status output in a structured, colored layout.',
+        props: [
+          { name: 'cwd', type: 'string', default: 'process.cwd()' },
+          { name: 'showBranch', type: 'boolean', default: 'true' },
+          { name: 'showUntracked', type: 'boolean', default: 'true' },
+        ],
+        usage: `import { GitStatus } from 'termui/components'
+
+<GitStatus cwd={process.cwd()} />`,
+      },
     ],
   },
   {
     name: 'Feedback',
+    slug: 'feedback',
     components: [
       {
         name: 'Spinner',
         description: 'Animated loading spinner with 12+ animation styles.',
-        preview: [
-          '  style="dots"',
-          '  ⠙ Loading files...',
-          '',
-          '  style="line"',
-          '  | Processing...',
-          '',
-          '  style="clock"',
-          '  🕒 Installing packages...',
-          '',
-          '  style="bounce"',
-          '  ⡆ Building...',
-        ],
         props: [
           { name: 'label', type: 'string' },
-          {
-            name: 'style',
-            type: "'dots' | 'line' | 'circle' | 'bounce' | 'clock' | ...",
-            default: "'dots'",
-          },
+          { name: 'style', type: "'dots' | 'line' | 'circle' | 'bounce' | 'clock' | ...", default: "'dots'" },
           { name: 'color', type: 'string' },
           { name: 'fps', type: 'number', default: '12' },
         ],
@@ -971,14 +838,6 @@ const [value, setValue] = useState('');
       {
         name: 'ProgressBar',
         description: 'Determinate progress bar with optional ETA display.',
-        preview: [
-          '  Installing   ████████████░░░░░░░░  60%',
-          '  Building     ██████████████████░░  90%',
-          '  Uploading    ████░░░░░░░░░░░░░░░░  22%',
-          '',
-          '  showEta=true:',
-          '  Fetching     ████████░░░░░░░░░░░░  42%  ETA 8s',
-        ],
         props: [
           { name: 'value', type: 'number', required: true },
           { name: 'max', type: 'number', default: '100' },
@@ -1023,11 +882,7 @@ const [value, setValue] = useState('');
         description: 'Auto-dismissing notification with configurable duration.',
         props: [
           { name: 'message', type: 'string', required: true },
-          {
-            name: 'variant',
-            type: "'default' | 'success' | 'error' | 'warning'",
-            default: "'default'",
-          },
+          { name: 'variant', type: "'default' | 'success' | 'error' | 'warning'", default: "'default'" },
           { name: 'duration', type: 'number', default: '3000' },
           { name: 'onDismiss', type: '() => void' },
         ],
@@ -1043,17 +898,6 @@ const [value, setValue] = useState('');
       {
         name: 'Alert',
         description: 'Success / error / warning / info alert box.',
-        preview: [
-          '  ╭─ ✓ Success ─────────────────╮',
-          '  │  Deployment complete.        │',
-          '  ╰─────────────────────────────╯',
-          '  ╭─ ✕ Error ───────────────────╮',
-          '  │  Build failed. See logs.    │',
-          '  ╰─────────────────────────────╯',
-          '  ╭─ ⚠ Warning ─────────────────╮',
-          '  │  This cannot be undone.     │',
-          '  ╰─────────────────────────────╯',
-        ],
         props: [
           { name: 'children', type: 'ReactNode', required: true },
           { name: 'variant', type: "'success' | 'error' | 'warning' | 'info'", default: "'info'" },
@@ -1097,21 +941,11 @@ const [value, setValue] = useState('');
   },
   {
     name: 'Navigation',
+    slug: 'navigation',
     components: [
       {
         name: 'Tabs',
         description: 'Horizontal tab bar with keyboard navigation (← →).',
-        preview: [
-          '  ╭────────╮ ─────────  ─────────',
-          '  │  Home  │  Settings    About',
-          '  ╰────────╯',
-          '  ┌─────────────────────────────┐',
-          '  │                             │',
-          '  │   Home content here         │',
-          '  │                             │',
-          '  └─────────────────────────────┘',
-          '  ← → to switch tabs',
-        ],
         props: [
           { name: 'tabs', type: 'Tab[]', required: true },
           { name: 'defaultTab', type: 'string' },
@@ -1143,7 +977,6 @@ const [value, setValue] = useState('');
       {
         name: 'Breadcrumb',
         description: 'Navigation breadcrumb trail with ← to go back.',
-        preview: ['', '  Home  ›  Docs  ›  Components  ›  Breadcrumb', '', '  ← to navigate back'],
         props: [
           { name: 'items', type: 'BreadcrumbItem[]', required: true },
           { name: 'separator', type: 'string', default: "'›'" },
@@ -1162,7 +995,6 @@ const [value, setValue] = useState('');
       {
         name: 'Pagination',
         description: 'Page navigator with ← → keys and smart ellipsis.',
-        preview: ['', '  [←]  1  …  4  [5]  6  …  20  [→]', '', '  ← → or h l to change page'],
         props: [
           { name: 'total', type: 'number', required: true },
           { name: 'current', type: 'number', required: true },
@@ -1180,18 +1012,7 @@ const [value, setValue] = useState('');
       },
       {
         name: 'CommandPalette',
-        description: 'VS Code–style Ctrl+P command palette with fuzzy search.',
-        preview: [
-          '  ╭───────────────────────────────╮',
-          '  │ > Open file…                  │',
-          '  ├───────────────────────────────┤',
-          '  │ ▸ Open File             ⌘O   │',
-          '  │   Save                  ⌘S   │',
-          '  │   Find in Files         ⌘⇧F  │',
-          '  │   Toggle Theme                │',
-          '  │   Quit                  q     │',
-          '  ╰───────────────────────────────╯',
-        ],
+        description: 'VS Code-style Ctrl+P command palette with fuzzy search.',
         props: [
           { name: 'commands', type: 'Command[]', required: true },
           { name: 'isOpen', type: 'boolean', required: true },
@@ -1247,21 +1068,11 @@ const [value, setValue] = useState('');
   },
   {
     name: 'Overlays',
+    slug: 'overlays',
     components: [
       {
         name: 'Modal',
         description: 'Focus-trapped overlay with Esc to close.',
-        preview: [
-          '  ╔══════════════════════════╗',
-          '  ║  Confirm Action          ║',
-          '  ╠══════════════════════════╣',
-          '  ║                          ║',
-          '  ║  Are you sure you want   ║',
-          '  ║  to delete this file?    ║',
-          '  ║                          ║',
-          '  ║  Esc to close            ║',
-          '  ╚══════════════════════════╝',
-        ],
         props: [
           { name: 'open', type: 'boolean', required: true },
           { name: 'onClose', type: '() => void', required: true },
@@ -1279,17 +1090,6 @@ const [value, setValue] = useState('');
       {
         name: 'Dialog',
         description: 'Confirm dialog with OK/Cancel buttons.',
-        preview: [
-          '  ╔══ Delete file? ═══════════╗',
-          '  ║                            ║',
-          '  ║  This cannot be undone.   ║',
-          '  ║                            ║',
-          '  ║   [ Cancel ]  [ Delete ]  ║',
-          '  ╚════════════════════════════╝',
-          '',
-          '  ← → or Tab to switch buttons',
-          '  Enter to confirm',
-        ],
         props: [
           { name: 'title', type: 'string' },
           { name: 'children', type: 'ReactNode', required: true },
@@ -1374,22 +1174,11 @@ const [value, setValue] = useState('');
   },
   {
     name: 'Forms',
+    slug: 'forms',
     components: [
       {
         name: 'Form',
         description: 'Form context with validation, dirty tracking. Ctrl+S to submit.',
-        preview: [
-          '  ╭─ User Details ─────────────────╮',
-          '  │                                 │',
-          '  │  Name *   ┌─────────────────┐  │',
-          '  │           │ Alice▌           │  │',
-          '  │           └─────────────────┘  │',
-          '  │  Email    ┌─────────────────┐  │',
-          '  │           │ alice@acme.com   │  │',
-          '  │           └─────────────────┘  │',
-          '  │                    [Ctrl+S] ✓  │',
-          '  ╰─────────────────────────────────╯',
-        ],
         props: [
           { name: 'children', type: 'ReactNode', required: true },
           { name: 'onSubmit', type: '(values: Record<string, unknown>) => void', required: true },
@@ -1427,17 +1216,6 @@ const [value, setValue] = useState('');
       {
         name: 'Wizard',
         description: 'Multi-step form wizard with validation per step.',
-        preview: [
-          '  ● Name ──── ● Email ──── ○ Confirm',
-          '  ─────────────────────────────────',
-          '  Step 2 of 3: Email Address',
-          '',
-          '  Email *  ┌────────────────────┐',
-          '           │ alice@example.com▌ │',
-          '           └────────────────────┘',
-          '',
-          '  [← Back]                [Next →]',
-        ],
         props: [
           { name: 'steps', type: 'WizardStep[]', required: true },
           { name: 'onComplete', type: '(completedSteps: string[]) => void' },
@@ -1457,16 +1235,6 @@ const [value, setValue] = useState('');
       {
         name: 'Confirm',
         description: 'Yes/No inline confirmation prompt.',
-        preview: [
-          '',
-          '  Delete this file?',
-          '',
-          '  ╭─────────╮  ╭───────────────╮',
-          '  │   No    │  │  ▸ Yes        │',
-          '  ╰─────────╯  ╰───────────────╯',
-          '',
-          '  ← → or Tab to switch',
-        ],
         props: [
           { name: 'message', type: 'string', required: true },
           { name: 'onConfirm', type: '() => void' },
@@ -1488,16 +1256,6 @@ const [value, setValue] = useState('');
       {
         name: 'DatePicker',
         description: 'Date picker with month/day/year spinners. Tab to switch fields.',
-        preview: [
-          '  Select date',
-          '',
-          '  ┌──────────┐ ┌────┐ ┌──────┐',
-          '  │   March  │ │ 22 │ │ 2026 │',
-          '  └──────────┘ └────┘ └──────┘',
-          '      ↑↓           ↑↓     ↑↓',
-          '',
-          '  Tab to switch field  Enter to confirm',
-        ],
         props: [
           { name: 'value', type: 'Date' },
           { name: 'onChange', type: '(date: Date) => void' },
@@ -1519,16 +1277,6 @@ const [value, setValue] = useState('');
       {
         name: 'TimePicker',
         description: 'Time picker with hours/minutes spinners. Supports 12h and 24h.',
-        preview: [
-          '  Select time  (12h format)',
-          '',
-          '  ┌────┐ : ┌────┐  ┌────┐',
-          '  │ 11 │   │ 45 │  │ PM │',
-          '  └────┘   └────┘  └────┘',
-          '    ↑↓       ↑↓    Space',
-          '',
-          '  Tab to switch  Enter to confirm',
-        ],
         props: [
           { name: 'value', type: '{ hours: number; minutes: number }' },
           { name: 'onChange', type: '(time: { hours: number; minutes: number }) => void' },
@@ -1567,20 +1315,11 @@ const [value, setValue] = useState('');
   },
   {
     name: 'Charts',
+    slug: 'charts',
     components: [
       {
         name: 'Sparkline',
         description: 'Inline Unicode braille sparkline chart for numeric series.',
-        preview: [
-          '  CPU usage (last 60s):',
-          '  ▁▂▄▆▃▇█▅▄▆▇▃▂▄▅▆▇▅▃▂  peak: 87%',
-          '',
-          '  Memory:',
-          '  ▃▃▄▄▄▅▅▆▆▇▇▇██▇▆▅▄▄▃  peak: 72%',
-          '',
-          '  Network:',
-          '  ▁▁▁▂▄▇█▅▃▂▁▁▁▂▃▅▆▄▂▁  peak: 12MB',
-        ],
         props: [
           { name: 'data', type: 'number[]', required: true },
           { name: 'color', type: 'string' },
@@ -1593,15 +1332,6 @@ const [value, setValue] = useState('');
       {
         name: 'BarChart',
         description: 'Horizontal or vertical bar chart.',
-        preview: [
-          '  JavaScript  ██████████████████  85',
-          '  TypeScript  ████████████████    72',
-          '  Python      ████████████        55',
-          '  Rust        ██████████          48',
-          '  Go          ████████            38',
-          '',
-          '  direction="horizontal"',
-        ],
         props: [
           { name: 'data', type: '{ label: string; value: number }[]', required: true },
           { name: 'direction', type: "'horizontal' | 'vertical'", default: "'horizontal'" },
@@ -1619,16 +1349,6 @@ const [value, setValue] = useState('');
       {
         name: 'LineChart',
         description: 'ASCII line chart with axes and multi-series support.',
-        preview: [
-          '  100 ┤           ╭─╮',
-          '   75 ┤      ╭────╯ ╰──╮',
-          '   50 ┤  ╭───╯         ╰───',
-          '   25 ┤╭─╯',
-          '    0 ┼─────────────────────',
-          '      Jan  Mar  May  Jul  Sep',
-          '',
-          '  ── CPU  ── Memory',
-        ],
         props: [
           { name: 'series', type: 'Series[]', required: true },
           { name: 'width', type: 'number', default: '60' },
@@ -1647,11 +1367,7 @@ const [value, setValue] = useState('');
         name: 'PieChart',
         description: 'Unicode block pie chart with a legend.',
         props: [
-          {
-            name: 'data',
-            type: '{ label: string; value: number; color?: string }[]',
-            required: true,
-          },
+          { name: 'data', type: '{ label: string; value: number; color?: string }[]', required: true },
           { name: 'showLegend', type: 'boolean', default: 'true' },
           { name: 'size', type: 'number', default: '10' },
         ],
@@ -1684,12 +1400,6 @@ const [value, setValue] = useState('');
       {
         name: 'Gauge',
         description: 'Speedometer-style gauge meter.',
-        preview: [
-          '  CPU   [████████████░░░░░░░░]  60%',
-          '  RAM   [██████████████████░░]  91%',
-          '  Disk  [████████░░░░░░░░░░░░]  43%',
-          '  Net   [███░░░░░░░░░░░░░░░░░]  17%',
-        ],
         props: [
           { name: 'value', type: 'number', required: true },
           { name: 'max', type: 'number', default: '100' },
@@ -1705,6 +1415,7 @@ const [value, setValue] = useState('');
   },
   {
     name: 'Utility',
+    slug: 'utility',
     components: [
       {
         name: 'Timer',
@@ -1827,17 +1538,6 @@ const [value, setValue] = useState('');
       {
         name: 'QRCode',
         description: 'Renders a QR code using Unicode block characters.',
-        preview: [
-          '  ▛▀▀▀▀▀▜ ▄ ▛▀▀▀▀▀▜',
-          '  ▌▛▀▀▜▌ █ ▌▛▀▀▜▌',
-          '  ▌▙▄▄▟▌ ▀ ▌▙▄▄▟▌',
-          '  ▙▄▄▄▄▄▟ █ ▙▄▄▄▄▄▟',
-          '  ▀▀ █▄▄█ ▀ ▀▀ █▄▄',
-          '  ▛▀▀▀▀▀▜ █ ▄█▀▀▄█',
-          '  ▌▛▀▀▜▌ ▀ ▀▄▀▄▀▄',
-          '',
-          '  termui.dev',
-        ],
         props: [
           { name: 'value', type: 'string', required: true },
           { name: 'size', type: 'number', default: '21' },
@@ -1882,75 +1582,157 @@ const [value, setValue] = useState('');
       },
     ],
   },
-  {
-    name: 'Dev Tools',
-    components: [
-      {
-        name: 'useRenderCount',
-        description: 'Hook — returns the number of times the component has rendered.',
-        props: [],
-        usage: `import { useRenderCount } from '@termui/core'
-
-function MyComponent() {
-  const count = useRenderCount();
-  return <Text>Renders: {count}</Text>;
-}`,
-      },
-      {
-        name: 'useRenderTime',
-        description: 'Hook — tracks last render duration, total time, and render count.',
-        props: [],
-        usage: `import { useRenderTime } from '@termui/core'
-
-function MyComponent() {
-  const { lastRenderMs, peakMs, count } = useRenderTime();
-  return <Text>{lastRenderMs.toFixed(1)}ms (peak {peakMs.toFixed(1)}ms, {count} renders)</Text>;
-}`,
-      },
-      {
-        name: 'renderToString',
-        description: 'Testing util — renders a React element headlessly and returns plain text.',
-        props: [],
-        usage: `import { renderToString } from '@termui/testing'
-
-const output = await renderToString(<Spinner style="dots" />);
-expect(output).toContain('⠋');`,
-      },
-      {
-        name: 'screen',
-        description: 'Testing util — query helpers (getByText, hasText, getLines) for plain-text output.',
-        props: [],
-        usage: `import { renderToString, screen } from '@termui/testing'
-
-const out = await renderToString(<MyComponent />);
-screen.getByText('Hello', out);          // throws if not found
-expect(screen.hasText('Error', out)).toBe(false);`,
-      },
-      {
-        name: 'fireEvent',
-        description: 'Testing util — simulate keyboard input (key, type, press) in component tests.',
-        props: [],
-        usage: `import { fireEvent } from '@termui/testing'
-
-fireEvent.key('down');        // arrow down
-fireEvent.key('enter');       // Enter
-fireEvent.type('hello');      // type text
-fireEvent.press(' ');         // space`,
-      },
-      {
-        name: 'waitFor',
-        description: 'Testing util — polls an assertion until it passes or timeout is reached.',
-        props: [],
-        usage: `import { waitFor } from '@termui/testing'
-
-await waitFor(() => {
-  expect(result.rerender().output).toContain('Done');
-}, { timeout: 2000 });`,
-      },
-    ],
-  },
 ];
 
-export function totalComponents(): number {
-  return CATALOG.reduce((sum, cat) => sum + cat.components.length, 0);
+// ---------------------------------------------------------------------------
+// Markdown helpers
+// ---------------------------------------------------------------------------
+
+function propRow(prop) {
+  const required = prop.required ? '✓' : '—';
+  const def = prop.default ?? '—';
+  return `| \`${prop.name}\` | \`${prop.type}\` | \`${def}\` | ${required} |`;
 }
+
+function componentBlock(comp) {
+  const propTable =
+    comp.props.length > 0
+      ? [
+          '**Props:**',
+          '| Prop | Type | Default | Required |',
+          '|------|------|---------|----------|',
+          ...comp.props.map(propRow),
+        ].join('\n')
+      : '';
+
+  const usageBlock = comp.usage
+    ? `**Usage:**\n\`\`\`tsx\n${comp.usage}\n\`\`\``
+    : '';
+
+  return [
+    `## ${comp.name}`,
+    '',
+    comp.description,
+    '',
+    propTable,
+    '',
+    usageBlock,
+  ]
+    .join('\n')
+    .trim();
+}
+
+// ---------------------------------------------------------------------------
+// Write helpers
+// ---------------------------------------------------------------------------
+
+function write(filePath, content) {
+  writeFileSync(filePath, content, 'utf8');
+  console.log(`  created  ${filePath.replace(ROOT + '/', '')}`);
+}
+
+// ---------------------------------------------------------------------------
+// Generate category pages
+// ---------------------------------------------------------------------------
+
+function generateCategoryPage(cat) {
+  const title = cat.name;
+  const slug = cat.slug;
+
+  const header = `---
+title: "${title} Components"
+---
+
+# ${title} Components
+
+`;
+
+  const body = cat.components.map(componentBlock).join('\n\n---\n\n');
+
+  write(join(DOCS, `${slug}.md`), header + body + '\n');
+}
+
+// ---------------------------------------------------------------------------
+// Generate index
+// ---------------------------------------------------------------------------
+
+function generateIndex() {
+  const tableRows = CATALOG.map((cat) => {
+    const names = cat.components.map((c) => c.name).join(', ');
+    return `| [${cat.name}](./${cat.slug}.md) | ${names} |`;
+  }).join('\n');
+
+  const content = `---
+title: TermUI — Terminal UI Framework
+---
+
+# TermUI
+
+> The missing terminal UI framework for TypeScript.
+> Built with React/Ink. Distributed like shadcn. Designed for developers.
+
+## Quick Start
+
+\`\`\`sh
+# Initialize in your project
+npx termui init
+
+# Add components
+npx termui add spinner progress-bar table
+
+# Browse the gallery
+npx termui preview
+\`\`\`
+
+## Component Catalog
+
+| Category | Components |
+|----------|------------|
+${tableRows}
+
+## API Reference
+
+- [Core Hooks](./api/hooks.md)
+- [CLI Commands](./api/cli.md)
+- [@termui/testing](./api/testing.md)
+
+## Theming
+
+8 built-in themes: \`default\`, \`dracula\`, \`nord\`, \`catppuccin\`, \`monokai\`, \`solarized\`, \`tokyo-night\`, \`one-dark\`
+
+\`\`\`sh
+npx termui theme dracula
+\`\`\`
+
+## Distribution Model
+
+TermUI uses a shadcn-style model: components are **copied into your project**, not installed as a black-box package. You own the source.
+
+\`\`\`sh
+npx termui add spinner   # copies Spinner.tsx to components/ui/
+\`\`\`
+
+## Registry
+
+Components are served from GitHub Pages:
+\`https://arindam200.github.io/termui/components/<name>/\`
+
+With jsDelivr as automatic fallback:
+\`https://cdn.jsdelivr.net/gh/arindam200/termui@main/registry/components/<name>/\`
+`;
+
+  write(join(DOCS, 'index.md'), content);
+}
+
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
+
+mkdirSync(join(DOCS, 'api'), { recursive: true });
+
+console.log('Generating docs...\n');
+
+generateIndex();
+CATALOG.forEach(generateCategoryPage);
+
+console.log('\nDone. All docs written to docs/');

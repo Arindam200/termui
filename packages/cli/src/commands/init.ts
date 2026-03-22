@@ -1,54 +1,84 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { writeConfig, type TermUIConfig } from '../utils/config.js';
+import {
+  printLogo, badge, intro, step, active, done, warn, outro,
+  hi, dim, bold, select,
+} from '../utils/ui.js';
 
-const TERMUI_CONFIG_TS = `import type { TermUIConfig } from 'termui';
+const THEMES = [
+  { value: 'default',     label: 'Default',      hint: 'clean neutral palette' },
+  { value: 'dracula',     label: 'Dracula',       hint: 'purple & pink dark theme' },
+  { value: 'nord',        label: 'Nord',          hint: 'cool arctic blues' },
+  { value: 'catppuccin',  label: 'Catppuccin',    hint: 'pastel mocha tones' },
+  { value: 'monokai',     label: 'Monokai',       hint: 'classic warm darks' },
+  { value: 'tokyo-night', label: 'Tokyo Night',   hint: 'vibrant neon city' },
+  { value: 'one-dark',    label: 'One Dark',      hint: 'Atom-inspired dark' },
+  { value: 'solarized',   label: 'Solarized',     hint: 'ethan schoonover classic' },
+] as const;
 
-const config: TermUIConfig = {
-  version: '0.1.0',
-  componentsDir: './components/ui',
-  registry: 'https://arindam200.github.io/termui',
-  theme: 'default',
-};
-
-export default config;
-`;
+type Theme = typeof THEMES[number]['value'];
 
 export async function init(_args: string[]): Promise<void> {
   const cwd = process.cwd();
 
-  console.log('\x1b[1m\x1b[35m◆ TermUI\x1b[0m — Initializing in', cwd, '\n');
+  // ─── Logo + badge ───────────────────────────────────────────────────────────
+  printLogo();
+  intro('termui');
 
-  // Create components/ui directory
+  // ─── Step 1: Project info ───────────────────────────────────────────────────
+  step(`Initializing in ${hi(cwd)}`);
+
+  // ─── Step 2: components/ui dir ─────────────────────────────────────────────
   const componentsDir = join(cwd, 'components', 'ui');
   if (!existsSync(componentsDir)) {
     mkdirSync(componentsDir, { recursive: true });
-    console.log('\x1b[32m✓\x1b[0m Created', componentsDir.replace(cwd, '.'));
+    step(`Created ${hi('./components/ui')}`);
   } else {
-    console.log('\x1b[33m~\x1b[0m Directory already exists:', componentsDir.replace(cwd, '.'));
+    warn(`${hi('./components/ui')} already exists — skipping`);
   }
 
-  // Write termui.config.ts
+  // ─── Step 3: Theme selection ────────────────────────────────────────────────
+  const theme = await select<Theme>('Pick a theme', [...THEMES]);
+
+  // ─── Step 4: Write config ───────────────────────────────────────────────────
+  const config: TermUIConfig = {
+    version:       '1.0.0',
+    componentsDir: './components/ui',
+    registry:      'https://arindam200.github.io/termui',
+    theme,
+  };
+
+  writeConfig(config, cwd);
+
   const configTsPath = join(cwd, 'termui.config.ts');
   if (!existsSync(configTsPath)) {
-    writeFileSync(configTsPath, TERMUI_CONFIG_TS, 'utf-8');
-    console.log('\x1b[32m✓\x1b[0m Created termui.config.ts');
+    writeFileSync(configTsPath, buildConfigTs(theme), 'utf-8');
+    step(`Created ${hi('termui.config.ts')}`);
   } else {
-    console.log('\x1b[33m~\x1b[0m termui.config.ts already exists, skipping');
+    warn(`${hi('termui.config.ts')} already exists — keeping your config`);
   }
 
-  // Write termui.config.json (runtime config)
-  const jsonConfig: TermUIConfig = {
-    version: '0.1.0',
-    componentsDir: './components/ui',
-    registry: 'https://arindam200.github.io/termui',
-    theme: 'default',
-  };
-  writeConfig(jsonConfig, cwd);
-  console.log('\x1b[32m✓\x1b[0m Created termui.config.json');
+  step(`Wrote ${hi('termui.config.json')}  ${dim(`theme: ${theme}`)}`);
 
-  console.log('\n\x1b[32m✓ Done!\x1b[0m\n');
-  console.log('Next steps:');
-  console.log('  \x1b[36mnpx termui add spinner\x1b[0m   — Add your first component');
-  console.log('  \x1b[36mnpx termui list\x1b[0m           — Browse available components\n');
+  // ─── Done ───────────────────────────────────────────────────────────────────
+  done('All done! TermUI is ready.');
+
+  outro(
+    `Next: ${hi('npx termui add spinner')}  ·  ${hi('npx termui list')}  ·  ${hi('npx termui preview')}`
+  );
+}
+
+function buildConfigTs(theme: string): string {
+  return `import type { TermUIConfig } from 'termui';
+
+const config: TermUIConfig = {
+  version:       '1.0.0',
+  componentsDir: './components/ui',
+  registry:      'https://arindam200.github.io/termui',
+  theme:         '${theme}',
+};
+
+export default config;
+`;
 }

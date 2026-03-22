@@ -25,3 +25,6 @@ export type { ErrorBoundaryProps } from './ErrorBoundary.js';
 export type { LogProps, LogEntry, LogLevel } from './Log.js';
 export type { ImageProps, ImageProtocol } from './Image.js';
 export type { QRCodeProps } from './QRCode.js';
+
+export { Profiler } from './Profiler.js';
+export type { ProfilerProps } from './Profiler.js';
