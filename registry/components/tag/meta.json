@@ -1,0 +1,9 @@
+{
+  "name": "tag",
+  "description": "Removable chip/tag",
+  "version": "1.0.0",
+  "category": "typography",
+  "files": ["Tag.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

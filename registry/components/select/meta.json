@@ -1,6 +1,6 @@
 {
   "name": "select",
-  "description": "Single-select dropdown with arrow-key navigation and disabled items",
+  "description": "Single-select dropdown with arrow-key navigation",
   "version": "0.1.0",
   "category": "selection",
   "files": ["Select.tsx"],

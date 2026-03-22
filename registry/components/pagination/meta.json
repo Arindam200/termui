@@ -1,0 +1,9 @@
+{
+  "name": "pagination",
+  "description": "Page navigation with prev/next and jump",
+  "version": "1.0.0",
+  "category": "navigation",
+  "files": ["Pagination.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

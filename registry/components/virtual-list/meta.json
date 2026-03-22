@@ -1,0 +1,9 @@
+{
+  "name": "virtual-list",
+  "description": "Virtualized list for 10k+ items",
+  "version": "1.0.0",
+  "category": "data",
+  "files": ["VirtualList.tsx"],
+  "deps": ["mnemonist"],
+  "peerComponents": []
+}

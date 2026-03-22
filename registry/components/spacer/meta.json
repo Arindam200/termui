@@ -1,0 +1,9 @@
+{
+  "name": "spacer",
+  "description": "Flexible space between flex children",
+  "version": "1.0.0",
+  "category": "layout",
+  "files": ["Spacer.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

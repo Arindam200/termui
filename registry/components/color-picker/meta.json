@@ -1,0 +1,9 @@
+{
+  "name": "color-picker",
+  "description": "Color picker with palette, hex, and RGB input",
+  "version": "1.0.0",
+  "category": "selection",
+  "files": ["ColorPicker.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

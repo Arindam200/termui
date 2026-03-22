@@ -1,0 +1,9 @@
+{
+  "name": "directory-tree",
+  "description": "Filesystem browser with expand/collapse",
+  "version": "1.0.0",
+  "category": "data",
+  "files": ["DirectoryTree.tsx"],
+  "deps": ["glob"],
+  "peerComponents": []
+}

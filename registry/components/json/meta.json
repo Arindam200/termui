@@ -1,0 +1,9 @@
+{
+  "name": "json",
+  "description": "Pretty-printed JSON with collapsible nodes",
+  "version": "1.0.0",
+  "category": "data",
+  "files": ["JSONView.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

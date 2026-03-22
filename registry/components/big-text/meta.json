@@ -1,0 +1,9 @@
+{
+  "name": "big-text",
+  "description": "Figlet-style large ASCII art text",
+  "version": "1.0.0",
+  "category": "typography",
+  "files": ["BigText.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

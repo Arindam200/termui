@@ -1,0 +1,48 @@
+import React, { useState } from 'react';
+import { Box, Text } from 'ink';
+import { useInput } from '@termui/core';
+import type { ReactNode } from 'react';
+
+export interface ScrollViewProps {
+  height: number;
+  children: ReactNode;
+  showScrollbar?: boolean;
+  scrollbarColor?: string;
+}
+
+// Note: Ink doesn't natively support scrolling viewport clipping.
+// ScrollView uses a scroll offset and the `overflow: 'hidden'` Box prop.
+// The children are rendered inside an offset container.
+export function ScrollView({
+  height,
+  children,
+  showScrollbar = true,
+  scrollbarColor = 'gray',
+}: ScrollViewProps) {
+  const [scrollTop, setScrollTop] = useState(0);
+
+  useInput((input, key) => {
+    if (key.upArrow) {
+      setScrollTop((s) => Math.max(0, s - 1));
+    } else if (key.downArrow) {
+      setScrollTop((s) => s + 1);
+    } else if (key.pageUp) {
+      setScrollTop((s) => Math.max(0, s - height));
+    } else if (key.pageDown) {
+      setScrollTop((s) => s + height);
+    }
+  });
+
+  return (
+    <Box flexDirection="row" height={height} overflow="hidden">
+      <Box flexGrow={1} flexDirection="column" marginTop={-scrollTop as number}>
+        {children}
+      </Box>
+      {showScrollbar && (
+        <Box width={1} flexDirection="column" height={height}>
+          <Text color={scrollbarColor}>{'│'.repeat(height)}</Text>
+        </Box>
+      )}
+    </Box>
+  );
+}

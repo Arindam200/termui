@@ -7,7 +7,7 @@ const TERMUI_CONFIG_TS = `import type { TermUIConfig } from 'termui';
 const config: TermUIConfig = {
   version: '0.1.0',
   componentsDir: './components/ui',
-  registry: 'https://registry.termui.dev',
+  registry: 'https://arindam200.github.io/termui',
   theme: 'default',
 };
 
@@ -41,7 +41,7 @@ export async function init(_args: string[]): Promise<void> {
   const jsonConfig: TermUIConfig = {
     version: '0.1.0',
     componentsDir: './components/ui',
-    registry: 'https://registry.termui.dev',
+    registry: 'https://arindam200.github.io/termui',
     theme: 'default',
   };
   writeConfig(jsonConfig, cwd);

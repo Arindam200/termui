@@ -1,0 +1,9 @@
+{
+  "name": "tag-input",
+  "description": "Add and remove tags inline",
+  "version": "1.0.0",
+  "category": "selection",
+  "files": ["TagInput.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

@@ -1,0 +1,9 @@
+{
+  "name": "aspect-ratio",
+  "description": "Constrains children to a given aspect ratio",
+  "version": "1.0.0",
+  "category": "layout",
+  "files": ["AspectRatio.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

@@ -1,0 +1,9 @@
+{
+  "name": "masked-input",
+  "description": "Masked input for phone, date, credit card formats",
+  "version": "1.0.0",
+  "category": "input",
+  "files": ["MaskedInput.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

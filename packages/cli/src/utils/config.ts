@@ -11,7 +11,7 @@ export interface TermUIConfig {
 const DEFAULT_CONFIG: TermUIConfig = {
   version: '0.1.0',
   componentsDir: './components/ui',
-  registry: 'https://registry.termui.dev',
+  registry: 'https://arindam200.github.io/termui',
   theme: 'default',
 };
 

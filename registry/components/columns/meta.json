@@ -1,0 +1,9 @@
+{
+  "name": "columns",
+  "description": "Multi-column layout with configurable widths",
+  "version": "1.0.0",
+  "category": "layout",
+  "files": ["Columns.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

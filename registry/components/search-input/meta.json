@@ -1,0 +1,9 @@
+{
+  "name": "search-input",
+  "description": "Fuzzy search input with autocomplete",
+  "version": "1.0.0",
+  "category": "input",
+  "files": ["SearchInput.tsx"],
+  "deps": ["mnemonist"],
+  "peerComponents": []
+}

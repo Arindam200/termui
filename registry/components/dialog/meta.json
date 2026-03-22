@@ -1,0 +1,9 @@
+{
+  "name": "dialog",
+  "description": "Confirmation dialog with OK/Cancel actions",
+  "version": "1.0.0",
+  "category": "overlays",
+  "files": ["Dialog.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

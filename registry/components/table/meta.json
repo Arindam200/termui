@@ -1,6 +1,6 @@
 {
   "name": "table",
-  "description": "Sortable, selectable, paginated data table with auto-sized columns",
+  "description": "Sortable, selectable, paginated data table",
   "version": "0.1.0",
   "category": "data",
   "files": ["Table.tsx"],

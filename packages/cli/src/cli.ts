@@ -9,6 +9,7 @@ import { list } from './commands/list.js';
 import { diff } from './commands/diff.js';
 import { update } from './commands/update.js';
 import { theme } from './commands/theme.js';
+import { preview, previewHelp } from './commands/preview.js';
 import { checkForUpdates } from './utils/updates.js';
 
 const [, , command, ...args] = process.argv;
@@ -50,6 +51,14 @@ async function main() {
       await theme(args);
       break;
 
+    case 'preview':
+      if (args.includes('--help') || args.includes('-h')) {
+        previewHelp();
+      } else {
+        await preview(args);
+      }
+      break;
+
     case 'help':
     case '--help':
     case '-h':
@@ -87,6 +96,7 @@ function printHelp() {
   \x1b[36mlist\x1b[0m                List all available components
   \x1b[36mdiff <component>\x1b[0m    Show diff between local and registry version
   \x1b[36mtheme [name]\x1b[0m        List or apply a theme
+  \x1b[36mpreview\x1b[0m             Interactive component gallery
   \x1b[36mhelp\x1b[0m                Show this help message
 
 \x1b[1mExamples:\x1b[0m
@@ -98,6 +108,7 @@ function printHelp() {
   npx termui diff table
   npx termui list
   npx termui theme dracula
+  npx termui preview
 
 \x1b[2mDocs: https://termui.dev\x1b[0m
 `);

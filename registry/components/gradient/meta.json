@@ -1,0 +1,9 @@
+{
+  "name": "gradient",
+  "description": "Color gradient text",
+  "version": "1.0.0",
+  "category": "typography",
+  "files": ["Gradient.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

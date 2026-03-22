@@ -1,0 +1,9 @@
+{
+  "name": "form-field",
+  "description": "Form field wrapper with label, hint, and error",
+  "version": "1.0.0",
+  "category": "forms",
+  "files": ["FormField.tsx"],
+  "deps": [],
+  "peerComponents": ["form"]
+}

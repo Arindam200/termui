@@ -24,7 +24,7 @@ describe('config utils', () => {
     const config = {
       version: '0.1.0',
       componentsDir: './components/ui',
-      registry: 'https://registry.termui.dev',
+      registry: 'https://arindam200.github.io/termui',
       theme: 'nord',
     };
     writeConfig(config, tmpDir);

@@ -1,0 +1,9 @@
+{
+  "name": "tooltip",
+  "description": "Contextual tooltip on focus or hover",
+  "version": "1.0.0",
+  "category": "overlays",
+  "files": ["Tooltip.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

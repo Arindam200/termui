@@ -1,0 +1,9 @@
+{
+  "name": "digits",
+  "description": "Box-drawing character numerals",
+  "version": "1.0.0",
+  "category": "typography",
+  "files": ["Digits.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

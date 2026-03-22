@@ -1,0 +1,9 @@
+{
+  "name": "center",
+  "description": "Centers children horizontally and vertically",
+  "version": "1.0.0",
+  "category": "layout",
+  "files": ["Center.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

@@ -1,0 +1,9 @@
+{
+  "name": "sidebar",
+  "description": "Collapsible navigation sidebar panel",
+  "version": "1.0.0",
+  "category": "navigation",
+  "files": ["Sidebar.tsx"],
+  "deps": [],
+  "peerComponents": []
+}
