@@ -1,10 +1,35 @@
 {
   "name": "termui",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./core": {
+      "import": "./dist/core.js",
+      "types": "./dist/core.d.ts"
+    },
+    "./components": {
+      "import": "./dist/components.js",
+      "types": "./dist/components.d.ts"
+    },
+    "./hooks": {
+      "import": "./dist/hooks.js",
+      "types": "./dist/hooks.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build && tsup",
+    "build:root": "tsup",
     "dev": "turbo run dev --parallel",
     "test": "turbo run test",
     "lint": "turbo run lint",
@@ -15,21 +40,27 @@
     "packages/*"
   ],
   "devDependencies": {
-    "turbo": "^2.0.0",
-    "typescript": "^5.4.0",
-    "prettier": "^3.2.0",
-    "eslint": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
+    "cross-env": "^7.0.0",
+    "eslint": "^9.0.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^9.0.0",
     "lint-staged": "^15.0.0",
-    "cross-env": "^7.0.0",
-    "tsx": "^4.7.0"
+    "prettier": "^3.2.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.7.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.0"
   },
   "lint-staged": {
-    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
-    "*.{json,md}": ["prettier --write"]
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   },
   "engines": {
     "node": ">=18.0.0"
