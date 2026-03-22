@@ -12,3 +12,8 @@ export type { KeyValueItem, KeyValueProps } from './KeyValue.js';
 export type { DefinitionItem, DefinitionProps } from './Definition.js';
 export type { VirtualListProps } from './VirtualList.js';
 export type { TreeNode, TreeProps } from './Tree.js';
+
+export { JSONView } from './JSONView.js';
+export type { JSONViewProps } from './JSONView.js';
+export { DirectoryTree } from './DirectoryTree.js';
+export type { DirectoryTreeProps } from './DirectoryTree.js';

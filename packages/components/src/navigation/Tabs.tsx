@@ -16,7 +16,14 @@ export interface TabsProps {
   onTabChange?: (key: string) => void;
   borderColor?: string;
   /** Border style of the content panel. Default: 'single' */
-  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   /** Separator between tab labels. Default: ' │ ' */
   separator?: string;
   /** Horizontal padding of the tab bar. Default: 2 */
@@ -86,7 +93,12 @@ export function Tabs({
         })}
       </Box>
       {/* Only the active tab's content is rendered */}
-      <Box borderStyle={borderStyle} borderColor={resolvedBorderColor} paddingX={paddingX} paddingY={paddingY}>
+      <Box
+        borderStyle={borderStyle}
+        borderColor={resolvedBorderColor}
+        paddingX={paddingX}
+        paddingY={paddingY}
+      >
         {activeTab?.content}
       </Box>
     </Box>

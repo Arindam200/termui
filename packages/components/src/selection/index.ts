@@ -10,3 +10,8 @@ export type { MultiSelectProps, MultiSelectOption } from './MultiSelect.js';
 export type { RadioGroupProps, RadioOption } from './RadioGroup.js';
 export type { CheckboxGroupProps, CheckboxGroupOption } from './CheckboxGroup.js';
 export type { TagInputProps } from './TagInput.js';
+
+export { TreeSelect } from './TreeSelect.js';
+export type { TreeSelectProps, TreeSelectNode } from './TreeSelect.js';
+export { ColorPicker } from './ColorPicker.js';
+export type { ColorPickerProps } from './ColorPicker.js';

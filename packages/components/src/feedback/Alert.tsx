@@ -20,7 +20,14 @@ export interface AlertProps {
   /** Show a border around the alert. Default: true */
   bordered?: boolean;
   /** Border style. Default: theme.border.style */
-  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   /** Override the border/icon color */
   color?: string;
   /** Horizontal padding. Default: 1 */

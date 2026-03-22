@@ -18,7 +18,14 @@ export interface TableProps<T extends Record<string, unknown> = Record<string, u
   maxRows?: number;
   borderColor?: string;
   /** Border style. Default: 'round' */
-  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   /** Column separator string. Default: ' │ ' */
   columnSeparator?: string;
   /** Row separator fill character. Default: '─' */
@@ -97,7 +104,9 @@ export function Table<T extends Record<string, unknown> = Record<string, unknown
   const headerRow = columns
     .map((col, i) => pad(col.header, colWidths[i] ?? col.header.length, col.align))
     .join(columnSeparator);
-  const separator = colWidths.map((w) => rowSeparatorChar.repeat(w)).join(`${rowSeparatorChar}┼${rowSeparatorChar}`);
+  const separator = colWidths
+    .map((w) => rowSeparatorChar.repeat(w))
+    .join(`${rowSeparatorChar}┼${rowSeparatorChar}`);
 
   return (
     <Box flexDirection="column" borderStyle={borderStyle} borderColor={resolvedBorderColor}>

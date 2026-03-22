@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 
+# pnpm: local content-addressable store when store-dir is inside the repo (very large; never commit)
+.pnpm-store/
+
 # Build outputs
 dist/
 build/
@@ -36,8 +39,21 @@ Thumbs.db
 # Test coverage
 coverage/
 
+# Tool caches
+.eslintcache
+.prettiercache
+
+# Packed tarballs (npm pack / local publishes)
+*.tgz
+
+# Local scratch
+scratch/
+tmp/
+
 # Claude AI context
 .claude/
 
 # Planning files
 plan/
+
+

@@ -12,7 +12,14 @@ export interface PasswordInputProps {
   label?: string;
   id?: string;
   /** Border style. Default: 'round' */
-  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   /** Horizontal padding. Default: 1 */
   paddingX?: number;
   /** Width of the input box. Default: undefined (auto) */

@@ -15,7 +15,14 @@ export interface ToggleProps {
   /** Icon shown when unchecked. Default: '○' */
   uncheckedIcon?: string;
   /** Border style. Default: 'round' */
-  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   /** Horizontal padding. Default: 1 */
   paddingX?: number;
 }

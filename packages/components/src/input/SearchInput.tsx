@@ -13,7 +13,14 @@ export interface SearchInputProps<T = string> {
   maxResults?: number;
   id?: string;
   /** Border style. Default: 'round' */
-  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   /** Horizontal padding. Default: 1 */
   paddingX?: number;
   /** Cursor character shown when focused. Default: '█' */

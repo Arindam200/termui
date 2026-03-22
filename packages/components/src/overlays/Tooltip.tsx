@@ -9,7 +9,14 @@ export interface TooltipProps {
   position?: 'top' | 'bottom' | 'left' | 'right';
   isVisible?: boolean;
   /** Border style of the tooltip box. Default: 'single' */
-  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   /** Border/arrow color. Default: theme.colors.border */
   borderColor?: string;
   /** Horizontal padding of the tooltip box. Default: 1 */

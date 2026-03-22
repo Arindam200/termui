@@ -10,7 +10,14 @@ export interface ModalProps {
   width?: number;
   children?: ReactNode;
   /** Border style. Default: 'round' */
-  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   /** Border color. Default: theme.colors.primary */
   borderColor?: string;
   /** Horizontal padding. Default: 1 */
@@ -18,7 +25,14 @@ export interface ModalProps {
   /** Vertical padding. Default: 0 */
   paddingY?: number;
   /** Title bar border style. Default: 'single' */
-  titleBorderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  titleBorderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   /** Close hint text. Set to false to hide, or a string to customize. Default: 'Press Esc to close' */
   closeHint?: string | false;
 }
@@ -59,7 +73,12 @@ export function Modal({
       paddingY={paddingY}
     >
       {title && (
-        <Box marginBottom={1} borderStyle={titleBorderStyle} borderColor={theme.colors.border} paddingX={1}>
+        <Box
+          marginBottom={1}
+          borderStyle={titleBorderStyle}
+          borderColor={theme.colors.border}
+          paddingX={1}
+        >
           <Text bold color={resolvedBorderColor}>
             {title}
           </Text>

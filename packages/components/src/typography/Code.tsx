@@ -7,7 +7,14 @@ export interface CodeProps {
   language?: string;
   inline?: boolean;
   /** Border style. Default: 'single' */
-  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   /** Whether to show line numbers. Default: true */
   showLineNumbers?: boolean;
   /** Line number separator string. Default: '│ ' */

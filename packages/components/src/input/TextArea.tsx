@@ -11,7 +11,14 @@ export interface TextAreaProps {
   label?: string;
   id?: string;
   /** Border style. Default: 'round' */
-  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   /** Horizontal padding. Default: 1 */
   paddingX?: number;
   /** Cursor character shown when focused. Default: '█' */
@@ -203,7 +210,12 @@ export function TextArea({
   return (
     <Box flexDirection="column">
       {label && <Text bold>{label}</Text>}
-      <Box flexDirection="column" borderStyle={borderStyle} borderColor={borderColor} paddingX={paddingX}>
+      <Box
+        flexDirection="column"
+        borderStyle={borderStyle}
+        borderColor={borderColor}
+        paddingX={paddingX}
+      >
         {paddedLines.map((line, rowIdx) => {
           const absoluteLineIdx = rowIdx + scrollOffset;
           const isActiveLine = isFocused && absoluteLineIdx === cursorLine;

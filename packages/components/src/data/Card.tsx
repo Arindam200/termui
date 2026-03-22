@@ -11,7 +11,14 @@ export interface CardProps {
   borderColor?: string;
   width?: number;
   /** Border style. Default: 'round' */
-  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic';
+  borderStyle?:
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic';
   /** Horizontal padding. Default: 1 */
   paddingX?: number;
   /** Vertical padding. Default: 0 */

@@ -33,7 +33,9 @@ export function FormField({
   return (
     <Box flexDirection="column" gap={gap}>
       <Box gap={0}>
-        <Text bold color={resolvedLabelColor}>{label}</Text>
+        <Text bold color={resolvedLabelColor}>
+          {label}
+        </Text>
         {required && <Text color={theme.colors.error}> *</Text>}
       </Box>
       <Box>{children}</Box>
@@ -44,8 +46,7 @@ export function FormField({
       )}
       {error && (
         <Text color={theme.colors.error}>
-          {errorIcon}{' '}
-          {error}
+          {errorIcon} {error}
         </Text>
       )}
     </Box>

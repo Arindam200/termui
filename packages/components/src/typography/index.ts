@@ -17,3 +17,6 @@ export type { TagProps, TagVariant } from './Tag.js';
 export type { GradientProps, GradientChar } from './Gradient.js';
 export type { BigTextProps, BigTextFont } from './BigText.js';
 export type { DigitsProps, DigitSize } from './Digits.js';
+
+export { Markdown } from './Markdown.js';
+export type { MarkdownProps } from './Markdown.js';

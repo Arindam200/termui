@@ -6,6 +6,9 @@
 import { init } from './commands/init.js';
 import { add } from './commands/add.js';
 import { list } from './commands/list.js';
+import { diff } from './commands/diff.js';
+import { update } from './commands/update.js';
+import { theme } from './commands/theme.js';
 import { checkForUpdates } from './utils/updates.js';
 
 const [, , command, ...args] = process.argv;
@@ -20,11 +23,31 @@ async function main() {
       break;
 
     case 'add':
-      await add(args);
+      // Support --all flag to install all components
+      if (args.includes('--all')) {
+        const { getLocalRegistry } = await import('./registry/client.js');
+        const registry = getLocalRegistry();
+        const allNames = Object.keys(registry.components);
+        await add(allNames);
+      } else {
+        await add(args);
+      }
       break;
 
     case 'list':
       await list(args);
+      break;
+
+    case 'diff':
+      await diff(args);
+      break;
+
+    case 'update':
+      await update(args);
+      break;
+
+    case 'theme':
+      await theme(args);
       break;
 
     case 'help':
@@ -59,14 +82,22 @@ function printHelp() {
 \x1b[1mCommands:\x1b[0m
   \x1b[36minit\x1b[0m                Initialize TermUI in your project
   \x1b[36madd <component>\x1b[0m     Add a component from the registry
+  \x1b[36madd --all\x1b[0m           Add all available components
+  \x1b[36mupdate <component>\x1b[0m  Update (re-install) a component
   \x1b[36mlist\x1b[0m                List all available components
+  \x1b[36mdiff <component>\x1b[0m    Show diff between local and registry version
+  \x1b[36mtheme [name]\x1b[0m        List or apply a theme
   \x1b[36mhelp\x1b[0m                Show this help message
 
 \x1b[1mExamples:\x1b[0m
   npx termui init
   npx termui add spinner
   npx termui add table select
+  npx termui add --all
+  npx termui update spinner
+  npx termui diff table
   npx termui list
+  npx termui theme dracula
 
 \x1b[2mDocs: https://termui.dev\x1b[0m
 `);

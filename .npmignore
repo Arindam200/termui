@@ -1,3 +1,10 @@
+# pnpm local store (should never appear in a pack; belt-and-suspenders)
+.pnpm-store/
+
+# Tool caches
+.eslintcache
+.prettiercache
+
 # Source (only ship dist/)
 src/
 
@@ -34,3 +41,6 @@ examples/
 # Dev dependencies cache
 .turbo/
 node_modules/
+
+# Packed tarballs
+*.tgz

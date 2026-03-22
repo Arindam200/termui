@@ -40,7 +40,13 @@ export interface SpinnerProps {
   frames?: string[];
 }
 
-export function Spinner({ style: spinnerStyle = 'dots', label, color, fps = 12, frames: customFrames }: SpinnerProps) {
+export function Spinner({
+  style: spinnerStyle = 'dots',
+  label,
+  color,
+  fps = 12,
+  frames: customFrames,
+}: SpinnerProps) {
   const theme = useTheme();
   const frame = useAnimation(fps);
   const frames = customFrames ?? FRAMES[spinnerStyle];
