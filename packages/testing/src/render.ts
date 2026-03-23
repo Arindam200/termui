@@ -104,6 +104,7 @@ export async function renderToString(
   const instance = inkRender(element, {
     stdout: stream as unknown as NodeJS.WriteStream,
     exitOnCtrlC: false,
+    debug: true,
   });
 
   // Wait one tick for React to flush
@@ -136,6 +137,7 @@ export function createTestRenderer(options: { cols?: number; rows?: number } = {
       const instance = inkRender(element, {
         stdout: stream as unknown as NodeJS.WriteStream,
         exitOnCtrlC: false,
+        debug: true,
       });
       instances.push(instance);
       return buildResult(stream, instance);

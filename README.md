@@ -1,25 +1,38 @@
+![TermUI demo](.github/assets/demo.png)
+
+<div align="center">
+
 # TermUI
 
-> The missing terminal UI framework for TypeScript.
-> Built with React/Ink. Distributed like shadcn. Designed for developers.
+**Build beautiful terminal interfaces with React components you actually own.**
 
 [![CI](https://github.com/Arindam200/termui/actions/workflows/ci.yml/badge.svg)](https://github.com/Arindam200/termui/actions)
 [![npm](https://img.shields.io/npm/v/termui)](https://www.npmjs.com/package/termui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-![TermUI demo](.github/assets/demo.png)
+[Quick Start](#quick-start) &bull; [Components](#components-v114-101-components) &bull; [Theming](#theming) &bull; [CLI](#cli) &bull; [Docs](./docs)
+
+</div>
 
 ---
 
-## Why TermUI?
+TermUI is a comprehensive terminal UI framework for TypeScript, with **101 components**, **8 themes**, **12 hooks**, and a shadcn-style CLI that copies source code directly into your project. No black-box dependency. No version lock-in. Just code you own and can customize.
 
-The TypeScript/JS terminal UI ecosystem is fragmented:
+```bash
+npx termui add spinner table select alert
+```
 
-- **Ink** ships ~5 basic primitives
-- **Blessed** is abandoned
-- Nothing has shadcn-style copy-paste distribution
+### Why TermUI?
 
-TermUI fixes all three. Pick only the components you need, own the code, and style everything with a single theme token.
+The terminal UI landscape in JavaScript is stuck. **Ink** gives you 5 primitives and leaves the rest to you. **Blessed** hasn't seen a commit in years. Neither offers a component library with real breadth (charts, forms, data grids, templates), and nothing gives you shadcn-style distribution where you own every line.
+
+TermUI fills that gap:
+
+- **101 production-ready components:** from `Spinner` and `Table` to `LineChart`, `DataGrid`, `LoginFlow`, and `QRCode`
+- **Copy-paste distribution:** `npx termui add` drops source files into your project; no runtime dependency on the registry
+- **Themeable everything:** swap between Dracula, Nord, Catppuccin, and 5 more with a single command, or create your own
+- **React mental model:** if you know React, you already know TermUI; it's JSX, hooks, and flexbox all the way down
+- **Built-in testing:** `@termui/testing` gives you `renderToString`, `fireEvent`, and `waitFor` for headless component tests
 
 ---
 
@@ -69,7 +82,7 @@ render(<App />);
 
 ---
 
-## Components (v1.1.4 — 101 components)
+## Components (v1.1.4, 101 components)
 
 | Category   | Components                                                                                                           |
 | ---------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -94,17 +107,9 @@ Browse everything: `npx termui list` or `npx termui preview`
 
 `npx termui` with no arguments launches a full interactive menu:
 
-```
-◆  What would you like to do?
-  ● Add a component        browse by category
-  ○ Use a template         starter layouts & pages
-  ○ Initialize project     set up termui.config.json
-  ○ Change theme           dracula, nord, catppuccin…
-  ○ Preview component gallery
-  ○ Browse all components
-  ○ Dev mode               watch & hot-reload
-  ○ Show help
-```
+![Interactive-demo](.github/assets/interactive-demo.png)
+
+
 
 | Command                         | Description                               |
 | ------------------------------- | ----------------------------------------- |
@@ -117,7 +122,7 @@ Browse everything: `npx termui list` or `npx termui preview`
 | `npx termui diff <component>`   | Show diff vs registry version             |
 | `npx termui theme [name]`       | List or apply a theme                     |
 | `npx termui preview`            | Interactive component gallery             |
-| `npx termui dev`                | Watch mode — hot-reload on file change    |
+| `npx termui dev`                | Watch mode: hot-reload on file change    |
 
 ---
 
@@ -280,4 +285,4 @@ pnpm dev
 
 ## License
 
-MIT © [Arindam Majumder](https://studio1hq.com)
+MIT © [Arindam Majumder](https://arindammajumder.com)
