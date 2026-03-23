@@ -7,6 +7,8 @@
 [![npm](https://img.shields.io/npm/v/termui)](https://www.npmjs.com/package/termui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+![TermUI demo](.github/assets/demo.png)
+
 ---
 
 ## Why TermUI?
@@ -17,7 +19,7 @@ The TypeScript/JS terminal UI ecosystem is fragmented:
 - **Blessed** is abandoned
 - Nothing has shadcn-style copy-paste distribution
 
-TermUI fixes all three.
+TermUI fixes all three. Pick only the components you need, own the code, and style everything with a single theme token.
 
 ---
 
@@ -67,7 +69,7 @@ render(<App />);
 
 ---
 
-## Components (v1.1.3 — 101 components)
+## Components (v1.1.4 — 101 components)
 
 | Category   | Components                                                                                                           |
 | ---------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -170,18 +172,18 @@ const myTheme = createTheme({
 
 ```ts
 import {
-  useInput, // keyboard input
-  useFocus, // component focus state
+  useInput,        // keyboard input
+  useFocus,        // component focus state
   useFocusManager, // programmatic focus
-  useTheme, // access theme tokens
-  useTerminal, // cols, rows, color depth
-  useAnimation, // frame-based animation
-  useInterval, // safe setInterval
-  useClipboard, // OSC 52 clipboard
-  useKeymap, // declarative keybindings
-  useMouse, // mouse events
-  useResize, // terminal resize
-  useAsync, // async data loading
+  useTheme,        // access theme tokens
+  useTerminal,     // cols, rows, color depth
+  useAnimation,    // frame-based animation
+  useInterval,     // safe setInterval
+  useClipboard,    // OSC 52 clipboard
+  useKeymap,       // declarative keybindings
+  useMouse,        // mouse events
+  useResize,       // terminal resize
+  useAsync,        // async data loading
 } from '@termui/core';
 ```
 
@@ -235,6 +237,7 @@ termui/
 ├── examples/
 │   └── demo/          # Interactive demo app
 └── .github/
+    ├── assets/        # README images and media
     └── workflows/     # CI (Node 18, 20, 22)
 ```
 
@@ -258,8 +261,8 @@ pnpm build
 # Run interactive demo
 pnpm --filter @termui/demo start
 
-# Test CLI locally
-node --import tsx/esm packages/cli/src/cli.ts
+# Test CLI locally (from packages/cli)
+pnpm dev
 ```
 
 ---
