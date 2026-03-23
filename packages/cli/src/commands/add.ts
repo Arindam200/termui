@@ -32,7 +32,7 @@ const CATEGORY_DIR: Record<string, string> = {
   templates: 'templates',
 };
 
-export async function add(args: string[], opts?: { skipHeader?: boolean }): Promise<void> {
+export async function add(args: string[], opts?: { isNested?: boolean }): Promise<void> {
   if (args.length === 0) {
     console.error(`\x1b[31mError:\x1b[0m Please specify a component name.`);
     console.error(`  Example: \x1b[36mnpx termui add spinner\x1b[0m\n`);
@@ -43,7 +43,7 @@ export async function add(args: string[], opts?: { skipHeader?: boolean }): Prom
   const config = getConfig(cwd);
   const registryUrl = config.registry ?? 'https://arindam200.github.io/termui';
 
-  if (!opts?.skipHeader) {
+  if (!opts?.isNested) {
     printLogo();
     intro('termui');
   }

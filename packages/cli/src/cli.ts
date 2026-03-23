@@ -155,7 +155,7 @@ async function interactiveMenu(): Promise<void> {
       return;
     }
 
-    await add(chosen, { skipHeader: true });
+    await add(chosen, { isNested: true });
   } else if (action === 'add-template') {
     const { getLocalRegistry } = await import('./registry/client.js');
     const registry = getLocalRegistry();
@@ -178,15 +178,15 @@ async function interactiveMenu(): Promise<void> {
       return;
     }
 
-    await add(chosen, { skipHeader: true });
+    await add(chosen, { isNested: true });
   } else if (action === 'init') {
-    await init([], { skipHeader: true });
+    await init([], { isNested: true });
   } else if (action === 'theme') {
     await theme([]);
   } else if (action === 'preview') {
     await preview([]);
   } else if (action === 'list') {
-    await list([], { skipHeader: true });
+    await list([], { isNested: true });
   } else if (action === 'dev') {
     await dev([]);
   } else {

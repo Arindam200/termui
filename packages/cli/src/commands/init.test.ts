@@ -1,7 +1,18 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mkdirSync, rmSync, existsSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
+
+vi.mock('../utils/ui.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../utils/ui.js')>();
+  return {
+    ...actual,
+    printLogo: vi.fn(),
+    intro: vi.fn(),
+    select: vi.fn().mockResolvedValue('default'),
+  };
+});
+
 import { init } from './init.js';
 
 describe('init command', () => {

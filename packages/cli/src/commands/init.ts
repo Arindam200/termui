@@ -29,11 +29,11 @@ const THEMES = [
 
 type Theme = (typeof THEMES)[number]['value'];
 
-export async function init(_args: string[], opts?: { skipHeader?: boolean }): Promise<void> {
+export async function init(_args: string[], opts?: { isNested?: boolean }): Promise<void> {
   const cwd = process.cwd();
 
   // ─── Logo + badge ───────────────────────────────────────────────────────────
-  if (!opts?.skipHeader) {
+  if (!opts?.isNested) {
     printLogo();
     intro('termui');
   }

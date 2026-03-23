@@ -69,19 +69,19 @@ render(<App />);
 
 ## Components (v1.1.3 — 101 components)
 
-| Category   | Components                                                                                     |
-| ---------- | ---------------------------------------------------------------------------------------------- |
-| Layout     | `Box` `Stack` `Grid` `ScrollView`                                                              |
-| Typography | `Text` `Badge` + more                                                                          |
-| Input      | `TextInput` + more                                                                             |
-| Selection  | `Select` `Checkbox` `MultiSelect` + more                                                       |
-| Data       | `List` `Table` `DataGrid` + more                                                               |
-| Feedback   | `Spinner` `ProgressBar` `Alert` + more                                                         |
-| Navigation | `Tabs` + more                                                                                  |
-| Overlays   | `Modal` + more                                                                                 |
-| Forms      | `Form` `Wizard` `TimePicker` + more                                                            |
-| Charts     | `Sparkline` `BarChart` `LineChart` `PieChart` `HeatMap` `Gauge`                                |
-| Utility    | `Timer` `Stopwatch` `Clock` `Clipboard` `KeyboardShortcuts` `Help` `ErrorBoundary` `Log` `QRCode` `Image` |
+| Category   | Components                                                                                                           |
+| ---------- | -------------------------------------------------------------------------------------------------------------------- |
+| Layout     | `Box` `Stack` `Grid` `ScrollView`                                                                                    |
+| Typography | `Text` `Badge` + more                                                                                                |
+| Input      | `TextInput` + more                                                                                                   |
+| Selection  | `Select` `Checkbox` `MultiSelect` + more                                                                             |
+| Data       | `List` `Table` `DataGrid` + more                                                                                     |
+| Feedback   | `Spinner` `ProgressBar` `Alert` + more                                                                               |
+| Navigation | `Tabs` + more                                                                                                        |
+| Overlays   | `Modal` + more                                                                                                       |
+| Forms      | `Form` `Wizard` `TimePicker` + more                                                                                  |
+| Charts     | `Sparkline` `BarChart` `LineChart` `PieChart` `HeatMap` `Gauge`                                                      |
+| Utility    | `Timer` `Stopwatch` `Clock` `Clipboard` `KeyboardShortcuts` `Help` `ErrorBoundary` `Log` `QRCode` `Image`            |
 | Templates  | `SplashScreen` `InfoBox` `BulletList` `AppShell` `WelcomeScreen` `LoginFlow` `UsageMonitor` `SetupFlow` `HelpScreen` |
 
 Browse everything: `npx termui list` or `npx termui preview`
@@ -104,18 +104,18 @@ Browse everything: `npx termui list` or `npx termui preview`
   ○ Show help
 ```
 
-| Command                        | Description                              |
-| ------------------------------ | ---------------------------------------- |
-| `npx termui`                   | Interactive menu                         |
-| `npx termui init`              | Initialize TermUI in your project        |
-| `npx termui add <component>`   | Add one or more components               |
-| `npx termui add --all`         | Add all 101 components at once           |
-| `npx termui update <component>`| Re-download a component from the registry|
-| `npx termui list`              | Browse all available components          |
-| `npx termui diff <component>`  | Show diff vs registry version            |
-| `npx termui theme [name]`      | List or apply a theme                    |
-| `npx termui preview`           | Interactive component gallery            |
-| `npx termui dev`               | Watch mode — hot-reload on file change   |
+| Command                         | Description                               |
+| ------------------------------- | ----------------------------------------- |
+| `npx termui`                    | Interactive menu                          |
+| `npx termui init`               | Initialize TermUI in your project         |
+| `npx termui add <component>`    | Add one or more components                |
+| `npx termui add --all`          | Add all 101 components at once            |
+| `npx termui update <component>` | Re-download a component from the registry |
+| `npx termui list`               | Browse all available components           |
+| `npx termui diff <component>`   | Show diff vs registry version             |
+| `npx termui theme [name]`       | List or apply a theme                     |
+| `npx termui preview`            | Interactive component gallery             |
+| `npx termui dev`                | Watch mode — hot-reload on file change    |
 
 ---
 
@@ -129,16 +129,16 @@ npx termui theme nord
 npx termui theme catppuccin
 ```
 
-| Theme         | Description                        |
-| ------------- | ---------------------------------- |
-| `default`     | Clean, neutral palette             |
-| `dracula`     | Dark purple with vibrant colors    |
-| `nord`        | Arctic, north-bluish palette       |
-| `catppuccin`  | Soothing pastel mocha tones        |
-| `monokai`     | Classic warm dark theme            |
-| `tokyo-night` | Vibrant neon city                  |
-| `one-dark`    | Atom-inspired dark                 |
-| `solarized`   | Ethan Schoonover classic           |
+| Theme         | Description                     |
+| ------------- | ------------------------------- |
+| `default`     | Clean, neutral palette          |
+| `dracula`     | Dark purple with vibrant colors |
+| `nord`        | Arctic, north-bluish palette    |
+| `catppuccin`  | Soothing pastel mocha tones     |
+| `monokai`     | Classic warm dark theme         |
+| `tokyo-night` | Vibrant neon city               |
+| `one-dark`    | Atom-inspired dark              |
+| `solarized`   | Ethan Schoonover classic        |
 
 Or use a theme programmatically:
 
@@ -147,7 +147,7 @@ import { ThemeProvider, draculaTheme } from '@termui/core';
 
 <ThemeProvider theme={draculaTheme}>
   <App />
-</ThemeProvider>
+</ThemeProvider>;
 ```
 
 ### Custom theme
@@ -170,18 +170,18 @@ const myTheme = createTheme({
 
 ```ts
 import {
-  useInput,        // keyboard input
-  useFocus,        // component focus state
+  useInput, // keyboard input
+  useFocus, // component focus state
   useFocusManager, // programmatic focus
-  useTheme,        // access theme tokens
-  useTerminal,     // cols, rows, color depth
-  useAnimation,    // frame-based animation
-  useInterval,     // safe setInterval
-  useClipboard,    // OSC 52 clipboard
-  useKeymap,       // declarative keybindings
-  useMouse,        // mouse events
-  useResize,       // terminal resize
-  useAsync,        // async data loading
+  useTheme, // access theme tokens
+  useTerminal, // cols, rows, color depth
+  useAnimation, // frame-based animation
+  useInterval, // safe setInterval
+  useClipboard, // OSC 52 clipboard
+  useKeymap, // declarative keybindings
+  useMouse, // mouse events
+  useResize, // terminal resize
+  useAsync, // async data loading
 } from '@termui/core';
 ```
 
@@ -198,13 +198,13 @@ const output = await renderToString(<Spinner style="dots" />);
 expect(screen.hasText('⠋', output)).toBe(true);
 ```
 
-| Export                | Description                                      |
-| --------------------- | ------------------------------------------------ |
-| `renderToString`      | Render a component to a plain string (one frame) |
-| `createTestRenderer`  | Reusable renderer with `render` / `cleanup`      |
-| `screen`              | Query helpers: `getByText`, `hasText`, `getLines`, etc. |
-| `fireEvent`           | Simulate keyboard input: `key`, `type`, `press`  |
-| `waitFor`             | Poll an assertion until it passes or times out   |
+| Export               | Description                                             |
+| -------------------- | ------------------------------------------------------- |
+| `renderToString`     | Render a component to a plain string (one frame)        |
+| `createTestRenderer` | Reusable renderer with `render` / `cleanup`             |
+| `screen`             | Query helpers: `getByText`, `hasText`, `getLines`, etc. |
+| `fireEvent`          | Simulate keyboard input: `key`, `type`, `press`         |
+| `waitFor`            | Poll an assertion until it passes or times out          |
 
 ---
 
@@ -266,12 +266,12 @@ node --import tsx/esm packages/cli/src/cli.ts
 
 ## Roadmap
 
-| Phase       | Status      | Description                                                          |
-| ----------- | ----------- | -------------------------------------------------------------------- |
-| **Phase 1** | ✅ **Done** | 19 components, CLI (init/add/list), 3 themes, 12 hooks               |
-| **Phase 2** | ✅ **Done** | 75 components, 8 themes, adapters, diff/update/theme commands        |
-| **Phase 3** | ✅ **Done** | 101 components, charts, dev tools, templates, testing package        |
-| **Phase 4** | 🔜 Planned  | Plugin system, community registry, Vue/Svelte adapters               |
+| Phase       | Status      | Description                                                   |
+| ----------- | ----------- | ------------------------------------------------------------- |
+| **Phase 1** | ✅ **Done** | 19 components, CLI (init/add/list), 3 themes, 12 hooks        |
+| **Phase 2** | ✅ **Done** | 75 components, 8 themes, adapters, diff/update/theme commands |
+| **Phase 3** | ✅ **Done** | 101 components, charts, dev tools, templates, testing package |
+| **Phase 4** | 🔜 Planned  | Plugin system, community registry, Vue/Svelte adapters        |
 
 ---
 

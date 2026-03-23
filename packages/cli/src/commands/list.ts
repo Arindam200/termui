@@ -16,7 +16,7 @@ const CATEGORY_ICONS: Record<string, string> = {
   templates: '🎨',
 };
 
-export async function list(_args: string[], opts?: { skipHeader?: boolean }): Promise<void> {
+export async function list(_args: string[], opts?: { isNested?: boolean }): Promise<void> {
   const registry = getLocalRegistry();
   const components = Object.values(registry.components);
 
@@ -27,7 +27,7 @@ export async function list(_args: string[], opts?: { skipHeader?: boolean }): Pr
     byCategory[comp.category]!.push(comp);
   }
 
-  if (!opts?.skipHeader) {
+  if (!opts?.isNested) {
     printLogo();
     intro('termui');
   }
