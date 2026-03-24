@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Text } from 'ink';
 import { useTheme } from '@termui/core';
+import { normalize } from './utils.js';
 
 export interface SparklineProps {
   data: number[];
@@ -10,17 +11,7 @@ export interface SparklineProps {
 }
 
 // Braille Unicode block characters ordered by dot fill level (0–7)
-// Each char represents increasing fill: ▁ through full block using braille patterns
 const BRAILLE_LEVELS = ['⣀', '⣄', '⣤', '⣦', '⣶', '⣷', '⣿', '⣿'];
-
-function normalize(data: number[], levels: number): number[] {
-  if (data.length === 0) return [];
-  const min = Math.min(...data);
-  const max = Math.max(...data);
-  const range = max - min;
-  if (range === 0) return data.map(() => Math.floor(levels / 2));
-  return data.map((v) => Math.round(((v - min) / range) * (levels - 1)));
-}
 
 export function Sparkline({ data, width = 20, color, label }: SparklineProps) {
   const theme = useTheme();
@@ -44,7 +35,9 @@ export function Sparkline({ data, width = 20, color, label }: SparklineProps) {
         )
       : data;
 
-  const levels = normalize(sampled, BRAILLE_LEVELS.length);
+  const min = Math.min(...sampled);
+  const max = Math.max(...sampled);
+  const levels = sampled.map((v) => normalize(v, min, max, BRAILLE_LEVELS.length));
   const sparkStr = levels.map((l) => BRAILLE_LEVELS[l] ?? BRAILLE_LEVELS[0]).join('');
 
   return (

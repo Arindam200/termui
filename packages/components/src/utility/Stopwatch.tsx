@@ -1,22 +1,12 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Box, Text } from 'ink';
 import { useInterval, useInput, useTheme } from '@termui/core';
+import { formatElapsed } from './formatters.js';
 
 export interface StopwatchProps {
   autoStart?: boolean;
   color?: string;
   showLaps?: boolean;
-}
-
-function formatElapsed(ms: number): string {
-  const totalSeconds = Math.floor(ms / 1000);
-  const h = Math.floor(totalSeconds / 3600);
-  const m = Math.floor((totalSeconds % 3600) / 60);
-  const s = totalSeconds % 60;
-  const centis = Math.floor((ms % 1000) / 10);
-
-  const pad = (n: number, len = 2) => String(n).padStart(len, '0');
-  return `${pad(h)}:${pad(m)}:${pad(s)}.${pad(centis)}`;
 }
 
 export function Stopwatch({ autoStart = false, color, showLaps = true }: StopwatchProps) {

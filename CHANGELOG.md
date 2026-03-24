@@ -2,6 +2,29 @@
 
 All notable changes to TermUI are documented here.
 
+## [1.1.7] — 2026-03-24
+
+### Performance
+
+- **Tree-shaking** — added `"sideEffects": false` to all four packages (`termui`, `@termui/core`, `@termui/components`, `@termui/adapters`); bundlers can now safely drop any module that is not imported
+- **Component category sub-exports** — 12 new granular entry points (`termui/components/layout`, `/typography`, `/input`, `/selection`, `/data`, `/feedback`, `/navigation`, `/overlays`, `/forms`, `/utility`, `/charts`, `/templates`) so users without a bundler can import only the slice they need; corresponding sub-exports added to `@termui/components` package as well
+- **BigText font encoding** — replaced verbose nested `number[][]` arrays (300+ lines) with packed 3-bit row integers in a separate `BigText.font.ts`; font data is ~60% smaller before gzip
+
+### Build
+
+- **`tsconfig.build.json`** — new production tsconfig that extends the root and sets `declarationMap: false` and `sourceMap: false`; tsup now uses it for all builds, eliminating ~232 unnecessary `.d.ts.map` files from the published dist
+- **Adapter sourcemaps removed** — `packages/adapters/tsup.config.ts` was incorrectly setting `sourcemap: true`; corrected to `false` to match the rest of the build
+- **`"files"` field** added to `packages/core`, `packages/components`, and `packages/cli` — npm now only publishes `dist/` and `README.md`, not source files or config
+
+### Refactoring
+
+- **QRCode encoder extracted** to `utility/qrEncoder.ts` — ~420 lines of pure GF(256)/Reed-Solomon/matrix logic separated from the React component; GF lookup tables are now lazy-initialised on first call (removing a module-level IIFE that conflicted with `sideEffects: false`)
+- **Shared chart utilities** — `normalize`, `clamp`, `padEnd`, `padStart` extracted to `charts/utils.ts`; `LineChart`, `Sparkline`, `Gauge`, and `BarChart` all import from it
+- **Shared time formatters** — `formatElapsed` and `formatTime` (plus `pad` helper) extracted to `utility/formatters.ts`; `Stopwatch` and `Timer` import from it instead of each defining their own
+- **`EmbeddedTerminal`** — added explicit comment on the `import('node-pty')` dynamic import so bundlers are not tempted to inline it
+
+---
+
 ## [1.1.3] — 2026-03-23
 
 ### Fixed

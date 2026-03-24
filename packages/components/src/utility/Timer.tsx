@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Box, Text } from 'ink';
 import { useInterval, useInput, useTheme } from '@termui/core';
+import { formatTime } from './formatters.js';
 
 export interface TimerProps {
   duration: number; // seconds
@@ -9,18 +10,6 @@ export interface TimerProps {
   format?: 'hms' | 'ms' | 's';
   color?: string;
   label?: string;
-}
-
-function formatTime(seconds: number, format: 'hms' | 'ms' | 's'): string {
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = seconds % 60;
-
-  const pad = (n: number) => String(n).padStart(2, '0');
-
-  if (format === 's') return `${seconds}s`;
-  if (format === 'ms') return `${pad(m)}:${pad(s)}`;
-  return `${pad(h)}:${pad(m)}:${pad(s)}`;
 }
 
 export function Timer({

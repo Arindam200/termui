@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Text } from 'ink';
 import { useTheme } from '@termui/core';
+import { normalize } from './utils.js';
 
 export type LineChartDataPoint = number | { label?: string; value: number };
 
@@ -19,11 +20,6 @@ function getValue(d: LineChartDataPoint): number {
 
 function getLabel(d: LineChartDataPoint): string {
   return typeof d === 'number' ? '' : (d.label ?? '');
-}
-
-function normalize(value: number, min: number, max: number, rows: number): number {
-  if (max === min) return Math.floor(rows / 2);
-  return Math.round(((value - min) / (max - min)) * (rows - 1));
 }
 
 // Characters used to draw the line

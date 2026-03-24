@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Text } from 'ink';
 import { useTheme } from '@termui/core';
+import { padEnd, padStart } from './utils.js';
 
 export interface BarChartItem {
   label: string;
@@ -19,16 +20,6 @@ export interface BarChartProps {
 
 const BAR_CHAR = '█';
 const EMPTY_CHAR = '░';
-
-function pad(str: string, length: number): string {
-  if (str.length >= length) return str.slice(0, length);
-  return str + ' '.repeat(length - str.length);
-}
-
-function padStart(str: string, length: number): string {
-  if (str.length >= length) return str.slice(0, length);
-  return ' '.repeat(length - str.length) + str;
-}
 
 export function BarChart({
   data,
@@ -67,7 +58,7 @@ export function BarChart({
 
           return (
             <Box key={idx} flexDirection="row" gap={1}>
-              <Text color={theme.colors.foreground}>{pad(item.label, maxLabelLen)}</Text>
+              <Text color={theme.colors.foreground}>{padEnd(item.label, maxLabelLen)}</Text>
               <Text color={resolvedColor}>{barStr}</Text>
               {showValues && (
                 <Text color={theme.colors.mutedForeground}>
@@ -127,7 +118,7 @@ export function BarChart({
             const resolvedColor = item.color ?? theme.colors.primary;
             return (
               <Text key={idx} color={resolvedColor}>
-                {pad(String(item.value), barW)}
+                {padEnd(String(item.value), barW)}
               </Text>
             );
           })}
@@ -137,7 +128,7 @@ export function BarChart({
       <Box flexDirection="row">
         {data.map((item, idx) => (
           <Text key={idx} color={theme.colors.mutedForeground}>
-            {pad(item.label, barW)}
+            {padEnd(item.label, barW)}
           </Text>
         ))}
       </Box>

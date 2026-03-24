@@ -34,6 +34,8 @@ export function EmbeddedTerminal({
 
     (async () => {
       try {
+        // Dynamic import is intentional — node-pty is an optional peer dependency
+        // and requires a native build. Bundlers must NOT inline or pre-bundle it.
         const mod = await import('node-pty');
         if (cancelled) return;
         const pty = mod.spawn(command, args, {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Text } from 'ink';
 import { useTheme } from '@termui/core';
+import { clamp } from './utils.js';
 
 export type GaugeSize = 'sm' | 'md' | 'lg';
 
@@ -21,10 +22,6 @@ export interface GaugeProps {
 
 const ARC_CHARS_FILL = '█';
 const ARC_CHARS_EMPTY = '░';
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, value));
-}
 
 function renderSmGauge(pct: number, color: string, mutedColor: string): React.ReactNode {
   // Single-line gauge: [▓▓▓▓░░] value%

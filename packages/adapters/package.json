@@ -116,6 +116,7 @@
       "import": "./dist/internal/color-env.js"
     }
   },
+  "sideEffects": false,
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

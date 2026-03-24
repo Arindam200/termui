@@ -1,7 +1,7 @@
 {
   "name": "termui",
   "private": false,
-  "version": "1.1.6",
+  "version": "1.1.7",
   "type": "module",
   "bin": {
     "termui": "./dist/cli.js"
@@ -20,6 +20,54 @@
     "./components": {
       "import": "./dist/components.js",
       "types": "./dist/components.d.ts"
+    },
+    "./components/layout": {
+      "import": "./dist/components-layout.js",
+      "types": "./dist/components-layout.d.ts"
+    },
+    "./components/typography": {
+      "import": "./dist/components-typography.js",
+      "types": "./dist/components-typography.d.ts"
+    },
+    "./components/input": {
+      "import": "./dist/components-input.js",
+      "types": "./dist/components-input.d.ts"
+    },
+    "./components/selection": {
+      "import": "./dist/components-selection.js",
+      "types": "./dist/components-selection.d.ts"
+    },
+    "./components/data": {
+      "import": "./dist/components-data.js",
+      "types": "./dist/components-data.d.ts"
+    },
+    "./components/feedback": {
+      "import": "./dist/components-feedback.js",
+      "types": "./dist/components-feedback.d.ts"
+    },
+    "./components/navigation": {
+      "import": "./dist/components-navigation.js",
+      "types": "./dist/components-navigation.d.ts"
+    },
+    "./components/overlays": {
+      "import": "./dist/components-overlays.js",
+      "types": "./dist/components-overlays.d.ts"
+    },
+    "./components/forms": {
+      "import": "./dist/components-forms.js",
+      "types": "./dist/components-forms.d.ts"
+    },
+    "./components/utility": {
+      "import": "./dist/components-utility.js",
+      "types": "./dist/components-utility.d.ts"
+    },
+    "./components/charts": {
+      "import": "./dist/components-charts.js",
+      "types": "./dist/components-charts.d.ts"
+    },
+    "./components/templates": {
+      "import": "./dist/components-templates.js",
+      "types": "./dist/components-templates.d.ts"
     },
     "./hooks": {
       "import": "./dist/hooks.js",
@@ -95,6 +143,7 @@
     "ink": "^5.0.0",
     "react": "^18.0.0"
   },
+  "sideEffects": false,
   "files": [
     "dist",
     "README.md"

@@ -6,6 +6,7 @@ const sharedOptions = {
   clean: true,
   sourcemap: false,
   minify: true,
+  tsconfig: 'tsconfig.build.json',
   external: [
     'react',
     'ink',
@@ -34,6 +35,45 @@ const sharedOptions = {
       '@termui/core/styling': path.resolve(__dirname, 'packages/core/src/styling/index.ts'),
       '@termui/core/terminal': path.resolve(__dirname, 'packages/core/src/terminal/index.ts'),
       '@termui/components': path.resolve(__dirname, 'packages/components/src/index.ts'),
+      '@termui/components/layout': path.resolve(
+        __dirname,
+        'packages/components/src/layout/index.ts'
+      ),
+      '@termui/components/typography': path.resolve(
+        __dirname,
+        'packages/components/src/typography/index.ts'
+      ),
+      '@termui/components/input': path.resolve(__dirname, 'packages/components/src/input/index.ts'),
+      '@termui/components/selection': path.resolve(
+        __dirname,
+        'packages/components/src/selection/index.ts'
+      ),
+      '@termui/components/data': path.resolve(__dirname, 'packages/components/src/data/index.ts'),
+      '@termui/components/feedback': path.resolve(
+        __dirname,
+        'packages/components/src/feedback/index.ts'
+      ),
+      '@termui/components/navigation': path.resolve(
+        __dirname,
+        'packages/components/src/navigation/index.ts'
+      ),
+      '@termui/components/overlays': path.resolve(
+        __dirname,
+        'packages/components/src/overlays/index.ts'
+      ),
+      '@termui/components/forms': path.resolve(__dirname, 'packages/components/src/forms/index.ts'),
+      '@termui/components/utility': path.resolve(
+        __dirname,
+        'packages/components/src/utility/index.ts'
+      ),
+      '@termui/components/charts': path.resolve(
+        __dirname,
+        'packages/components/src/charts/index.ts'
+      ),
+      '@termui/components/templates': path.resolve(
+        __dirname,
+        'packages/components/src/templates/index.ts'
+      ),
     };
   },
 };
@@ -45,6 +85,18 @@ export default defineConfig([
       index: 'src/index.ts',
       core: 'src/core.ts',
       components: 'src/components.ts',
+      'components-layout': 'src/components-layout.ts',
+      'components-typography': 'src/components-typography.ts',
+      'components-input': 'src/components-input.ts',
+      'components-selection': 'src/components-selection.ts',
+      'components-data': 'src/components-data.ts',
+      'components-feedback': 'src/components-feedback.ts',
+      'components-navigation': 'src/components-navigation.ts',
+      'components-overlays': 'src/components-overlays.ts',
+      'components-forms': 'src/components-forms.ts',
+      'components-utility': 'src/components-utility.ts',
+      'components-charts': 'src/components-charts.ts',
+      'components-templates': 'src/components-templates.ts',
       hooks: 'src/hooks.ts',
       args: 'src/args.ts',
       clack: 'src/clack.ts',
