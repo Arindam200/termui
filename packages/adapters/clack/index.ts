@@ -237,3 +237,72 @@ export async function group<T>(opts: { title: string; prompts: () => Promise<T> 
   console.log(`\n${ansi.magenta('◆')}  ${ansi.bold(opts.title)}\n`);
   return opts.prompts();
 }
+
+export interface Task {
+  title: string;
+  task: () => Promise<string | undefined | void>;
+}
+
+export interface TasksOptions {
+  parallel?: boolean;
+  continueOnError?: boolean;
+}
+
+/** Run a list of tasks with spinner feedback. */
+export async function tasks(taskList: Task[], opts?: TasksOptions): Promise<void> {
+  if (opts?.parallel) {
+    // Parallel mode: print all tasks as pending, run concurrently, then print results
+    for (const t of taskList) {
+      console.log(`  ${ansi.cyan('⠋')} ${t.title}`);
+    }
+
+    const results = await Promise.allSettled(taskList.map((t) => t.task()));
+
+    for (let i = 0; i < taskList.length; i++) {
+      const t = taskList[i]!;
+      const result = results[i]!;
+      if (result.status === 'fulfilled') {
+        const returnValue = result.value;
+        console.log(
+          `  ${ansi.green('✓')} ${t.title}${returnValue ? ansi.dim('  ' + returnValue) : ''}`
+        );
+      } else {
+        const err =
+          result.reason instanceof Error ? result.reason : new Error(String(result.reason));
+        console.log(`  ${ansi.red('✗')} ${t.title}  ${ansi.red(err.message)}`);
+      }
+    }
+
+    // If not continueOnError, throw the first error
+    if (!opts?.continueOnError) {
+      for (const result of results) {
+        if (result.status === 'rejected') {
+          throw result.reason instanceof Error ? result.reason : new Error(String(result.reason));
+        }
+      }
+    }
+  } else {
+    // Sequential mode (default)
+    for (const t of taskList) {
+      // Print spinner start line
+      process.stdout.write(`  ${ansi.cyan('⠋')} ${t.title}\n`);
+
+      try {
+        const returnValue = await t.task();
+        // Move cursor up one line and clear it, then print success
+        process.stdout.write(`\x1b[1A\x1b[2K`);
+        console.log(
+          `  ${ansi.green('✓')} ${t.title}${returnValue ? ansi.dim('  ' + returnValue) : ''}`
+        );
+      } catch (e) {
+        const err = e instanceof Error ? e : new Error(String(e));
+        // Move cursor up one line and clear it, then print error
+        process.stdout.write(`\x1b[1A\x1b[2K`);
+        console.log(`  ${ansi.red('✗')} ${t.title}  ${ansi.red(err.message)}`);
+        if (!opts?.continueOnError) {
+          throw err;
+        }
+      }
+    }
+  }
+}

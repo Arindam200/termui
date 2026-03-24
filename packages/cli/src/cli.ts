@@ -25,15 +25,7 @@ async function main() {
       break;
 
     case 'add':
-      // Support --all flag to install all components
-      if (args.includes('--all')) {
-        const { getLocalRegistry } = await import('./registry/client.js');
-        const registry = getLocalRegistry();
-        const allNames = Object.keys(registry.components);
-        await add(allNames);
-      } else {
-        await add(args);
-      }
+      await add(args);
       break;
 
     case 'list':
@@ -63,6 +55,22 @@ async function main() {
     case 'dev':
       await dev(args);
       break;
+
+    case 'completion': {
+      const shell = args[0];
+      if (!shell || !['bash', 'zsh', 'fish'].includes(shell)) {
+        console.error(`\x1b[31mError:\x1b[0m Usage: npx termui completion <bash|zsh|fish>`);
+        process.exit(1);
+      }
+      await runCompletion(shell as 'bash' | 'zsh' | 'fish');
+      break;
+    }
+
+    case 'create': {
+      const { create } = await import('./commands/create.js');
+      await create(args);
+      break;
+    }
 
     case 'help':
     case '--help':
@@ -120,7 +128,7 @@ async function interactiveMenu(): Promise<void> {
     { value: 'add-template', label: 'Use a template', hint: 'starter layouts & pages' },
     { value: 'init', label: 'Initialize project', hint: 'set up termui.config.json' },
     { value: 'theme', label: 'Change theme', hint: 'dracula, nord, catppuccin…' },
-    { value: 'preview', label: 'Preview component gallery', hint: '91 components' },
+    { value: 'preview', label: 'Preview component gallery', hint: 'browse all components' },
     { value: 'list', label: 'Browse all components', hint: 'grouped by category' },
     { value: 'dev', label: 'Dev mode', hint: 'watch & hot-reload' },
     { value: 'help', label: 'Show help', hint: 'all commands & examples' },
@@ -194,6 +202,68 @@ async function interactiveMenu(): Promise<void> {
   }
 }
 
+async function runCompletion(shell: 'bash' | 'zsh' | 'fish'): Promise<void> {
+  const { getLocalRegistry } = await import('./registry/client.js');
+  const registry = getLocalRegistry();
+  const comps = Object.keys(registry.components).join(' ');
+  const THEMES = 'default dracula nord catppuccin monokai tokyo-night one-dark solarized';
+  const CMDS =
+    'init add list diff update theme preview dev create completion help --help --version';
+
+  if (shell === 'bash') {
+    process.stdout.write(`# TermUI bash completion — source <(npx termui completion bash)
+_termui_completions() {
+  local cur=\${COMP_WORDS[COMP_CWORD]}
+  local prev=\${COMP_WORDS[COMP_CWORD-1]}
+  if [[ \${COMP_CWORD} -eq 1 ]]; then
+    COMPREPLY=( $(compgen -W "${CMDS}" -- "\${cur}") )
+    return
+  fi
+  case "\${prev}" in
+    add|update|diff) COMPREPLY=( $(compgen -W "${comps}" -- "\${cur}") ); return ;;
+    theme)           COMPREPLY=( $(compgen -W "${THEMES}" -- "\${cur}") ); return ;;
+    completion)      COMPREPLY=( $(compgen -W "bash zsh fish" -- "\${cur}") ); return ;;
+  esac
+}
+complete -F _termui_completions termui npx
+`);
+  } else if (shell === 'zsh') {
+    process.stdout.write(`#compdef termui
+# TermUI zsh completion — source <(npx termui completion zsh)
+_termui() {
+  local state
+  _arguments '1: :->cmd' '*::args:->args'
+  case $state in
+    cmd) _arguments "1: :(${CMDS})" ;;
+    args)
+      case $words[1] in
+        add|update|diff) _arguments '*: :(${comps})' ;;
+        theme)           _arguments '*: :(${THEMES})' ;;
+        completion)      _arguments '*: :(bash zsh fish)' ;;
+      esac
+    ;;
+  esac
+}
+_termui
+`);
+  } else {
+    // fish
+    const compLines = [`# TermUI fish completion — copy to ~/.config/fish/completions/termui.fish`];
+    for (const cmd of CMDS.split(' ')) {
+      compLines.push(`complete -c termui -f -n '__fish_use_subcommand' -a ${cmd}`);
+    }
+    for (const comp of comps.split(' ').filter(Boolean)) {
+      compLines.push(
+        `complete -c termui -f -n '__fish_seen_subcommand_from add update diff' -a ${comp}`
+      );
+    }
+    for (const t of THEMES.split(' ')) {
+      compLines.push(`complete -c termui -f -n '__fish_seen_subcommand_from theme' -a ${t}`);
+    }
+    process.stdout.write(compLines.join('\n') + '\n');
+  }
+}
+
 function printHelp() {
   printLogo();
   intro('termui');
@@ -201,12 +271,17 @@ function printHelp() {
   const cmds: [string, string][] = [
     ['init', 'Initialize TermUI in your project'],
     ['add <component>', 'Add one or more components from the registry'],
-    ['add --all', 'Add all 91 components at once'],
+    ['add --all', 'Add all components at once'],
     ['update <component>', 'Re-download a component from the registry'],
     ['list', 'Browse all available components'],
     ['diff <component>', 'Show diff between local and registry version'],
     ['theme [name]', 'List or apply a theme'],
-    ['preview', 'Interactive component gallery (91 components)'],
+    ['preview', 'Interactive component gallery'],
+    ['create <name>', 'Scaffold a new TermUI project'],
+    ['list --category <cat>', 'Filter list by category'],
+    ['list --search <q>', 'Search components by name/description'],
+    ['list --json', 'Machine-readable JSON output'],
+    ['completion <shell>', 'Print shell completion script (bash/zsh/fish)'],
     ['dev', 'Watch mode — hot-reload on file change'],
     ['help', 'Show this help message'],
   ];
@@ -230,7 +305,7 @@ function printHelp() {
     console.log(`${c.gray}│${c.reset}    ${hi(ex)}`);
   }
 
-  outro(`Docs: ${hi('https://arindam200.github.io/termui')}  ·  v1.0.0`);
+  outro(`Docs: ${hi('https://arindam200.github.io/termui')}  ·  v1.1.3`);
 }
 
 main().catch((err) => {

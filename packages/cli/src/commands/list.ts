@@ -1,5 +1,8 @@
+import { existsSync } from 'fs';
+import { join } from 'path';
 import { getLocalRegistry } from '../registry/client.js';
 import { printLogo, intro, step, outro, hi, dim, c } from '../utils/ui.js';
+import { getConfig } from '../utils/config.js';
 
 const CATEGORY_ICONS: Record<string, string> = {
   layout: '📐',
@@ -17,8 +20,61 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 export async function list(_args: string[], opts?: { isNested?: boolean }): Promise<void> {
+  const args = _args;
+
+  // Parse flags
+  const categoryIdx = args.indexOf('--category');
+  const categoryFilter = categoryIdx !== -1 ? args[categoryIdx + 1] : undefined;
+
+  const searchIdx = args.indexOf('--search');
+  const searchQuery = searchIdx !== -1 ? args[searchIdx + 1] : undefined;
+
+  const jsonMode = args.includes('--json');
+  const installedOnly = args.includes('--installed');
+
   const registry = getLocalRegistry();
-  const components = Object.values(registry.components);
+  let components = Object.values(registry.components);
+
+  // Apply --category filter
+  if (categoryFilter) {
+    components = components.filter(
+      (comp) => comp.category.toLowerCase() === categoryFilter.toLowerCase()
+    );
+  }
+
+  // Apply --search filter (substring match on name or description)
+  if (searchQuery) {
+    const query = searchQuery.toLowerCase();
+    components = components.filter(
+      (comp) =>
+        comp.name.toLowerCase().includes(query) || comp.description.toLowerCase().includes(query)
+    );
+  }
+
+  // Apply --installed filter
+  if (installedOnly) {
+    const cwd = process.cwd();
+    const config = getConfig(cwd);
+    components = components.filter((comp) => {
+      if (!comp.files || comp.files.length === 0) return false;
+      return existsSync(join(cwd, config.componentsDir, comp.category, comp.files[0]!));
+    });
+  }
+
+  // --json mode: output JSON and return immediately
+  if (jsonMode) {
+    const output = {
+      components: components.map((comp) => ({
+        name: comp.name,
+        category: comp.category,
+        description: comp.description,
+        files: comp.files,
+      })),
+      total: components.length,
+    };
+    console.log(JSON.stringify(output, null, 2));
+    return;
+  }
 
   // Group by category
   const byCategory: Record<string, typeof components> = {};

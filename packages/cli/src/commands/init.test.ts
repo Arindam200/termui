@@ -9,7 +9,16 @@ vi.mock('../utils/ui.js', async (importOriginal) => {
     ...actual,
     printLogo: vi.fn(),
     intro: vi.fn(),
+    step: vi.fn(),
+    warn: vi.fn(),
+    done: vi.fn(),
+    outro: vi.fn(),
+    // select: theme picker — default theme
     select: vi.fn().mockResolvedValue('default'),
+    // text: components directory prompt — return default value
+    text: vi.fn().mockResolvedValue('./components/ui'),
+    // confirm: install deps prompt — skip install
+    confirm: vi.fn().mockResolvedValue(false),
   };
 });
 

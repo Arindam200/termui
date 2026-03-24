@@ -1,7 +1,26 @@
 {
   "name": "termui",
   "private": false,
-  "version": "1.1.7",
+  "version": "1.1.8",
+  "description": "A TypeScript/React terminal UI framework with 100+ components, 8 themes, and a shadcn-style CLI",
+  "keywords": [
+    "terminal",
+    "tui",
+    "cli",
+    "react",
+    "ink",
+    "typescript",
+    "components"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Arindam200/termui#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Arindam200/termui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Arindam200/termui/issues"
+  },
   "type": "module",
   "bin": {
     "termui": "./dist/cli.js"
@@ -189,5 +208,9 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "packageManager": "pnpm@9.0.0"
+  "packageManager": "pnpm@9.0.0",
+  "author": {
+    "name": "Arindam Majumder",
+    "url": "https://github.com/Arindam200"
+  }
 }

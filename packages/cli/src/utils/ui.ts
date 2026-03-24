@@ -200,6 +200,129 @@ export async function select<T extends string>(
   });
 }
 
+// ─── Interactive: confirm (yes/no) ────────────────────────────────────────────
+
+export async function confirm(prompt: string, defaultValue = true): Promise<boolean> {
+  return new Promise((resolve) => {
+    const hint = defaultValue ? dim('(Y/n)') : dim('(y/N)');
+
+    console.log(`${sym.pipe}`);
+    console.log(`${sym.filled}  ${bold(prompt)} ${hint}`);
+
+    if (!process.stdin.isTTY) {
+      resolve(defaultValue);
+      return;
+    }
+
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.setEncoding('utf8');
+
+    function onKey(key: string): void {
+      process.stdin.setRawMode(false);
+      process.stdin.pause();
+      process.stdin.removeListener('data', onKey);
+
+      let answer: boolean;
+      if (key === 'y' || key === 'Y') {
+        answer = true;
+      } else if (key === 'n' || key === 'N') {
+        answer = false;
+      } else if (key === '\r' || key === '\n') {
+        answer = defaultValue;
+      } else if (key === '\x03') {
+        process.exit(0);
+        return;
+      } else {
+        answer = defaultValue;
+      }
+
+      const answerLabel = answer ? `${c.green}yes${c.reset}` : `${c.red}no${c.reset}`;
+      process.stdout.write(`\x1b[2A\x1b[0J`);
+      console.log(`${sym.pipe}`);
+      console.log(`${sym.done}  ${bold(prompt)}  ${answerLabel}`);
+      resolve(answer);
+    }
+
+    process.stdin.on('data', onKey);
+  });
+}
+
+// ─── Interactive: text input ───────────────────────────────────────────────────
+
+export async function text(
+  prompt: string,
+  options: { defaultValue?: string; validate?: (v: string) => string | undefined } = {}
+): Promise<string> {
+  return new Promise((resolve) => {
+    const { defaultValue = '', validate } = options;
+    let input = '';
+    let errorMsg = '';
+
+    function render(isFirst = false): void {
+      if (!isFirst) {
+        const lines = 2 + (errorMsg ? 1 : 0);
+        process.stdout.write(`\x1b[${lines}A\x1b[0J`);
+      }
+      const placeholder = defaultValue ? dim(` (default: ${defaultValue})`) : '';
+      console.log(`${sym.pipe}`);
+      console.log(`${sym.filled}  ${bold(prompt)}${placeholder}`);
+      if (errorMsg) {
+        console.log(`  ${c.red}✖ ${errorMsg}${c.reset}`);
+      }
+      process.stdout.write(`  ${c.cyan}›${c.reset} ${input}`);
+    }
+
+    render(true);
+
+    if (!process.stdin.isTTY) {
+      console.log('');
+      resolve(defaultValue);
+      return;
+    }
+
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.setEncoding('utf8');
+
+    function onKey(key: string): void {
+      if (key === '\x03') {
+        process.stdin.setRawMode(false);
+        process.exit(0);
+      } else if (key === '\r' || key === '\n') {
+        const value = input.trim() || defaultValue;
+        if (validate) {
+          const err = validate(value);
+          if (err) {
+            errorMsg = err;
+            render();
+            return;
+          }
+        }
+        process.stdin.setRawMode(false);
+        process.stdin.pause();
+        process.stdin.removeListener('data', onKey);
+        console.log('');
+        const lines = 2 + (errorMsg ? 1 : 0);
+        process.stdout.write(`\x1b[${lines + 1}A\x1b[0J`);
+        console.log(`${sym.pipe}`);
+        console.log(`${sym.done}  ${bold(prompt)}  ${c.white}${value}${c.reset}`);
+        resolve(value);
+      } else if (key === '\x7f' || key === '\b') {
+        input = input.slice(0, -1);
+        errorMsg = '';
+        render();
+      } else if (key >= ' ') {
+        input += key;
+        errorMsg = '';
+        render();
+      }
+    }
+
+    process.stdin.on('data', onKey);
+  });
+}
+
 // ─── Interactive: multi-select checkboxes ─────────────────────────────────────
 
 export async function multiselect<T extends string>(

@@ -49,6 +49,8 @@ coverage/
 # Local scratch
 scratch/
 tmp/
+.tmp/
+__tmp_*/
 
 # Claude AI context
 .claude/

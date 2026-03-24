@@ -23,7 +23,7 @@ Add one or more components from the registry.
 ```sh
 npx termui add spinner
 npx termui add table select progress-bar
-npx termui add --all   # install all 91 components
+npx termui add --all   # install all 101 components
 ```
 
 ---
@@ -73,7 +73,7 @@ Available themes: `default`, `dracula`, `nord`, `catppuccin`, `monokai`, `solari
 
 ### `npx termui preview`
 
-Interactive component gallery in the terminal. Browse all 91+ components with live prop editing.
+Interactive component gallery in the terminal. Browse all 101 components with live prop editing.
 
 ```sh
 npx termui preview
