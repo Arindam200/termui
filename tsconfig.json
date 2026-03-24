@@ -4,6 +4,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "lib": ["ES2022", "DOM"],
+    "types": ["node"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -15,7 +16,22 @@
     "baseUrl": ".",
     "paths": {
       "@termui/core": ["packages/core/src/index.ts"],
-      "@termui/components": ["packages/components/src/index.ts"]
+      "@termui/components": ["packages/components/src/index.ts"],
+      "@termui/adapters/args": ["packages/adapters/args/index.ts"],
+      "@termui/adapters/clack": ["packages/adapters/clack/index.ts"],
+      "@termui/adapters/clack-ink": ["packages/adapters/clack-ink/index.tsx"],
+      "@termui/adapters/picocolors": ["packages/adapters/picocolors/index.ts"],
+      "@termui/adapters/gray-matter": ["packages/adapters/gray-matter/index.ts"],
+      "@termui/adapters/git": ["packages/adapters/git/index.ts"],
+      "@termui/adapters/github": ["packages/adapters/github/index.ts"],
+      "@termui/adapters/keychain": ["packages/adapters/keychain/index.ts"],
+      "@termui/adapters/pty": ["packages/adapters/pty/index.ts"],
+      "@termui/adapters/execa": ["packages/adapters/execa/index.ts"],
+      "@termui/adapters/link": ["packages/adapters/link/index.ts"],
+      "@termui/adapters/semver-update": ["packages/adapters/semver-update/index.ts"],
+      "@termui/adapters/conf": ["packages/adapters/conf/index.ts"],
+      "@termui/adapters/completion": ["packages/adapters/completion/index.ts"],
+      "@termui/adapters/internal/color-env": ["packages/adapters/internal/color-env.ts"]
     }
   },
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]

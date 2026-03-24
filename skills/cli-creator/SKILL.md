@@ -30,15 +30,15 @@ If the request is clear enough (e.g., "build me a Docker container manager with 
 
 Map what they described to one of these patterns. Patterns can be combined.
 
-| Pattern | When to use | Core components |
-|---------|-------------|-----------------|
-| **Data Browser** | Browse/search/filter a list of items | `AppShell` + `Table` or `VirtualList` + `SearchInput` |
-| **Dashboard** | Real-time metrics, logs, charts | `AppShell` + `Tabs` + `BarChart`/`Gauge`/`Sparkline` + `useInterval` |
-| **Setup Wizard** | Onboarding, init, configuration | `SetupFlow` + `TextInput`/`Select`/`MultiSelect` + `Spinner` |
-| **CRUD Manager** | Create / read / update / delete resources | `AppShell` + `Table` + `Form`/`FormField` + `Modal`/`Confirm` |
-| **Auth Flow** | Login, token entry, account setup | `LoginFlow` + `TextInput`/`PasswordInput` + `SetupFlow` |
-| **Log Viewer** | Streaming logs, event feeds | `AppShell` + `Log` + `StatusMessage` + `useAsync` |
-| **File Browser** | Navigate filesystem, pick files | `AppShell` + `DirectoryTree` or `FilePicker` |
+| Pattern          | When to use                               | Core components                                                      |
+| ---------------- | ----------------------------------------- | -------------------------------------------------------------------- |
+| **Data Browser** | Browse/search/filter a list of items      | `AppShell` + `Table` or `VirtualList` + `SearchInput`                |
+| **Dashboard**    | Real-time metrics, logs, charts           | `AppShell` + `Tabs` + `BarChart`/`Gauge`/`Sparkline` + `useInterval` |
+| **Setup Wizard** | Onboarding, init, configuration           | `SetupFlow` + `TextInput`/`Select`/`MultiSelect` + `Spinner`         |
+| **CRUD Manager** | Create / read / update / delete resources | `AppShell` + `Table` + `Form`/`FormField` + `Modal`/`Confirm`        |
+| **Auth Flow**    | Login, token entry, account setup         | `LoginFlow` + `TextInput`/`PasswordInput` + `SetupFlow`              |
+| **Log Viewer**   | Streaming logs, event feeds               | `AppShell` + `Log` + `StatusMessage` + `useAsync`                    |
+| **File Browser** | Navigate filesystem, pick files           | `AppShell` + `DirectoryTree` or `FilePicker`                         |
 
 Full working code for each pattern is in `references/patterns.md`. Read it before writing code.
 
@@ -162,7 +162,10 @@ export function App() {
   }
   return (
     <HomeScreen
-      onSelect={(id) => { setSelectedId(id); setScreen('detail'); }}
+      onSelect={(id) => {
+        setSelectedId(id);
+        setScreen('detail');
+      }}
       onCreate={() => setScreen('create')}
     />
   );
@@ -172,6 +175,7 @@ export function App() {
 ### Always wrap in ThemeProvider — never render components without it.
 
 ### Keyboard conventions
+
 - `q` / `Ctrl+C` → quit
 - `Escape` → go back / cancel
 - `↑↓` → navigate lists
@@ -180,6 +184,7 @@ export function App() {
 - `?` → show help
 
 Implement quit handling in every screen:
+
 ```tsx
 useInput((input, key) => {
   if (input === 'q' || (key.ctrl && input === 'c')) process.exit(0);
@@ -211,6 +216,7 @@ Read `references/patterns.md` for complete, copy-paste-ready implementations of 
 ## Deliver to the user
 
 When done, give them:
+
 1. Every file with its full content (no placeholders like `// TODO`)
 2. The exact `npx termui add` command to run
 3. `npm install && npm run dev` to try it immediately

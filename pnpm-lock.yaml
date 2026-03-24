@@ -30,6 +30,9 @@ importers:
       '@eslint/js':
         specifier: ^9.0.0
         version: 9.39.4
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.37
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.0.0
         version: 7.18.0(@typescript-eslint/parser@7.18.0(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)(typescript@5.9.3)

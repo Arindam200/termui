@@ -109,8 +109,6 @@ Browse everything: `npx termui list` or `npx termui preview`
 
 ![Interactive-demo](.github/assets/interactive-demo.png)
 
-
-
 | Command                         | Description                               |
 | ------------------------------- | ----------------------------------------- |
 | `npx termui`                    | Interactive menu                          |
@@ -122,7 +120,7 @@ Browse everything: `npx termui list` or `npx termui preview`
 | `npx termui diff <component>`   | Show diff vs registry version             |
 | `npx termui theme [name]`       | List or apply a theme                     |
 | `npx termui preview`            | Interactive component gallery             |
-| `npx termui dev`                | Watch mode: hot-reload on file change    |
+| `npx termui dev`                | Watch mode: hot-reload on file change     |
 
 ---
 
@@ -177,18 +175,18 @@ const myTheme = createTheme({
 
 ```ts
 import {
-  useInput,        // keyboard input
-  useFocus,        // component focus state
+  useInput, // keyboard input
+  useFocus, // component focus state
   useFocusManager, // programmatic focus
-  useTheme,        // access theme tokens
-  useTerminal,     // cols, rows, color depth
-  useAnimation,    // frame-based animation
-  useInterval,     // safe setInterval
-  useClipboard,    // OSC 52 clipboard
-  useKeymap,       // declarative keybindings
-  useMouse,        // mouse events
-  useResize,       // terminal resize
-  useAsync,        // async data loading
+  useTheme, // access theme tokens
+  useTerminal, // cols, rows, color depth
+  useAnimation, // frame-based animation
+  useInterval, // safe setInterval
+  useClipboard, // OSC 52 clipboard
+  useKeymap, // declarative keybindings
+  useMouse, // mouse events
+  useResize, // terminal resize
+  useAsync, // async data loading
 } from '@termui/core';
 ```
 

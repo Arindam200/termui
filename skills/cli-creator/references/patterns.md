@@ -38,7 +38,11 @@ export function BrowserScreen({ onSelect }: BrowserScreenProps) {
   const theme = useTheme();
   const [query, setQuery] = useState('');
 
-  const { data: items, loading, error } = useAsync<Item[]>(async () => {
+  const {
+    data: items,
+    loading,
+    error,
+  } = useAsync<Item[]>(async () => {
     // Replace with your real data fetching
     return fetchItems();
   }, []);
@@ -47,7 +51,9 @@ export function BrowserScreen({ onSelect }: BrowserScreenProps) {
     if (!items) return [];
     if (!query) return items;
     const q = query.toLowerCase();
-    return items.filter(i => i.name.toLowerCase().includes(q) || i.status.toLowerCase().includes(q));
+    return items.filter(
+      (i) => i.name.toLowerCase().includes(q) || i.status.toLowerCase().includes(q)
+    );
   }, [items, query]);
 
   useInput((input, key) => {
@@ -57,12 +63,18 @@ export function BrowserScreen({ onSelect }: BrowserScreenProps) {
   return (
     <AppShell>
       <AppShell.Header>
-        <Text bold color={theme.colors.primary}>◆ My Browser</Text>
+        <Text bold color={theme.colors.primary}>
+          ◆ My Browser
+        </Text>
         <SearchInput value={query} onChange={setQuery} placeholder="Filter…" />
       </AppShell.Header>
       <AppShell.Content height={20}>
         {loading && <Spinner label="Loading…" />}
-        {error && <Alert variant="error" title="Error">{String(error)}</Alert>}
+        {error && (
+          <Alert variant="error" title="Error">
+            {String(error)}
+          </Alert>
+        )}
         {!loading && !error && (
           <Table
             data={filtered}
@@ -130,10 +142,15 @@ export function App() {
             label="Project name"
             placeholder="my-app"
             autoFocus
-            onSubmit={(name) => { setConfig(c => ({ ...c, name })); setStep('framework'); }}
+            onSubmit={(name) => {
+              setConfig((c) => ({ ...c, name }));
+              setStep('framework');
+            }}
           />
         ) : (
-          <Text>Project name: <Text bold>{config.name}</Text></Text>
+          <Text>
+            Project name: <Text bold>{config.name}</Text>
+          </Text>
         )}
       </SetupFlow.Step>
 
@@ -148,10 +165,15 @@ export function App() {
                 { value: 'vue', label: 'Vue' },
                 { value: 'svelte', label: 'Svelte' },
               ]}
-              onSubmit={(framework) => { setConfig(c => ({ ...c, framework })); setStep('features'); }}
+              onSubmit={(framework) => {
+                setConfig((c) => ({ ...c, framework }));
+                setStep('features');
+              }}
             />
           ) : (
-            <Text>Framework: <Text bold>{config.framework}</Text></Text>
+            <Text>
+              Framework: <Text bold>{config.framework}</Text>
+            </Text>
           )}
         </SetupFlow.Step>
       )}
@@ -169,14 +191,16 @@ export function App() {
                 { value: 'test', label: 'Testing' },
               ]}
               onSubmit={(features) => {
-                setConfig(c => ({ ...c, features }));
+                setConfig((c) => ({ ...c, features }));
                 setStep('installing');
                 // Simulate install
                 setTimeout(() => setStep('done'), 2000);
               }}
             />
           ) : (
-            <Text>Features: <Text bold>{config.features.join(', ')}</Text></Text>
+            <Text>
+              Features: <Text bold>{config.features.join(', ')}</Text>
+            </Text>
           )}
         </SetupFlow.Step>
       )}
@@ -184,10 +208,13 @@ export function App() {
       {/* Step 4 — async work */}
       {(step === 'installing' || step === 'done') && (
         <SetupFlow.Step status={step === 'done' ? 'success' : 'active'}>
-          {step === 'installing'
-            ? <SetupFlow.Spinner label="Installing packages…" />
-            : <Text color="green">✓ Done! Run <Text bold>cd {config.name} && npm run dev</Text></Text>
-          }
+          {step === 'installing' ? (
+            <SetupFlow.Spinner label="Installing packages…" />
+          ) : (
+            <Text color="green">
+              ✓ Done! Run <Text bold>cd {config.name} && npm run dev</Text>
+            </Text>
+          )}
         </SetupFlow.Step>
       )}
     </SetupFlow>
@@ -231,7 +258,10 @@ function readMetrics(): Metrics {
     cpu,
     memory: Math.round(Math.random() * 100),
     cpuHistory: Array.from({ length: 20 }, () => Math.round(Math.random() * 100)),
-    requests: ['GET', 'POST', 'PUT', 'DELETE'].map(m => ({ label: m, value: Math.round(Math.random() * 500) })),
+    requests: ['GET', 'POST', 'PUT', 'DELETE'].map((m) => ({
+      label: m,
+      value: Math.round(Math.random() * 500),
+    })),
   };
 }
 
@@ -248,8 +278,20 @@ export function App() {
   const OverviewTab = (
     <Box flexDirection="column" gap={1}>
       <Box gap={4}>
-        <Gauge value={metrics.cpu} label="CPU" unit="%" warningThreshold={75} dangerThreshold={90} />
-        <Gauge value={metrics.memory} label="Memory" unit="%" warningThreshold={80} dangerThreshold={95} />
+        <Gauge
+          value={metrics.cpu}
+          label="CPU"
+          unit="%"
+          warningThreshold={75}
+          dangerThreshold={90}
+        />
+        <Gauge
+          value={metrics.memory}
+          label="Memory"
+          unit="%"
+          warningThreshold={80}
+          dangerThreshold={95}
+        />
       </Box>
       <Text dimColor>CPU history (last 20s):</Text>
       <Sparkline data={metrics.cpuHistory} width={40} color={theme.colors.primary} />
@@ -272,7 +314,9 @@ export function App() {
   return (
     <AppShell>
       <AppShell.Header>
-        <Text bold color={theme.colors.primary}>◆ ✦ DASHBOARD ✦ ◆</Text>
+        <Text bold color={theme.colors.primary}>
+          ◆ ✦ DASHBOARD ✦ ◆
+        </Text>
         <Text dimColor>Refreshes every 2s</Text>
       </AppShell.Header>
       <AppShell.Content height={22}>
@@ -346,14 +390,14 @@ export function App() {
       env: values['env'] as string,
       status: 'stopped',
     };
-    setResources(r => [...r, newResource]);
+    setResources((r) => [...r, newResource]);
     setFlash({ type: 'success', msg: `Created ${newResource.name}` });
     setTimeout(() => setFlash(null), 3000);
     setView('list');
   };
 
   const handleDelete = () => {
-    setResources(r => r.filter(x => x.id !== selectedId));
+    setResources((r) => r.filter((x) => x.id !== selectedId));
     setFlash({ type: 'success', msg: 'Resource deleted' });
     setTimeout(() => setFlash(null), 3000);
     setSelectedId(null);
@@ -363,19 +407,27 @@ export function App() {
   if (view === 'create') {
     return (
       <AppShell>
-        <AppShell.Header><Text bold color={theme.colors.primary}>New Resource</Text></AppShell.Header>
+        <AppShell.Header>
+          <Text bold color={theme.colors.primary}>
+            New Resource
+          </Text>
+        </AppShell.Header>
         <AppShell.Content>
           <Form
             onSubmit={handleCreate}
-            fields={[{ name: 'name', validate: v => v ? null : 'Required' }]}
+            fields={[{ name: 'name', validate: (v) => (v ? null : 'Required') }]}
           >
-            <FormField name="name" label="Name"><TextInput autoFocus /></FormField>
+            <FormField name="name" label="Name">
+              <TextInput autoFocus />
+            </FormField>
             <FormField name="env" label="Environment">
-              <Select options={[
-                { value: 'production', label: 'Production' },
-                { value: 'staging', label: 'Staging' },
-                { value: 'dev', label: 'Development' },
-              ]} />
+              <Select
+                options={[
+                  { value: 'production', label: 'Production' },
+                  { value: 'staging', label: 'Staging' },
+                  { value: 'dev', label: 'Development' },
+                ]}
+              />
             </FormField>
           </Form>
         </AppShell.Content>
@@ -385,7 +437,7 @@ export function App() {
   }
 
   if (view === 'confirm-delete') {
-    const target = resources.find(r => r.id === selectedId);
+    const target = resources.find((r) => r.id === selectedId);
     return (
       <Confirm
         message={`Delete "${target?.name}"? This cannot be undone.`}
@@ -398,9 +450,17 @@ export function App() {
 
   return (
     <AppShell>
-      <AppShell.Header><Text bold color={theme.colors.primary}>◆ Resource Manager</Text></AppShell.Header>
+      <AppShell.Header>
+        <Text bold color={theme.colors.primary}>
+          ◆ Resource Manager
+        </Text>
+      </AppShell.Header>
       <AppShell.Content height={20}>
-        {flash && <Alert variant={flash.type} title={flash.type === 'success' ? 'Done' : 'Error'}>{flash.msg}</Alert>}
+        {flash && (
+          <Alert variant={flash.type} title={flash.type === 'success' ? 'Done' : 'Error'}>
+            {flash.msg}
+          </Alert>
+        )}
         <Table
           data={resources}
           columns={[
@@ -549,7 +609,7 @@ interface LogEntry {
 
 interface LogScreenProps {
   onBack: () => void;
-  source: string;  // e.g., "api-prod"
+  source: string; // e.g., "api-prod"
 }
 
 export function LogScreen({ onBack, source }: LogScreenProps) {
@@ -561,7 +621,7 @@ export function LogScreen({ onBack, source }: LogScreenProps) {
   useEffect(() => {
     // Replace with your real log stream
     const stream = streamLogs(source);
-    stream.on('data', (entry: LogEntry) => setEntries(e => [...e.slice(-200), entry]));
+    stream.on('data', (entry: LogEntry) => setEntries((e) => [...e.slice(-200), entry]));
     stream.on('end', () => setStreaming(false));
     return () => stream.destroy();
   }, [source]);
@@ -575,29 +635,27 @@ export function LogScreen({ onBack, source }: LogScreenProps) {
     if (input === '0') setFilter('all');
   });
 
-  const filtered = filter === 'all' ? entries : entries.filter(e => e.level === filter);
+  const filtered = filter === 'all' ? entries : entries.filter((e) => e.level === filter);
 
   return (
     <AppShell>
       <AppShell.Header>
         <Box gap={2}>
-          <Text bold color={theme.colors.primary}>Logs: {source}</Text>
-          {streaming
-            ? <Spinner style="dots" label="streaming" fps={8} />
-            : <StatusMessage variant="info">Stream ended</StatusMessage>
-          }
+          <Text bold color={theme.colors.primary}>
+            Logs: {source}
+          </Text>
+          {streaming ? (
+            <Spinner style="dots" label="streaming" fps={8} />
+          ) : (
+            <StatusMessage variant="info">Stream ended</StatusMessage>
+          )}
           <Badge variant={filter === 'all' ? 'default' : 'info'}>
             {filter === 'all' ? 'all levels' : filter}
           </Badge>
         </Box>
       </AppShell.Header>
       <AppShell.Content height={22}>
-        <Log
-          entries={filtered}
-          maxLines={200}
-          showTimestamps
-          showLevel
-        />
+        <Log entries={filtered} maxLines={200} showTimestamps showLevel />
       </AppShell.Content>
       <AppShell.Hints items={['0 all  1 info  2 warn  3 error', 'Esc back', 'q quit']} />
     </AppShell>

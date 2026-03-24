@@ -114,9 +114,7 @@ import { MyComponent } from '../MyComponent.js';
 
 describe('MyComponent', () => {
   it('renders expected text', async () => {
-    const output = await renderToString(
-      React.createElement(MyComponent, { label: 'Hello' })
-    );
+    const output = await renderToString(React.createElement(MyComponent, { label: 'Hello' }));
     expect(output).toContain('Hello');
   });
 });
@@ -138,14 +136,14 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 <type>(<scope>): <short summary>
 ```
 
-| Type       | When to use                                      |
-| ---------- | ------------------------------------------------ |
-| `feat`     | New component, hook, or CLI command              |
-| `fix`      | Bug fix                                          |
-| `docs`     | Documentation only                               |
-| `test`     | Adding or updating tests                         |
-| `refactor` | Code change that is not a feature or bug fix     |
-| `chore`    | Tooling, config, dependency updates              |
+| Type       | When to use                                  |
+| ---------- | -------------------------------------------- |
+| `feat`     | New component, hook, or CLI command          |
+| `fix`      | Bug fix                                      |
+| `docs`     | Documentation only                           |
+| `test`     | Adding or updating tests                     |
+| `refactor` | Code change that is not a feature or bug fix |
+| `chore`    | Tooling, config, dependency updates          |
 
 Examples:
 

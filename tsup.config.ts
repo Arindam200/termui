@@ -4,7 +4,8 @@ import path from 'path';
 const sharedOptions = {
   format: ['esm'] as ['esm'],
   clean: true,
-  sourcemap: true,
+  sourcemap: false,
+  minify: true,
   external: [
     'react',
     'ink',

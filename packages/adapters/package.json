@@ -5,6 +5,55 @@
   "type": "module",
   "main": "./dist/args/index.js",
   "types": "./dist/args/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "args": [
+        "./dist/args/index.d.ts"
+      ],
+      "clack": [
+        "./dist/clack/index.d.ts"
+      ],
+      "clack-ink": [
+        "./dist/clack-ink/index.d.ts"
+      ],
+      "picocolors": [
+        "./dist/picocolors/index.d.ts"
+      ],
+      "gray-matter": [
+        "./dist/gray-matter/index.d.ts"
+      ],
+      "git": [
+        "./dist/git/index.d.ts"
+      ],
+      "github": [
+        "./dist/github/index.d.ts"
+      ],
+      "keychain": [
+        "./dist/keychain/index.d.ts"
+      ],
+      "pty": [
+        "./dist/pty/index.d.ts"
+      ],
+      "execa": [
+        "./dist/execa/index.d.ts"
+      ],
+      "link": [
+        "./dist/link/index.d.ts"
+      ],
+      "semver-update": [
+        "./dist/semver-update/index.d.ts"
+      ],
+      "conf": [
+        "./dist/conf/index.d.ts"
+      ],
+      "completion": [
+        "./dist/completion/index.d.ts"
+      ],
+      "internal/color-env": [
+        "./dist/internal/color-env.d.ts"
+      ]
+    }
+  },
   "exports": {
     "./args": {
       "types": "./dist/args/index.d.ts",

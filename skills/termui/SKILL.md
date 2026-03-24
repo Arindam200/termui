@@ -25,20 +25,20 @@ npx termui preview <component>      # live preview
 
 See `references/components.md` for full props on every component.
 
-| Category | Components |
-|----------|------------|
-| **Layout** | `Box` `Stack` `Grid` `ScrollView` `Columns` `Center` `Divider` `Spacer` `AspectRatio` |
-| **Typography** | `Text` `Heading` `Code` `Link` `Badge` `Tag` `Markdown` `JSONView` `Gradient` `BigText` `Digits` |
-| **Input** | `TextInput` `TextArea` `PasswordInput` `NumberInput` `SearchInput` `MaskedInput` `EmailInput` `PathInput` |
-| **Selection** | `Select` `MultiSelect` `RadioGroup` `Checkbox` `CheckboxGroup` `Toggle` `TreeSelect` `TagInput` `ColorPicker` |
-| **Data** | `Table` `DataGrid` `List` `VirtualList` `Tree` `DirectoryTree` `KeyValue` `Definition` `Card` `Panel` |
-| **Feedback** | `Spinner` `ProgressBar` `ProgressCircle` `StatusMessage` `Toast` `Alert` `Banner` `Skeleton` |
-| **Navigation** | `Tabs` `TabbedContent` `Breadcrumb` `Pagination` `CommandPalette` `Menu` `Sidebar` |
-| **Overlays** | `Modal` `Dialog` `Drawer` `Tooltip` `Popover` |
-| **Forms** | `Form` `FormField` `Wizard` `Confirm` `DatePicker` `TimePicker` `FilePicker` |
-| **Charts** | `Sparkline` `BarChart` `LineChart` `PieChart` `HeatMap` `Gauge` |
-| **Utility** | `Timer` `Stopwatch` `Clock` `Clipboard` `KeyboardShortcuts` `Help` `ErrorBoundary` `Log` `Image` `QRCode` |
-| **Templates** | `SplashScreen` `AppShell` `WelcomeScreen` `LoginFlow` `SetupFlow` `UsageMonitor` `InfoBox` `BulletList` `HelpScreen` |
+| Category       | Components                                                                                                           |
+| -------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Layout**     | `Box` `Stack` `Grid` `ScrollView` `Columns` `Center` `Divider` `Spacer` `AspectRatio`                                |
+| **Typography** | `Text` `Heading` `Code` `Link` `Badge` `Tag` `Markdown` `JSONView` `Gradient` `BigText` `Digits`                     |
+| **Input**      | `TextInput` `TextArea` `PasswordInput` `NumberInput` `SearchInput` `MaskedInput` `EmailInput` `PathInput`            |
+| **Selection**  | `Select` `MultiSelect` `RadioGroup` `Checkbox` `CheckboxGroup` `Toggle` `TreeSelect` `TagInput` `ColorPicker`        |
+| **Data**       | `Table` `DataGrid` `List` `VirtualList` `Tree` `DirectoryTree` `KeyValue` `Definition` `Card` `Panel`                |
+| **Feedback**   | `Spinner` `ProgressBar` `ProgressCircle` `StatusMessage` `Toast` `Alert` `Banner` `Skeleton`                         |
+| **Navigation** | `Tabs` `TabbedContent` `Breadcrumb` `Pagination` `CommandPalette` `Menu` `Sidebar`                                   |
+| **Overlays**   | `Modal` `Dialog` `Drawer` `Tooltip` `Popover`                                                                        |
+| **Forms**      | `Form` `FormField` `Wizard` `Confirm` `DatePicker` `TimePicker` `FilePicker`                                         |
+| **Charts**     | `Sparkline` `BarChart` `LineChart` `PieChart` `HeatMap` `Gauge`                                                      |
+| **Utility**    | `Timer` `Stopwatch` `Clock` `Clipboard` `KeyboardShortcuts` `Help` `ErrorBoundary` `Log` `Image` `QRCode`            |
+| **Templates**  | `SplashScreen` `AppShell` `WelcomeScreen` `LoginFlow` `SetupFlow` `UsageMonitor` `InfoBox` `BulletList` `HelpScreen` |
 
 ---
 
@@ -49,8 +49,12 @@ All imported from `termui/core`:
 ```tsx
 // Keyboard input
 useInput((input, key) => {
-  if (key.upArrow) { /* ... */ }
-  if (key.escape) { /* ... */ }
+  if (key.upArrow) {
+    /* ... */
+  }
+  if (key.escape) {
+    /* ... */
+  }
   if (key.ctrl && input === 'c') process.exit(0);
 });
 
@@ -59,16 +63,16 @@ const { isFocused } = useFocus({ autoFocus: true, id: 'my-input' });
 const { focus, focusNext, focusPrev } = useFocusManager();
 
 // Theme
-const theme = useTheme();              // read current theme
-const setTheme = useThemeUpdater();    // switch theme at runtime
+const theme = useTheme(); // read current theme
+const setTheme = useThemeUpdater(); // switch theme at runtime
 
 // Terminal
 const { columns, rows, hasColor } = useTerminal();
 const { columns, rows } = useResize(); // reactive to resize
 
 // Animation & timing
-const frame = useAnimation(12);        // 12fps frame counter
-useInterval(() => tick(), 1000);       // runs every 1000ms
+const frame = useAnimation(12); // 12fps frame counter
+useInterval(() => tick(), 1000); // runs every 1000ms
 
 // Async state
 const { data, loading, error } = useAsync(() => fetchData(), []);
@@ -114,6 +118,7 @@ const myTheme = createTheme({
 `focusRing` `selection` `selectionForeground`
 
 **In a component:** always fall back to theme tokens, never hardcode hex:
+
 ```tsx
 const theme = useTheme();
 const color = props.color ?? theme.colors.primary;
@@ -124,8 +129,8 @@ const color = props.color ?? theme.colors.primary;
 ## Library Adapters
 
 ```ts
-import { intro, text, select, spinner } from 'termui/clack';  // @clack/prompts wrapper
-import pc from 'termui/picocolors';      // picocolors + pc.hex(), pc.theme.primary()
+import { intro, text, select, spinner } from 'termui/clack'; // @clack/prompts wrapper
+import pc from 'termui/picocolors'; // picocolors + pc.hex(), pc.theme.primary()
 import matter from 'termui/gray-matter'; // gray-matter + <FrontmatterDisplay>
 import { useGit, GitStatus } from 'termui/git';
 import { useKeychain } from 'termui/keychain';
