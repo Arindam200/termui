@@ -57,6 +57,10 @@
     "./templates": {
       "types": "./dist/templates/index.d.ts",
       "import": "./dist/templates/index.js"
+    },
+    "./ai": {
+      "types": "./dist/ai/index.d.ts",
+      "import": "./dist/ai/index.js"
     }
   },
   "sideEffects": false,

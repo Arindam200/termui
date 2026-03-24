@@ -51,6 +51,12 @@
       ],
       "internal/color-env": [
         "./dist/internal/color-env.d.ts"
+      ],
+      "ai": [
+        "./dist/ai/index.d.ts"
+      ],
+      "conversation-store": [
+        "./dist/conversation-store/index.d.ts"
       ]
     }
   },
@@ -114,6 +120,14 @@
     "./internal/color-env": {
       "types": "./dist/internal/color-env.d.ts",
       "import": "./dist/internal/color-env.js"
+    },
+    "./ai": {
+      "types": "./dist/ai/index.d.ts",
+      "import": "./dist/ai/index.js"
+    },
+    "./conversation-store": {
+      "types": "./dist/conversation-store/index.d.ts",
+      "import": "./dist/conversation-store/index.js"
     }
   },
   "sideEffects": false,

@@ -1,7 +1,7 @@
 {
   "name": "termui",
   "private": false,
-  "version": "1.1.8",
+  "version": "1.2.0",
   "description": "A TypeScript/React terminal UI framework with 100+ components, 8 themes, and a shadcn-style CLI",
   "keywords": [
     "terminal",
@@ -151,6 +151,18 @@
     "./color-env": {
       "import": "./dist/color-env.js",
       "types": "./dist/color-env.d.ts"
+    },
+    "./components/ai": {
+      "import": "./dist/components-ai.js",
+      "types": "./dist/components-ai.d.ts"
+    },
+    "./ai": {
+      "import": "./dist/ai.js",
+      "types": "./dist/ai.d.ts"
+    },
+    "./conversation-store": {
+      "import": "./dist/conversation-store.js",
+      "types": "./dist/conversation-store.d.ts"
     }
   },
   "dependencies": {

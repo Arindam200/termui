@@ -25,6 +25,8 @@ const sharedOptions = {
     'semver',
     'latest-version',
     'yaml',
+    '@anthropic-ai/sdk',
+    'openai',
   ],
   esbuildOptions(
     options: Parameters<Exclude<import('tsup').Options['esbuildOptions'], undefined>>[0]
@@ -74,6 +76,10 @@ const sharedOptions = {
         __dirname,
         'packages/components/src/templates/index.ts'
       ),
+      '@termui/components/ai': path.resolve(
+        __dirname,
+        'packages/components/src/ai/index.ts'
+      ),
     };
   },
 };
@@ -113,6 +119,9 @@ export default defineConfig([
       conf: 'src/conf.ts',
       completion: 'src/completion.ts',
       'color-env': 'src/color-env.ts',
+      'components-ai': 'src/components-ai.ts',
+      ai: 'src/ai.ts',
+      'conversation-store': 'src/conversation-store.ts',
     },
     dts: true,
   },

@@ -2,7 +2,51 @@
 
 All notable changes to TermUI are documented here.
 
-## [1.1.7] — 2026-03-24
+## [1.2.0] - 2026-03-25
+
+### Added - Phase 6: AI CLI Builder
+
+#### Tier 1 - Core Primitives
+
+- **`StreamingText`** (`termui/components/typography`) - renders LLM token streams in real time; accepts a controlled `text` prop, an `AsyncIterable<string>` via `stream`, a blinking `cursor`, and a typing `animate`/`speed` mode for pre-buffered responses
+- **`Markdown` streaming mode** - new `streaming` and `cursor` props on the existing component; partial code fences are closed gracefully so the component never crashes mid-stream
+- **`DiffView`** (`termui/components/data`) - unified, split, and inline diff views with an internal LCS algorithm (no extra dependency); supports `context` lines, `showLineNumbers`, and coloured `+`/`-` lines with `@@` hunk headers
+
+#### Tier 2 - Chat UI Components
+
+- **`ChatMessage` + `ChatThread`** (`termui/components/ai`) - role-based message styling (user/assistant/system/error), animated `...` typing indicator while `streaming`, collapsible system messages, and optional `autoScroll`
+- **`ToolCall`** - status icons for pending/running/success/error states, live elapsed timer, and collapsible args and result display
+- **`ThinkingBlock`** - collapsible chain-of-thought block; shows token count and duration when collapsed; `streaming` prop shows a pulsing indicator
+- **`ToolApproval`** - risk-level border colour (green/yellow/red), `y`/`n`/`a` keybindings, and a countdown timer that auto-denies on timeout
+
+#### Tier 3 - AI Integration Layer
+
+- **`TokenUsage` + `ContextMeter`** - compact token and cost display (`1.2k in / 850 out - $0.003`) with a threshold-aware progress meter (warn/critical colour steps)
+- **`ModelSelector`** - built on `Select`; supports provider grouping, context window size, and provider badges
+- **`FileChange`** - file list with M/A/D icons, keyboard navigation, and inline `DiffView` expansion per file
+- **`useChat` + `useCompletion`** (`termui/ai`) - provider-agnostic streaming hooks for Anthropic, OpenAI, Ollama, and custom `fetchFn`; `tokenUsage` is populated from each provider's native usage events
+
+#### Tier 4 - Ecosystem
+
+- **`createConversationStore`** (`termui/conversation-store`) - JSONL/JSON persistence with `save`/`load`/`list`/`delete`/`search`; auto-titles from the first user message
+
+#### New exports
+
+- `termui/components/ai` - all AI UI components
+- `termui/ai` - `useChat`, `useCompletion`
+- `termui/conversation-store` - `createConversationStore`
+
+### Fixed
+
+- `useChat` history bug: replaced the `setMessages` functional-updater capture pattern with a `messagesRef` that is updated synchronously; the stream now always receives the full, correct message list on every turn including the first
+- `tokenUsage` never updated: `useChat` now passes a `setTokenUsage` callback into each provider stream; Anthropic reads `message_start`/`message_delta` usage events, OpenAI enables `stream_options: { include_usage: true }`, Ollama reads `prompt_eval_count`/`eval_count` from the done line
+- `DiffView` inline mode was identical to unified; replaced with a proper `InlineView` that renders all ops linearly without hunk headers
+- DTS build failure (`TS2307`) for `@anthropic-ai/sdk` and `openai`: dynamic imports now use a variable specifier so tsc does not attempt static module resolution during declaration emit
+- `tsconfig.json` was missing path entries for `@termui/components/ai`, `@termui/adapters/ai`, and `@termui/adapters/conversation-store`; added all three so the root DTS build resolves them correctly
+
+---
+
+## [1.1.7] - 2026-03-24
 
 ### Performance
 

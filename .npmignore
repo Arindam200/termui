@@ -44,3 +44,7 @@ node_modules/
 
 # Packed tarballs
 *.tgz
+
+# Temporary/scratch directories
+.tmp/
+__tmp_*/

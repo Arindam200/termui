@@ -33,3 +33,6 @@ export * from './charts/index.js';
 
 // Templates
 export * from './templates/index.js';
+
+// AI
+export * from './ai/index.js';

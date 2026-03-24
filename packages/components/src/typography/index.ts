@@ -20,3 +20,6 @@ export type { DigitsProps, DigitSize } from './Digits.js';
 
 export { Markdown } from './Markdown.js';
 export type { MarkdownProps } from './Markdown.js';
+
+export { StreamingText } from './StreamingText.js';
+export type { StreamingTextProps } from './StreamingText.js';

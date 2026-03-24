@@ -21,3 +21,6 @@ export { GitStatus } from './GitStatus.js';
 export type { GitStatusProps } from './GitStatus.js';
 export { DataGrid } from './DataGrid.js';
 export type { DataGridColumn, DataGridProps } from './DataGrid.js';
+
+export { DiffView } from './DiffView.js';
+export type { DiffViewProps, DiffMode } from './DiffView.js';

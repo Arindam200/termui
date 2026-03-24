@@ -18,6 +18,8 @@ export default defineConfig({
     'conf/index': 'conf/index.ts',
     'completion/index': 'completion/index.ts',
     'internal/color-env': 'internal/color-env.ts',
+    'ai/index': 'ai/index.ts',
+    'conversation-store/index': 'conversation-store/index.ts',
   },
   format: ['esm'],
   dts: true,
@@ -44,6 +46,8 @@ export default defineConfig({
     'yaml',
     'yargs',
     'yargs/helpers',
+    '@anthropic-ai/sdk',
+    'openai',
   ],
   esbuildOptions(options) {
     options.alias = {

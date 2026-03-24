@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Text } from 'ink';
 import { useTheme } from '@termui/core';
 
@@ -6,6 +6,10 @@ export interface MarkdownProps {
   children: string;
   /** Max width for text wrapping */
   width?: number;
+  /** Show a streaming cursor at the end of the last line */
+  streaming?: boolean;
+  /** Cursor character to show when streaming (default ▌) */
+  cursor?: string;
 }
 
 interface InlineSegment {
@@ -86,9 +90,19 @@ function InlineLine({ segments }: { segments: InlineSegment[] }) {
   );
 }
 
-export function Markdown({ children, width }: MarkdownProps) {
+export function Markdown({ children, width, streaming = false, cursor = '▌' }: MarkdownProps) {
   const theme = useTheme();
-  const lines = children.split('\n');
+  const [cursorVisible, setCursorVisible] = useState(true);
+
+  useEffect(() => {
+    if (!streaming) return;
+    const id = setInterval(() => setCursorVisible((v) => !v), 530);
+    return () => clearInterval(id);
+  }, [streaming]);
+
+  // Sanitize partial code fences when streaming
+  const safeChildren = streaming ? sanitizePartialFences(children) : children;
+  const lines = safeChildren.split('\n');
 
   const elements: React.ReactNode[] = [];
   let i = 0;
@@ -164,5 +178,25 @@ export function Markdown({ children, width }: MarkdownProps) {
     i++;
   }
 
+  // Append streaming cursor to the last element
+  if (streaming && cursorVisible && elements.length > 0) {
+    const last = elements[elements.length - 1];
+    elements[elements.length - 1] = (
+      <Box key={`cursor-wrapper-${elements.length - 1}`} flexDirection="row">
+        {last}
+        <Text color={theme.colors.primary}>{cursor}</Text>
+      </Box>
+    );
+  }
+
   return <Box flexDirection="column">{elements}</Box>;
+}
+
+/** Close any unclosed triple-backtick code fences to prevent parse crashes */
+function sanitizePartialFences(text: string): string {
+  const fenceCount = (text.match(/```/g) ?? []).length;
+  if (fenceCount % 2 !== 0) {
+    return text + '\n```';
+  }
+  return text;
 }
