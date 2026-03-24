@@ -14,9 +14,7 @@ export function ChatThread({ maxHeight, autoScroll = true, children }: ChatThrea
   // API compatibility and future enhancement.
   void autoScroll;
 
-  const containerProps = maxHeight
-    ? { height: maxHeight, overflow: 'hidden' as const }
-    : {};
+  const containerProps = maxHeight ? { height: maxHeight, overflow: 'hidden' as const } : {};
 
   return (
     <Box flexDirection="column" {...containerProps}>

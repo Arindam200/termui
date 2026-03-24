@@ -76,10 +76,7 @@ const sharedOptions = {
         __dirname,
         'packages/components/src/templates/index.ts'
       ),
-      '@termui/components/ai': path.resolve(
-        __dirname,
-        'packages/components/src/ai/index.ts'
-      ),
+      '@termui/components/ai': path.resolve(__dirname, 'packages/components/src/ai/index.ts'),
     };
   },
 };

@@ -733,7 +733,8 @@ export function getLocalRegistry(): RegistryManifest {
       },
       'splash-screen': {
         name: 'splash-screen',
-        description: 'Styled startup banner with big ASCII art title, subtitle, author credit, and status line',
+        description:
+          'Styled startup banner with big ASCII art title, subtitle, author credit, and status line',
         version: '0.1.0',
         category: 'templates',
         files: ['SplashScreen.tsx'],
@@ -755,7 +756,8 @@ export function getLocalRegistry(): RegistryManifest {
       },
       'app-shell': {
         name: 'app-shell',
-        description: 'Full-screen TUI layout with header, tip bar, full-width input, scrollable content, and hints footer',
+        description:
+          'Full-screen TUI layout with header, tip bar, full-width input, scrollable content, and hints footer',
         version: '0.1.0',
         category: 'templates',
         files: ['AppShell.tsx'],
@@ -770,7 +772,8 @@ export function getLocalRegistry(): RegistryManifest {
       },
       'login-flow': {
         name: 'login-flow',
-        description: 'Full-page onboarding/login screen with announcement banner, big ASCII title, description, and numbered select',
+        description:
+          'Full-page onboarding/login screen with announcement banner, big ASCII title, description, and numbered select',
         version: '0.1.0',
         category: 'templates',
         files: ['LoginFlow.tsx'],
@@ -778,14 +781,16 @@ export function getLocalRegistry(): RegistryManifest {
       },
       'usage-monitor': {
         name: 'usage-monitor',
-        description: 'Real-time dashboard with diamond header, progress metrics, burn rate, predictions, and status bar',
+        description:
+          'Real-time dashboard with diamond header, progress metrics, burn rate, predictions, and status bar',
         version: '0.1.0',
         category: 'templates',
         files: ['UsageMonitor.tsx'],
       },
       'setup-flow': {
         name: 'setup-flow',
-        description: '@clack-style step flow with ◇/◆/│ visual language, badge, info steps, and multi-select',
+        description:
+          '@clack-style step flow with ◇/◆/│ visual language, badge, info steps, and multi-select',
         version: '0.1.0',
         category: 'templates',
         files: ['SetupFlow.tsx'],

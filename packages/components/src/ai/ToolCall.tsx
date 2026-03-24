@@ -61,7 +61,8 @@ export function ToolCall({
     }
   };
 
-  const durationText = duration !== undefined ? `${duration}ms` : status === 'running' ? `${elapsed}ms` : null;
+  const durationText =
+    duration !== undefined ? `${duration}ms` : status === 'running' ? `${elapsed}ms` : null;
 
   return (
     <Box flexDirection="column">
@@ -113,7 +114,9 @@ export function ToolCall({
               <Text dimColor color={theme.colors.mutedForeground}>
                 Result:
               </Text>
-              <Text dimColor>{typeof result === 'string' ? result : JSON.stringify(result, null, 2)}</Text>
+              <Text dimColor>
+                {typeof result === 'string' ? result : JSON.stringify(result, null, 2)}
+              </Text>
             </Box>
           )}
         </Box>

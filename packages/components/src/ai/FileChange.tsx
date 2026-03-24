@@ -94,7 +94,7 @@ export function FileChange({ changes, onAccept, onReject, onAcceptAll }: FileCha
           File Changes ({changes.length})
         </Text>
         <Text dimColor color={theme.colors.mutedForeground}>
-          [↑↓] navigate  [Enter/Space] expand  [y] accept  [n] reject  [a] accept all
+          [↑↓] navigate [Enter/Space] expand [y] accept [n] reject [a] accept all
         </Text>
       </Box>
 
@@ -123,12 +123,8 @@ export function FileChange({ changes, onAccept, onReject, onAcceptAll }: FileCha
               >
                 {item.path}
               </Text>
-              {isAccepted && (
-                <Text color={theme.colors.success ?? 'green'}>✓ accepted</Text>
-              )}
-              {isRejected && (
-                <Text color={theme.colors.error ?? 'red'}>✗ rejected</Text>
-              )}
+              {isAccepted && <Text color={theme.colors.success ?? 'green'}>✓ accepted</Text>}
+              {isRejected && <Text color={theme.colors.error ?? 'red'}>✗ rejected</Text>}
               {(item.diff || item.content) && (
                 <Text dimColor color={theme.colors.mutedForeground}>
                   {isExpanded ? '▼' : '▶'}

@@ -304,7 +304,6 @@ function SplitView({ hunks, showLineNumbers, theme }: ViewProps) {
         );
       }
     });
-
   });
 
   return <Box flexDirection="column">{rows}</Box>;

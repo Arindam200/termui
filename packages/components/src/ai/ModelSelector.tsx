@@ -116,12 +116,17 @@ interface ModelRowProps {
   theme: ReturnType<typeof useTheme>;
 }
 
-function ModelRow({ model, isActive, isSelected, showContext, showProvider, theme }: ModelRowProps) {
+function ModelRow({
+  model,
+  isActive,
+  isSelected,
+  showContext,
+  showProvider,
+  theme,
+}: ModelRowProps) {
   return (
     <Box gap={1}>
-      <Text color={isActive ? theme.colors.primary : undefined}>
-        {isActive ? '›' : ' '}
-      </Text>
+      <Text color={isActive ? theme.colors.primary : undefined}>{isActive ? '›' : ' '}</Text>
       <Text
         bold={isActive || isSelected}
         color={
@@ -134,9 +139,7 @@ function ModelRow({ model, isActive, isSelected, showContext, showProvider, them
       >
         {model.name}
       </Text>
-      {isSelected && (
-        <Text color={theme.colors.success ?? 'green'}>✓</Text>
-      )}
+      {isSelected && <Text color={theme.colors.success ?? 'green'}>✓</Text>}
       {showProvider && (
         <Text dimColor color={theme.colors.mutedForeground}>
           {model.provider}

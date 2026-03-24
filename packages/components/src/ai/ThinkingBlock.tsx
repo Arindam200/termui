@@ -31,11 +31,7 @@ export function ThinkingBlock({
   const tokenStr = tokenCount !== undefined ? `${tokenCount.toLocaleString()} tokens` : null;
   const durationStr = duration !== undefined ? `${(duration / 1000).toFixed(1)}s` : null;
 
-  const headerParts = [
-    streaming ? 'Thinking...' : label,
-    tokenStr,
-    durationStr,
-  ].filter(Boolean);
+  const headerParts = [streaming ? 'Thinking...' : label, tokenStr, durationStr].filter(Boolean);
 
   const headerText = headerParts.join(' · ');
 

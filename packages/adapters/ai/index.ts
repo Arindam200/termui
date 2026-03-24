@@ -247,9 +247,7 @@ async function* streamAnthropic(
   const sdkId = '@anthropic-ai/sdk';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { default: Anthropic } = await (import(sdkId) as Promise<any>).catch(() => {
-    throw new Error(
-      'Anthropic SDK not found. Install it with: npm install @anthropic-ai/sdk'
-    );
+    throw new Error('Anthropic SDK not found. Install it with: npm install @anthropic-ai/sdk');
   });
 
   const client = new Anthropic({ apiKey: opts.apiKey });
@@ -260,7 +258,10 @@ async function* streamAnthropic(
     model: opts.model ?? 'claude-sonnet-4-6',
     max_tokens: opts.maxTokens ?? 4096,
     system: systemMessages.map((m) => m.content).join('\n') || undefined,
-    messages: chatMessages.map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content })),
+    messages: chatMessages.map((m) => ({
+      role: m.role as 'user' | 'assistant',
+      content: m.content,
+    })),
   });
 
   let inputTokens = 0;
@@ -272,10 +273,7 @@ async function* streamAnthropic(
       inputTokens = event.message?.usage?.input_tokens ?? 0;
     } else if (event.type === 'message_delta' && event.usage) {
       outputTokens = event.usage.output_tokens ?? 0;
-    } else if (
-      event.type === 'content_block_delta' &&
-      event.delta.type === 'text_delta'
-    ) {
+    } else if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
       yield event.delta.text;
     }
   }

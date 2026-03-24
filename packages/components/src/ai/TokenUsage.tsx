@@ -115,11 +115,7 @@ export function ContextMeter({
         </Text>
       )}
       <Text color={barColor}>{bar}</Text>
-      {showPercent && (
-        <Text color={barColor}>
-          {percent}%
-        </Text>
-      )}
+      {showPercent && <Text color={barColor}>{percent}%</Text>}
       <Text dimColor color={theme.colors.mutedForeground}>
         {formatTokens(used)}/{formatTokens(limit)}
       </Text>
