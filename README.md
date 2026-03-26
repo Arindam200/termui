@@ -8,9 +8,11 @@
 
 [![CI](https://github.com/Arindam200/termui/actions/workflows/ci.yml/badge.svg)](https://github.com/Arindam200/termui/actions)
 [![npm](https://img.shields.io/npm/v/termui)](https://www.npmjs.com/package/termui)
+[![npm downloads](https://img.shields.io/npm/dm/termui)](https://www.npmjs.com/package/termui)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[Quick Start](#quick-start) &bull; [Components](#component-categories) &bull; [Adapters](#library-adapters) &bull; [Theming](#theming) &bull; [CLI](#cli) &bull; [Docs](./docs)
+[Quick Start](#quick-start) &bull; [Documentation](#documentation) &bull; [Components](#component-categories) &bull; [Adapters](#library-adapters) &bull; [Theming](#theming) &bull; [CLI](#cli) &bull; [Development](#development)
 
 </div>
 
@@ -316,6 +318,19 @@ expect(screen.hasText('⠋', output)).toBe(true);
 
 ---
 
+## Documentation
+
+In-repo docs live under [`docs/`](./docs). Start at **[docs/index.md](./docs/index.md)** for the overview and category guides (layout, typography, feedback, charts, and more). API-focused pages:
+
+| Doc | Contents |
+| --- | -------- |
+| [docs/api/cli.md](./docs/api/cli.md) | CLI reference |
+| [docs/api/hooks.md](./docs/api/hooks.md) | Hooks API |
+| [docs/api/testing.md](./docs/api/testing.md) | Testing utilities |
+| [docs/adapters.md](./docs/adapters.md) | Adapters overview |
+
+---
+
 ## Stack
 
 | Layer        | Technology                                                      |
@@ -353,25 +368,69 @@ termui/
 
 ## Development
 
+This repository is a **pnpm** workspace with **Turborepo**. Use the same toolchain CI uses so local results match the checks on a PR.
+
+### Prerequisites
+
+| Requirement | Notes |
+| ----------- | ----- |
+| **Node.js** | **18+** (CI runs 18, 20, and 22) |
+| **pnpm** | **9.x** — this repo pins `packageManager` in `package.json`. Enable with [Corepack](https://nodejs.org/api/corepack.html): `corepack enable` then `corepack prepare pnpm@9.0.0 --activate` (or match the version in `package.json`). |
+
+Do not use `npm` or `yarn` at the repo root; workspace protocol and scripts expect **pnpm**.
+
+### First-time setup
+
 ```bash
-# Install dependencies
+git clone https://github.com/Arindam200/termui.git
+cd termui
 pnpm install
 
-# Run all tests
+# Build core first — other packages depend on it
+pnpm --filter @termui/core build
+
+pnpm test
+```
+
+Full fork-and-PR workflow, commit conventions, and component checklist: **[CONTRIBUTING.md](./CONTRIBUTING.md)**. For registry and component structure: **[CONTRIBUTING_COMPONENTS.md](./CONTRIBUTING_COMPONENTS.md)**.
+
+### Common commands
+
+```bash
+# Tests (all packages)
 pnpm test
 
-# Type-check all packages
+# Type-check
 pnpm typecheck
 
-# Build all packages
+# Build everything
 pnpm build
 
-# Run interactive demo
+# Format & lint
+pnpm format
+pnpm lint
+
+# Interactive demo app
 pnpm --filter @termui/demo start
 
-# Test CLI locally (from packages/cli)
+# AI demo (examples/ai-demo)
+pnpm --filter @termui/ai-demo start
+
+# Dev: parallel package watch (Turborepo)
 pnpm dev
+
+# CLI package only — run from repo root
+pnpm --filter @termui/cli dev
 ```
+
+### Troubleshooting
+
+| Problem | What to try |
+| ------- | ----------- |
+| Build or test fails after `git pull` | `pnpm install`, then `pnpm --filter @termui/core build`, then `pnpm build` or `pnpm test`. |
+| Wrong package manager errors | Use **pnpm** from the repo root, not npm/yarn. |
+| Stale Turborepo cache | `pnpm exec turbo run build --force` (or your usual clean build). |
+| Type errors across packages | Run `pnpm typecheck` after a full `pnpm build`. |
 
 ---
 
@@ -384,6 +443,15 @@ pnpm dev
 | **Phase 3** | ✅ **Done**    | 101 components, charts, dev tools, templates, testing package                                                      |
 | **Phase 4** | 🚧 In Progress | AI components, streaming hooks, chalk/ora/meow/commander/inquirer/Vue/Svelte adapters, `@termui/types`, 600+ tests |
 | **Phase 5** | 🔜 Planned     | Plugin system, community registry                                                                                  |
+
+---
+
+## Community & contributing
+
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** — setup, workflow, tests, commits, PRs, reporting issues.
+- **[CONTRIBUTING_COMPONENTS.md](./CONTRIBUTING_COMPONENTS.md)** — adding or changing components and registry entries.
+- **[GOVERNANCE.md](./GOVERNANCE.md)** — project governance.
+- **[Issues](https://github.com/Arindam200/termui/issues)** — bugs and feature requests.
 
 ---
 
