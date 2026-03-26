@@ -1090,7 +1090,7 @@ ASCII art splash/intro screen.
   titleColorAlt="#8B5CF6" // alternates rows for gradient effect
   subtitle="v1.0.0 — fast terminal tools"
   subtitleDim
-  author={{ name: 'Studio1hq', href: 'https://studio1hq.com' }}
+  author={{ name: 'Arindam Majumder', href: 'https://arindammajumder.com' }}
   statusLine={<Spinner label="Loading…" />}
   padding={2}
 />

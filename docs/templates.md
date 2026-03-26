@@ -36,7 +36,7 @@ import { SplashScreen } from 'termui/components';
   titleColor="cyan"
   titleColorAlt="blue"
   subtitle="The fastest way to ship CLI tools"
-  author={{ name: 'Arindam', href: 'https://studio1hq.com' }}
+  author={{ name: 'Arindam', href: 'https://github.com/Arindam200' }}
   statusLine={<Text dimColor>v1.0.0 — press any key to continue</Text>}
 />;
 ```
@@ -390,7 +390,7 @@ import { InfoBox } from 'termui/components';
   />
   <InfoBox.Row label="Author" value="Arindam" />
   <InfoBox.Row label="License" value="MIT" valueDetail="Open source" />
-  <InfoBox.TreeRow label="Homepage" value="studio1hq.com" valueColor="cyan" />
+  <InfoBox.TreeRow label="Homepage" value="arindammajumder.com" valueColor="cyan" />
 </InfoBox>;
 ```
 

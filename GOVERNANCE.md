@@ -2,7 +2,7 @@
 
 ## Project Maintainers
 
-TermUI is maintained by [Arindam Majumder](https://studio1hq.com/Arindam200). Maintainers are responsible for reviewing PRs, triaging issues, cutting releases, and setting project direction.
+TermUI is maintained by [Arindam Majumder](https://github.com/Arindam200). Maintainers are responsible for reviewing PRs, triaging issues, cutting releases, and setting project direction.
 
 To become a maintainer, contribute consistently over several months and demonstrate good judgment in code review and design discussions.
 
@@ -21,7 +21,7 @@ To become a maintainer, contribute consistently over several months and demonstr
 
 TermUI is free and open source. If you or your company rely on it, consider sponsoring to sustain development.
 
-- GitHub Sponsors: [github.com/sponsors/studio1hq](https://github.com/sponsors/studio1hq) _(coming soon)_
+- GitHub Sponsors: [github.com/sponsors/Arindam200](https://github.com/sponsors/Arindam200) _(coming soon)_
 
 **Tiers:**
 | Tier | Monthly | Benefits |
@@ -58,5 +58,5 @@ All participants are expected to follow the [Contributor Covenant Code of Conduc
 
 ## Community Channels
 
-- **GitHub Discussions** — design proposals, Q&A, show & tell: [github.com/studio1hq/termi/discussions](https://github.com/studio1hq/termi/discussions)
-- **GitHub Issues** — bug reports and feature requests: [github.com/studio1hq/termi/issues](https://github.com/studio1hq/termi/issues)
+- **GitHub Discussions** — design proposals, Q&A, show & tell: [github.com/Arindam200/termi/discussions](https://github.com/Arindam200/termi/discussions)
+- **GitHub Issues** — bug reports and feature requests: [github.com/Arindam200/termi/issues](https://github.com/Arindam200/termi/issues)
