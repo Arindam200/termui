@@ -1,0 +1,8 @@
+{
+  "name": "file-picker",
+  "description": "Full-featured file picker: TextInput + List + filesystem integration",
+  "version": "0.1.0",
+  "components": ["text-input", "list", "path-input"],
+  "wiringFile": "FilePicker.example.tsx",
+  "wiringContent": "import React, { useState } from 'react';\nimport { Box } from 'ink';\nimport { TextInput } from './input/TextInput.js';\nimport { List } from './data/List.js';\nimport { PathInput } from './input/PathInput.js';\n\n/**\n * File Picker recipe — compose TextInput + List + PathInput\n * for a filesystem-aware file selection widget.\n */\nexport function FilePickerRecipe() {\n  const [path, setPath] = useState('');\n  const [selected, setSelected] = useState<string | null>(null);\n\n  return (\n    <Box flexDirection=\"column\">\n      <PathInput\n        value={path}\n        onChange={setPath}\n        placeholder=\"Enter path...\"\n      />\n      <List\n        items={[{ label: 'example.ts', value: 'example.ts' }]}\n        onSelect={(item) => setSelected(item.value)}\n      />\n    </Box>\n  );\n}\n"
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text } from 'ink';
-import { useTheme } from '@termui/core';
+import { useTheme, useMotion } from '@termui/core';
 
 export interface ProgressBarProps {
   value: number; // 0–100
@@ -12,6 +12,7 @@ export interface ProgressBarProps {
   emptyChar?: string;
   color?: string;
   label?: string;
+  reducedMotion?: boolean;
 }
 
 export function ProgressBar({
@@ -24,8 +25,12 @@ export function ProgressBar({
   emptyChar = '░',
   color,
   label,
+  reducedMotion,
 }: ProgressBarProps) {
   const theme = useTheme();
+  const { reduced } = useMotion();
+  // isReduced is available for future shimmer/animation suppression
+  const _isReduced = reducedMotion ?? reduced;
   const resolvedColor = color ?? theme.colors.primary;
 
   const percent =

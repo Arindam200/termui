@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useTheme } from '@termui/core';
+import { useInput, useTheme, getAccessibleName } from '@termui/core';
+import type { AriaProps } from '@termui/core';
 
 export interface SelectOption<T = string> {
   value: T;
@@ -9,7 +10,7 @@ export interface SelectOption<T = string> {
   disabled?: boolean;
 }
 
-export interface SelectProps<T = string> {
+export interface SelectProps<T = string> extends AriaProps {
   options: SelectOption<T>[];
   value?: T;
   onChange?: (value: T) => void;
@@ -27,9 +28,18 @@ export function Select<T = string>({
   label,
   cursor = '›',
   cursorColor,
+  'aria-label': ariaLabel,
+  'aria-description': ariaDescription,
+  'aria-live': ariaLive,
 }: SelectProps<T>) {
   const theme = useTheme();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(() => {
+    if (controlledValue === undefined) return 0;
+    const idx = options.findIndex((o) => o.value === controlledValue);
+    return idx >= 0 ? idx : 0;
+  });
+
+  const accessibleLabel = getAccessibleName(ariaLabel, label ?? 'Select');
 
   const resolvedCursorColor = cursorColor ?? theme.colors.primary;
 
@@ -58,6 +68,12 @@ export function Select<T = string>({
   return (
     <Box flexDirection="column">
       {label && <Text bold>{label}</Text>}
+      {ariaDescription && (
+        <Text color={theme.colors.mutedForeground} dimColor>
+          {' '}
+          {ariaDescription}
+        </Text>
+      )}
       {options.map((opt, idx) => {
         const isActive = idx === activeIndex;
         const isSelected = controlledValue !== undefined && opt.value === controlledValue;

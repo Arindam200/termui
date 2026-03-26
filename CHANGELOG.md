@@ -2,6 +2,80 @@
 
 All notable changes to TermUI are documented here.
 
+## [1.3.0] - 2026-03-26
+
+### Added - Adapter Ecosystem, Registry Expansion & DX
+
+#### New Library Adapters
+
+- **`termui/chalk`** — drop-in Chalk wrapper that maps colours through the active TermUI theme so hex values stay consistent across ANSI escape sequences and Ink renders
+- **`termui/commander`** — Commander.js integration that generates styled `--help` output using TermUI typography; entry-point commands render inside an `AppShell`
+- **`termui/inquirer`** — @inquirer/prompts replacement that routes `input`, `select`, `confirm`, and `checkbox` prompts through TermUI components so they inherit the active theme
+- **`termui/meow`** — meow wrapper with auto-styled help text; flags and positional args are documented via TermUI's `KeyValue` table
+- **`termui/ora`** — ora spinner proxy that delegates to TermUI's `Spinner` component; `start`/`stop`/`succeed`/`fail`/`warn` all map to themed variants
+- **`termui/imperative`** — imperative API surface (`prompt`, `confirm`, `select`, `spinner`) for non-React code paths, backed by Ink renders that unmount automatically on resolve
+- **`termui/svelte`** — Svelte action and store adapters for embedding TermUI renders inside Svelte-based CLIs
+- **`termui/vue`** — Vue composables and plugin for TermUI theme access and component mounting in Vue-based CLIs
+
+#### New Components
+
+- **`MultiProgress`** (`termui/components/feedback`) — stacked progress bar list with per-item labels, values, and colours; supports dynamic add/remove
+- **`NotificationBadge`** (`termui/components/overlays`) — inline badge with unread count, dot indicator variant, and theme-aware colour mapping for info/success/warning/error
+- **`NotificationCenter`** (`termui/components/overlays`) — scrollable overlay that lists notifications with timestamps, mark-as-read, and dismiss actions; opens via `useNotifications` hook
+
+#### New CLI Commands
+
+- **`npx termui docs <component>`** — fetches and renders the component's registry manifest, props table, and usage example inline in the terminal
+- **`npx termui publish`** — validates a local component against the registry schema and opens a pre-filled GitHub PR against the community registry; falls back to printed instructions if `termui/github` is not installed
+
+#### New Registry Components (13)
+
+`chat-message`, `chat-thread`, `diff-view`, `file-change`, `model-selector`, `multi-progress`, `notification-center`, `streaming-text`, `thinking-block`, `token-usage`, `tool-approval`, `tool-call`
+
+Each ships a `registry.json` manifest with `name`, `version`, `description`, `files`, `dependencies`, and `devDependencies` so `npx termui add` can pull them individually.
+
+#### New `@termui/types` Package
+
+- Centralised TypeScript types for themes, components, hooks, registry manifests, and adapter contracts
+- All packages now import shared types from `@termui/types` instead of re-declaring them locally
+
+#### New Examples
+
+- `examples/with-chalk` — themed Chalk usage
+- `examples/with-commander` — Commander CLI with TermUI help
+- `examples/with-inquirer` — Inquirer prompts via TermUI
+- `examples/with-meow` — meow CLI with styled flags
+- `examples/with-ora` — ora spinner integration
+- `examples/with-github` — GitHub API example using `termui/github`
+- `examples/with-keychain` — OS keychain access via `termui/keychain`
+- `examples/ai-demo` — agent shell with streaming output and tool-call panels
+
+#### New Docs
+
+- `docs/adapters.md` — full guide for every adapter with install, usage, and migration from the original library
+- `docs/ai.md` — AI component and hook reference including `useChat`, `useCompletion`, and all AI UI components
+- `docs/templates.md` — template and layout pattern cookbook
+
+#### Infrastructure
+
+- **Changeset tooling** — `.changeset/` directory and `pnpm changeset version` workflow for automated version management
+- **Release workflow** — `.github/workflows/release.yml` automates publishing on version tag push
+- **Release template** — `.github/RELEASE_TEMPLATE.md` standardises GitHub release notes
+- **`CONTRIBUTING_COMPONENTS.md`** — step-by-step guide for contributing new components to the registry
+- **`GOVERNANCE.md`** — project governance model, maintainer responsibilities, and RFC process
+
+#### Testing
+
+- Comprehensive test files added for: AI components, charts, data components, feedback components, overlays, selection components, templates, typography, utility, CLI commands, and adapter integrations
+- `packages/testing` — new `cli.ts` test utilities, `matchers.ts` custom Vitest matchers, and `snapshot.ts` terminal snapshot helpers
+
+### Changed
+
+- `registry/schema.json` expanded: added `templates`, `examples`, `adapters`, and `ai` component categories; `files` array now accepts an `optional: true` flag; `peer` dependencies field added alongside `dependencies`
+- All package versions aligned to `1.3.0`
+
+---
+
 ## [1.2.0] - 2026-03-25
 
 ### Added - Phase 6: AI CLI Builder

@@ -1,0 +1,8 @@
+{
+  "name": "deploy-wizard",
+  "description": "Multi-step deployment wizard with prompts and progress",
+  "version": "0.1.0",
+  "components": ["select", "text-input", "progress-bar", "spinner", "alert"],
+  "wiringFile": "DeployWizard.example.tsx",
+  "wiringContent": "import React, { useState } from 'react';\nimport { Box } from 'ink';\nimport { Select } from './selection/Select.js';\nimport { ProgressBar } from './feedback/ProgressBar.js';\nimport { Spinner } from './feedback/Spinner.js';\nimport { Alert } from './feedback/Alert.js';\n\ntype Step = 'env' | 'deploying' | 'done';\n\nexport function DeployWizardRecipe() {\n  const [step, setStep] = useState<Step>('env');\n  const [progress, setProgress] = useState(0);\n\n  return (\n    <Box flexDirection=\"column\" gap={1}>\n      {step === 'env' && (\n        <Select\n          label=\"Select environment:\"\n          options={[\n            { value: 'staging', label: 'Staging' },\n            { value: 'production', label: 'Production' },\n          ]}\n          onSubmit={() => setStep('deploying')}\n        />\n      )}\n      {step === 'deploying' && (\n        <Box flexDirection=\"column\" gap={1}>\n          <Spinner label=\"Deploying...\" />\n          <ProgressBar value={progress} total={100} label=\"Deploy progress\" />\n        </Box>\n      )}\n      {step === 'done' && (\n        <Alert variant=\"success\" title=\"Deployed!\">Your app is live.</Alert>\n      )}\n    </Box>\n  );\n}\n"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "dashboard",
+  "description": "Tabs + Table + Spinner dashboard layout",
+  "version": "0.1.0",
+  "components": ["tabs", "table", "spinner", "progress-bar"],
+  "wiringFile": "Dashboard.example.tsx",
+  "wiringContent": "import React, { useState } from 'react';\nimport { Box } from 'ink';\nimport { Tabs } from './navigation/Tabs.js';\nimport { Table } from './data/Table.js';\nimport { ProgressBar } from './feedback/ProgressBar.js';\n\nexport function DashboardRecipe() {\n  const [activeTab, setActiveTab] = useState(0);\n\n  const sampleData = [\n    { name: 'Service A', status: 'running', uptime: '99.9%' },\n    { name: 'Service B', status: 'degraded', uptime: '95.2%' },\n  ];\n\n  return (\n    <Box flexDirection=\"column\" gap={1}>\n      <Tabs\n        items={['Overview', 'Services', 'Logs']}\n        activeIndex={activeTab}\n        onChange={setActiveTab}\n      />\n      {activeTab === 0 && (\n        <Box flexDirection=\"column\" gap={1}>\n          <ProgressBar value={72} total={100} label=\"CPU Usage\" />\n          <ProgressBar value={45} total={100} label=\"Memory\" />\n        </Box>\n      )}\n      {activeTab === 1 && (\n        <Table\n          data={sampleData}\n          columns={[\n            { key: 'name', header: 'Service' },\n            { key: 'status', header: 'Status' },\n            { key: 'uptime', header: 'Uptime' },\n          ]}\n        />\n      )}\n    </Box>\n  );\n}\n"
+}

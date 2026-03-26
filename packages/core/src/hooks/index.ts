@@ -20,3 +20,17 @@ export type { AsyncState } from './useAsync.js';
 export { useRenderCount } from './useRenderCount.js';
 export { useRenderTime } from './useRenderTime.js';
 export type { RenderTiming } from './useRenderTime.js';
+
+export { useMotion, isReducedMotion, MotionContext } from './useMotion.js';
+export type { MotionContextValue } from './useMotion.js';
+
+export {
+  useNotifications,
+  useNotificationsProvider,
+  NotificationsContext,
+} from './useNotifications.js';
+export type {
+  Notification,
+  NotificationVariant,
+  NotificationsContextValue,
+} from './useNotifications.js';

@@ -22,6 +22,16 @@ export interface DataGridProps<T extends Record<string, unknown> = Record<string
   borderStyle?: 'single' | 'double' | 'round' | 'bold';
   showRowNumbers?: boolean;
   filterPlaceholder?: string;
+  /** Default sort applied on first render (uncontrolled) */
+  defaultSort?: { column: string; direction: 'asc' | 'desc' };
+  /**
+   * Controlled sort callback. When provided the component will NOT sort
+   * internally — it just calls this handler and expects the consumer to
+   * supply already-sorted `data`.
+   */
+  onSort?: (column: string, direction: 'asc' | 'desc' | null) => void;
+  /** Column keys that are always rendered first (left-pinned). */
+  pinnedColumns?: string[];
 }
 
 function pad(str: string, width: number, align: 'left' | 'right' | 'center' = 'left'): string {
@@ -44,58 +54,130 @@ export function DataGrid<T extends Record<string, unknown> = Record<string, unkn
   borderColor,
   borderStyle = 'single',
   showRowNumbers = false,
+  defaultSort,
+  onSort,
+  pinnedColumns = [],
 }: DataGridProps<T>) {
   const theme = useTheme();
+
+  // ── Sort state ────────────────────────────────────────────────────────────
+  const [sortState, setSortState] = useState<{
+    column: string | null;
+    direction: 'asc' | 'desc' | null;
+  }>(() => ({
+    column: defaultSort?.column ?? null,
+    direction: defaultSort?.direction ?? null,
+  }));
+
+  // ── Header focus (for `s` key cycling) ────────────────────────────────────
+  // Index into the *displayed* columns array (after pinning reorder).
+  const [headerFocusIdx, setHeaderFocusIdx] = useState<number | null>(null);
+  const [headerMode, setHeaderMode] = useState(false); // true when navigating headers
+
+  // ── Filter state ──────────────────────────────────────────────────────────
   const [selectedRow, setSelectedRow] = useState(0);
   const [page, setPage] = useState(0);
-  const [sortKey, setSortKey] = useState<string | null>(null);
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
   const [filter, setFilter] = useState('');
   const [filterMode, setFilterMode] = useState(false);
 
   const resolvedBorderColor = borderColor ?? theme.colors.border;
 
-  // Compute column widths
+  // ── Column ordering: pinned first ─────────────────────────────────────────
+  const orderedColumns = useMemo(() => {
+    if (pinnedColumns.length === 0) return columns;
+    const pinned = pinnedColumns
+      .map((key) => columns.find((c) => c.key === key))
+      .filter((c): c is DataGridColumn<T> => c !== undefined);
+    const rest = columns.filter((c) => !pinnedColumns.includes(c.key));
+    return [...pinned, ...rest];
+  }, [columns, pinnedColumns]);
+
+  const pinnedCount = useMemo(
+    () => orderedColumns.filter((c) => pinnedColumns.includes(c.key)).length,
+    [orderedColumns, pinnedColumns]
+  );
+
+  // ── Column widths ─────────────────────────────────────────────────────────
   const colWidths = useMemo(
     () =>
-      columns.map((col) => {
+      orderedColumns.map((col) => {
         if (col.width) return col.width;
-        const headerLen = col.header.length;
+        // Account for sort indicator (` ↑` or ` ↓`) — reserve 2 extra chars
+        const headerLen = col.header.length + (col.sortable ? 2 : 0);
         const dataLen = Math.max(...data.map((row) => String(row[col.key] ?? '').length));
         return Math.max(headerLen, dataLen, 6);
       }),
-    [columns, data]
+    [orderedColumns, data]
   );
 
-  // Filter
+  // ── Filter ────────────────────────────────────────────────────────────────
   const filtered = useMemo(() => {
     if (!filter) return data;
     const q = filter.toLowerCase();
     return data.filter((row) =>
-      columns.some((col) =>
+      orderedColumns.some((col) =>
         String(row[col.key] ?? '')
           .toLowerCase()
           .includes(q)
       )
     );
-  }, [data, filter, columns]);
+  }, [data, filter, orderedColumns]);
 
-  // Sort
+  // ── Sort (client-side only when onSort is not provided) ───────────────────
   const sorted = useMemo(() => {
-    if (!sortKey) return filtered;
-    return [...filtered].sort((a, b) => {
-      const av = String(a[sortKey] ?? '');
-      const bv = String(b[sortKey] ?? '');
-      const cmp = av.localeCompare(bv);
-      return sortDir === 'asc' ? cmp : -cmp;
-    });
-  }, [filtered, sortKey, sortDir]);
+    // Controlled mode — consumer handles sorting
+    if (onSort) return filtered;
 
-  // Paginate
+    if (!sortState.column || !sortState.direction) return filtered;
+
+    const key = sortState.column;
+    const dir = sortState.direction;
+
+    return [...filtered].sort((a, b) => {
+      const av = a[key];
+      const bv = b[key];
+
+      // Numeric comparison
+      if (typeof av === 'number' && typeof bv === 'number') {
+        return dir === 'asc' ? av - bv : bv - av;
+      }
+
+      // String / mixed comparison
+      const cmp = String(av ?? '').localeCompare(String(bv ?? ''));
+      return dir === 'asc' ? cmp : -cmp;
+    });
+  }, [filtered, sortState, onSort]);
+
+  // ── Pagination ────────────────────────────────────────────────────────────
   const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
   const pageData = sorted.slice(page * pageSize, (page + 1) * pageSize);
 
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function cycleSort(colKey: string, isSortable: boolean) {
+    if (!isSortable) return;
+
+    let next: { column: string | null; direction: 'asc' | 'desc' | null };
+
+    if (sortState.column !== colKey) {
+      // New column — start ascending
+      next = { column: colKey, direction: 'asc' };
+    } else if (sortState.direction === 'asc') {
+      next = { column: colKey, direction: 'desc' };
+    } else {
+      // desc → clear
+      next = { column: null, direction: null };
+    }
+
+    setSortState(next);
+
+    if (onSort) {
+      onSort(next.column ?? colKey, next.direction);
+    }
+  }
+
+  // ── Keyboard ──────────────────────────────────────────────────────────────
   useInput((input, key) => {
+    // Filter mode
     if (filterMode) {
       if (key.escape) {
         setFilterMode(false);
@@ -109,6 +191,38 @@ export function DataGrid<T extends Record<string, unknown> = Record<string, unkn
       return;
     }
 
+    // Header focus mode — navigating sortable column headers
+    if (headerMode) {
+      if (key.escape) {
+        setHeaderMode(false);
+        setHeaderFocusIdx(null);
+        return;
+      }
+      if (key.leftArrow) {
+        setHeaderFocusIdx((i) => Math.max(0, (i ?? 0) - 1));
+        return;
+      }
+      if (key.rightArrow) {
+        setHeaderFocusIdx((i) => Math.min(orderedColumns.length - 1, (i ?? 0) + 1));
+        return;
+      }
+      if (input === 's') {
+        const idx = headerFocusIdx ?? 0;
+        const col = orderedColumns[idx];
+        if (col) cycleSort(col.key, col.sortable ?? false);
+        return;
+      }
+      if (key.return) {
+        const idx = headerFocusIdx ?? 0;
+        const col = orderedColumns[idx];
+        if (col) cycleSort(col.key, col.sortable ?? false);
+        setHeaderMode(false);
+        setHeaderFocusIdx(null);
+        return;
+      }
+    }
+
+    // Normal row navigation
     if (key.upArrow) {
       setSelectedRow((r) => Math.max(0, r - 1));
     } else if (key.downArrow) {
@@ -123,15 +237,50 @@ export function DataGrid<T extends Record<string, unknown> = Record<string, unkn
       setSelectedRow(0);
     } else if (input === '/') {
       setFilterMode(true);
-    } else if (input === 's' && sortKey === null) {
-      setSortKey(columns[0]?.key ?? null);
+    } else if (input === 's') {
+      // Enter header navigation mode; start at first sortable column
+      const firstSortableIdx = orderedColumns.findIndex((c) => c.sortable);
+      if (firstSortableIdx >= 0) {
+        setHeaderMode(true);
+        setHeaderFocusIdx(firstSortableIdx);
+      }
     }
   });
 
+  // ── Separator constant ────────────────────────────────────────────────────
   const colSep = ' │ ';
+  const pinSep = ' ║ '; // visual separator between pinned and scrollable sections
+
+  // ── Render helpers ────────────────────────────────────────────────────────
+  function buildCells(getCell: (col: DataGridColumn<T>, ci: number) => string): string {
+    if (pinnedCount === 0 || pinnedCount >= orderedColumns.length) {
+      return orderedColumns.map((col, ci) => getCell(col, ci)).join(colSep);
+    }
+    const pinnedPart = orderedColumns
+      .slice(0, pinnedCount)
+      .map((col, ci) => getCell(col, ci))
+      .join(colSep);
+    const restPart = orderedColumns
+      .slice(pinnedCount)
+      .map((col, ci) => getCell(col, ci + pinnedCount))
+      .join(colSep);
+    return pinnedPart + pinSep + restPart;
+  }
+
+  const headerCells = buildCells((col, ci) => {
+    const isSorted = sortState.column === col.key;
+    const indicator = isSorted ? (sortState.direction === 'asc' ? ' ↑' : ' ↓') : '';
+    const isFocused = headerMode && headerFocusIdx === ci;
+    const label = col.header + indicator;
+    const padded = pad(label, colWidths[ci], col.align);
+    // Wrap focused header in brackets to signal focus
+    return isFocused ? `[${padded}]` : padded;
+  });
+
+  const rowNumHeader = showRowNumbers ? '    ' : '';
 
   const renderRow = (row: T, rowIdx: number, isSelected: boolean) => {
-    const cells = columns.map((col, ci) => {
+    const cells = buildCells((col, ci) => {
       const raw = col.render ? col.render(row[col.key], row) : String(row[col.key] ?? '');
       return pad(raw, colWidths[ci], col.align);
     });
@@ -145,19 +294,16 @@ export function DataGrid<T extends Record<string, unknown> = Record<string, unkn
           backgroundColor={isSelected ? theme.colors.primary : undefined}
           color={isSelected ? theme.colors.background : undefined}
         >
-          {cells.join(colSep)}
+          {cells}
         </Text>
       </Box>
     );
   };
 
-  const headerCells = columns.map((col, ci) => {
-    const isSorted = sortKey === col.key;
-    const indicator = isSorted ? (sortDir === 'asc' ? ' ↑' : ' ↓') : '';
-    return pad(col.header + indicator, colWidths[ci], col.align);
-  });
-
-  const rowNumHeader = showRowNumbers ? '    ' : '';
+  // ── Hints ─────────────────────────────────────────────────────────────────
+  const hasSortable = orderedColumns.some((c) => c.sortable);
+  const sortHint = hasSortable ? '  s sort' : '';
+  const headerModeHint = headerMode ? '  ←→ col  s cycle  Esc done' : '';
 
   return (
     <Box flexDirection="column">
@@ -170,15 +316,22 @@ export function DataGrid<T extends Record<string, unknown> = Record<string, unkn
         </Box>
       )}
 
+      {/* Header mode hint */}
+      {headerMode && (
+        <Box marginBottom={1}>
+          <Text color={theme.colors.primary}>{headerModeHint}</Text>
+        </Box>
+      )}
+
       <Box borderStyle={borderStyle} borderColor={resolvedBorderColor} flexDirection="column">
         {/* Header */}
         <Box flexDirection="row" paddingX={1}>
           {rowNumHeader && <Text dimColor>{rowNumHeader}</Text>}
-          <Text bold color={theme.colors.primary}>
-            {headerCells.join(colSep)}
+          <Text bold color={headerMode ? theme.colors.focusRing : theme.colors.primary}>
+            {headerCells}
           </Text>
         </Box>
-        <Text color={resolvedBorderColor}>{'─'.repeat(headerCells.join(colSep).length + 2)}</Text>
+        <Text color={resolvedBorderColor}>{'─'.repeat(headerCells.length + 2)}</Text>
 
         {/* Rows */}
         {pageData.length > 0 ? (
@@ -199,7 +352,12 @@ export function DataGrid<T extends Record<string, unknown> = Record<string, unkn
         <Text dimColor>
           {'Page ' + (page + 1) + '/' + totalPages + ' (' + sorted.length + ' rows)'}
         </Text>
-        <Text dimColor>{'↑↓ navigate  n/p page  / filter  Enter select'}</Text>
+        {sortState.column && (
+          <Text dimColor>
+            {'sorted: ' + sortState.column + ' ' + (sortState.direction === 'asc' ? '↑' : '↓')}
+          </Text>
+        )}
+        <Text dimColor>{'↑↓ navigate  n/p page  / filter' + sortHint + '  Enter select'}</Text>
       </Box>
     </Box>
   );

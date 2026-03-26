@@ -7,8 +7,25 @@ export type AsyncState<T> =
   | { status: 'error'; data: null; error: Error };
 
 /**
- * Async data loading hook with loading/error/data states.
- * Automatically cancels stale requests.
+ * Manage async data loading with loading/error/data states.
+ *
+ * Re-runs the async function when `deps` change (same semantics as `useEffect`).
+ * Returns `{ data, loading, error }` — exactly one of `data` or `error` will be
+ * non-null after the promise settles. Stale requests (superseded by a newer
+ * `deps` change) are automatically cancelled via a mounted ref guard.
+ *
+ * @param fn - Async factory that returns the data. Called on mount and
+ *   whenever `deps` change.
+ * @param deps - Dependency array (same as React `useEffect` deps).
+ * @returns `AsyncState<T>` — `{ status, data, error, refetch }`.
+ *
+ * @example
+ * ```tsx
+ * const { data, status, error } = useAsync(() => fetchPackages(), [query]);
+ * if (status === 'loading') return <Spinner />;
+ * if (status === 'error') return <Alert variant="error">{error.message}</Alert>;
+ * return <Table data={data} />;
+ * ```
  */
 export function useAsync<T>(
   asyncFn: () => Promise<T>,

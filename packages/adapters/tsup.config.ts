@@ -20,6 +20,16 @@ export default defineConfig({
     'internal/color-env': 'internal/color-env.ts',
     'ai/index': 'ai/index.ts',
     'conversation-store/index': 'conversation-store/index.ts',
+    'imperative/index': 'imperative/index.ts',
+    'chalk/index': 'chalk/index.ts',
+    'ora/index': 'ora/index.ts',
+    'meow/index': 'meow/index.ts',
+    'commander/index': 'commander/index.ts',
+    // Svelte adapter: index.ts only — the .svelte.ts files use $state/$effect
+    // rune syntax that requires the Svelte preprocessor and cannot be parsed
+    // by TypeScript/tsup directly. They are provided as source examples only.
+    'svelte/index': 'svelte/index.ts',
+    'inquirer/index': 'inquirer/index.ts',
   },
   format: ['esm'],
   dts: true,
@@ -48,6 +58,12 @@ export default defineConfig({
     'yargs/helpers',
     '@anthropic-ai/sdk',
     'openai',
+    'chalk',
+    'ora',
+    'meow',
+    'svelte',
+    'svelte/store',
+    'inquirer',
   ],
   esbuildOptions(options) {
     options.alias = {

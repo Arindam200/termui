@@ -36,9 +36,27 @@ function unsubscribe(ms: number, cb: Subscriber) {
 }
 
 /**
- * Frame-based animation hook at configurable fps.
- * Returns the current frame index (increments every tick).
- * All instances at the same fps share a single interval for efficient batching.
+ * Drive frame-based animations at a configurable frame rate.
+ *
+ * Returns a monotonically increasing frame counter. Use `frame % frames.length`
+ * to cycle through animation frames. The counter increments at `fps` times per
+ * second using `requestAnimationFrame`-equivalent timing.
+ *
+ * All instances at the same fps share a single interval for efficient batching —
+ * React 18 can batch their `setState` calls into a single re-render per tick.
+ *
+ * @param fps - Frames per second (default: 12). Lower values (6–10) save CPU;
+ *   higher values (24–30) produce smoother animations.
+ * @returns Current frame index (increments at the given fps rate).
+ *
+ * @example
+ * ```tsx
+ * const FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴'];
+ * function Spinner() {
+ *   const frame = useAnimation(12);
+ *   return <Text>{FRAMES[frame % FRAMES.length]}</Text>;
+ * }
+ * ```
  */
 export function useAnimation(fps = 12): number {
   const [frame, setFrame] = useState(0);

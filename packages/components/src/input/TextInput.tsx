@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useFocus, useTheme } from '@termui/core';
+import { useInput, useFocus, useTheme, getAccessibleName } from '@termui/core';
+import type { AriaProps } from '@termui/core';
 
-export interface TextInputProps {
+export interface TextInputProps extends AriaProps {
   value?: string;
   onChange?: (value: string) => void;
   onSubmit?: (value: string) => void;
@@ -45,6 +46,9 @@ export function TextInput({
   borderStyle = 'round',
   paddingX = 1,
   cursor = '█',
+  'aria-label': ariaLabel,
+  'aria-description': ariaDescription,
+  'aria-live': ariaLive,
 }: TextInputProps) {
   const [internalValue, setInternalValue] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +56,7 @@ export function TextInput({
   const { isFocused } = useFocus({ autoFocus, id });
 
   const value = controlledValue ?? internalValue;
+  const accessibleLabel = getAccessibleName(ariaLabel, label ?? placeholder ?? 'Text input');
 
   useInput((input, key) => {
     if (!isFocused) return;
@@ -99,6 +104,12 @@ export function TextInput({
   return (
     <Box flexDirection="column">
       {label && <Text bold>{label}</Text>}
+      {ariaDescription && (
+        <Text color={theme.colors.mutedForeground} dimColor>
+          {' '}
+          {ariaDescription}
+        </Text>
+      )}
       {bordered ? (
         <Box borderStyle={borderStyle} borderColor={borderColor} width={width} paddingX={paddingX}>
           {inputContent}

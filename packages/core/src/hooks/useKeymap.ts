@@ -11,8 +11,25 @@ export type KeyBinding = {
 };
 
 /**
- * Declarative keybinding registration with conflict detection.
- * Pass an array of KeyBinding objects; the hook handles matching and invocation.
+ * Register declarative keybindings with conflict detection.
+ *
+ * Provides a structured way to declare keyboard shortcuts. Conflicts
+ * (two handlers registered for the same key combination) are warned at runtime.
+ *
+ * @param bindings - Array of `KeyBinding` objects with `key`, optional modifier
+ *   flags (`ctrl`, `shift`, `meta`), and an `action` callback. `key` can be a
+ *   single character or a special key name (`escape`, `return`).
+ * @param isActive - Whether input handling is active (default: true).
+ *   Set to `false` to pause all bindings without unmounting.
+ *
+ * @example
+ * ```tsx
+ * useKeymap([
+ *   { key: 'q',      action: () => process.exit(0) },
+ *   { key: 'r',      action: reload },
+ *   { key: 'c', ctrl: true, action: () => process.exit(0) },
+ * ]);
+ * ```
  */
 export function useKeymap(bindings: KeyBinding[], isActive = true): void {
   const bindingsRef = useRef(bindings);

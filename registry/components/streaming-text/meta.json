@@ -1,0 +1,9 @@
+{
+  "name": "streaming-text",
+  "description": "Token-by-token streaming text with blinking cursor and optional typing animation",
+  "version": "1.0.0",
+  "category": "ai",
+  "files": ["StreamingText.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

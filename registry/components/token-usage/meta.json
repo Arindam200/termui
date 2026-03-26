@@ -1,0 +1,9 @@
+{
+  "name": "token-usage",
+  "description": "Compact token counter showing prompt and completion usage with optional cost estimate; also exports ContextMeter for visualising context window fill",
+  "category": "ai",
+  "version": "1.0.0",
+  "files": ["TokenUsage.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

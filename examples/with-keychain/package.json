@@ -1,0 +1,22 @@
+{
+  "name": "@termui/example-with-keychain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx index.ts"
+  },
+  "dependencies": {
+    "@termui/adapters": "workspace:*"
+  },
+  "peerDependencies": {
+    "keytar": "^7.9.0"
+  },
+  "devDependencies": {
+    "@types/keytar": "^4.4.2",
+    "@types/node": "^20.0.0",
+    "keytar": "^7.9.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}

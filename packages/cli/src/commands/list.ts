@@ -32,6 +32,9 @@ export async function list(_args: string[], opts?: { isNested?: boolean }): Prom
   const jsonMode = args.includes('--json');
   const installedOnly = args.includes('--installed');
 
+  const registryIdx = args.indexOf('--registry');
+  const registryFilter = registryIdx !== -1 ? args[registryIdx + 1] : undefined;
+
   const registry = getLocalRegistry();
   let components = Object.values(registry.components);
 
@@ -49,6 +52,11 @@ export async function list(_args: string[], opts?: { isNested?: boolean }): Prom
       (comp) =>
         comp.name.toLowerCase().includes(query) || comp.description.toLowerCase().includes(query)
     );
+  }
+
+  // Apply --registry filter (missing 'registry' field is treated as 'core')
+  if (registryFilter === 'community' || registryFilter === 'core') {
+    components = components.filter((comp) => (comp.registry ?? 'core') === registryFilter);
   }
 
   // Apply --installed filter

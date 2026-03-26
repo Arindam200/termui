@@ -105,6 +105,68 @@ export interface PreviewState {
   playEditing: boolean; // true when cursor is in text-edit mode
   playEditBuffer: string; // live keystroke buffer while editing
   playScroll: number; // vertical scroll offset for playground panel
+  // search
+  searchMode: boolean; // true when search bar is active
+  searchQuery: string; // current query string
+  /** Flat list of matches across all categories, populated when searchQuery != '' */
+  searchResults: Array<{ catIndex: number; compIndex: number; comp: ComponentEntry }>;
+  searchResultIndex: number; // selected index within searchResults
+}
+
+// ── Search helpers ────────────────────────────────────────────────────────────
+
+/** Case-insensitive substring check; returns true when every character of the
+ *  query appears in order inside `target` (fuzzy), or as a plain substring. */
+function fuzzyMatch(target: string, query: string): boolean {
+  if (!query) return true;
+  const t = target.toLowerCase();
+  const q = query.toLowerCase();
+  // First try plain substring (faster and more intuitive for short queries)
+  if (t.includes(q)) return true;
+  // Fuzzy: every char of q must appear in order inside t
+  let ti = 0;
+  for (let qi = 0; qi < q.length; qi++) {
+    const ch = q[qi]!;
+    const found = t.indexOf(ch, ti);
+    if (found === -1) return false;
+    ti = found + 1;
+  }
+  return true;
+}
+
+/**
+ * Highlight query characters inside a display string using ANSI bold+cyan.
+ * Uses plain substring highlighting for readability.
+ */
+function highlightMatch(text: string, query: string): string {
+  if (!query) return text;
+  const lower = text.toLowerCase();
+  const q = query.toLowerCase();
+  const idx = lower.indexOf(q);
+  if (idx === -1) return text;
+  const before = text.slice(0, idx);
+  const match = text.slice(idx, idx + q.length);
+  const after = text.slice(idx + q.length);
+  return `${before}${ansi.bold}${ansi.cyan}${match}${ansi.reset}${after}`;
+}
+
+/** Rebuild search results from all categories based on current query. */
+export function buildSearchResults(
+  categories: Category[],
+  query: string
+): PreviewState['searchResults'] {
+  if (!query) return [];
+  const results: PreviewState['searchResults'] = [];
+  for (let ci = 0; ci < categories.length; ci++) {
+    const cat = categories[ci]!;
+    for (let ki = 0; ki < cat.components.length; ki++) {
+      const comp = cat.components[ki]!;
+      if (fuzzyMatch(comp.name, query) || fuzzyMatch(comp.description, query)) {
+        results.push({ catIndex: ci, compIndex: ki, comp });
+      }
+    }
+  }
+  return results;
 }
 
 // ── Main render ──────────────────────────────────────────────────────────────
@@ -122,12 +184,13 @@ export function render(state: PreviewState): void {
     `${ansi.bold}${ansi.magenta} TermUI ${ansi.reset}` +
     `${ansi.bold}${ansi.white}Preview${ansi.reset}` +
     `${ansi.dim}  v0.1.5${ansi.reset}`;
-  const hints =
-    state.mode === 'playground'
+  const hints = state.searchMode
+    ? `${ansi.dim}type to search  Enter=jump  Esc=clear  ↑↓ results${ansi.reset}`
+    : state.mode === 'playground'
       ? state.playEditing
         ? `${ansi.dim}type to edit  Enter=confirm  Esc=cancel${ansi.reset}`
         : `${ansi.dim}↑↓ prop  Space/←→ toggle  Enter=edit  p/Esc=back${ansi.reset}`
-      : `${ansi.dim}↑↓ navigate  →/Enter detail  p playground  ← back  q quit${ansi.reset}`;
+      : `${ansi.dim}↑↓ navigate  →/Enter detail  p playground  / search  q quit${ansi.reset}`;
   out.push(ansi.move(1, 1) + pad(title, cols - stripAnsi(hints).length) + hints);
 
   // top border
@@ -171,27 +234,48 @@ export function render(state: PreviewState): void {
 
   // ── Status / breadcrumb bar ──────────────────────────────────────────────
   const comp = cat?.components[state.compIndex];
-  const catLabel = ansi.dim + (cat?.name ?? '') + ansi.reset;
-  const compLabel =
-    comp && state.mode !== 'list'
-      ? ` ${ansi.gray}›${ansi.reset} ${ansi.cyan}${ansi.bold}${comp.name}${ansi.reset}`
+
+  if (state.searchMode || state.searchQuery) {
+    // Search bar occupies the footer row
+    const totalComps = state.categories.reduce((n, c) => n + c.components.length, 0);
+    const matchCount = state.searchResults.length;
+    const countStr = state.searchQuery
+      ? `  ${ansi.dim}${matchCount} of ${totalComps} components${ansi.reset}`
       : '';
-  const modeLabel =
-    state.mode === 'playground' ? `  ${ansi.magenta}${ansi.bold}playground${ansi.reset}` : '';
-  const propCount =
-    comp && state.mode === 'detail' ? `  ${ansi.gray}${comp.props.length} props${ansi.reset}` : '';
-  const scrollHint =
-    state.mode === 'detail' && state.detailScroll > 0 ? `  ${ansi.gray}↑ scroll${ansi.reset}` : '';
-  out.push(
-    ansi.move(rows, 1) +
-      ansi.clearLine +
-      ' ' +
-      catLabel +
-      compLabel +
-      modeLabel +
-      propCount +
-      scrollHint
-  );
+    const cursor = state.searchMode ? `${ansi.bold}${ansi.cyan}▌${ansi.reset}` : '';
+    const bar =
+      ` ${ansi.bold}${ansi.yellow}/${ansi.reset}  ` +
+      `${ansi.white}${state.searchQuery}${ansi.reset}` +
+      cursor +
+      countStr;
+    out.push(ansi.move(rows, 1) + ansi.clearLine + bar);
+  } else {
+    const catLabel = ansi.dim + (cat?.name ?? '') + ansi.reset;
+    const compLabel =
+      comp && state.mode !== 'list'
+        ? ` ${ansi.gray}›${ansi.reset} ${ansi.cyan}${ansi.bold}${comp.name}${ansi.reset}`
+        : '';
+    const modeLabel =
+      state.mode === 'playground' ? `  ${ansi.magenta}${ansi.bold}playground${ansi.reset}` : '';
+    const propCount =
+      comp && state.mode === 'detail'
+        ? `  ${ansi.gray}${comp.props.length} props${ansi.reset}`
+        : '';
+    const scrollHint =
+      state.mode === 'detail' && state.detailScroll > 0
+        ? `  ${ansi.gray}↑ scroll${ansi.reset}`
+        : '';
+    out.push(
+      ansi.move(rows, 1) +
+        ansi.clearLine +
+        ' ' +
+        catLabel +
+        compLabel +
+        modeLabel +
+        propCount +
+        scrollHint
+    );
+  }
 
   process.stdout.write(out.join(''));
 }
@@ -222,13 +306,67 @@ function renderLeftRow(state: PreviewState, row: number): string {
 // ── List mode (right panel) ───────────────────────────────────────────────────
 
 function renderListRow(state: PreviewState, row: number, width: number): string {
+  const innerW = width - 2;
+
+  // ── Search results mode ──────────────────────────────────────────────────
+  if (state.searchQuery) {
+    const results = state.searchResults;
+
+    // Row 0: heading
+    if (row === 0) {
+      const totalComps = state.categories.reduce((n, c) => n + c.components.length, 0);
+      const heading =
+        `  ${ansi.bold}${ansi.yellow}Search${ansi.reset}` +
+        `  ${ansi.dim}${results.length} of ${totalComps} components${ansi.reset}`;
+      return pad(heading, innerW) + ' ';
+    }
+
+    // Row 1: thin rule
+    if (row === 1) {
+      return ansi.gray + ' ' + hline(innerW - 1) + ansi.reset + ' ';
+    }
+
+    if (row === 2) {
+      const h = `  ${ansi.dim}Component${ansi.reset}`;
+      return pad(h, innerW) + ' ';
+    }
+
+    if (results.length === 0) {
+      if (row === 3) {
+        return pad(`  ${ansi.dim}No matches${ansi.reset}`, innerW) + ' ';
+      }
+      return ' '.repeat(width - 1);
+    }
+
+    const resultRow = row - 3 + state.scrollOffset;
+    const result = results[resultRow];
+    if (!result) return ' '.repeat(width - 1);
+
+    const isActive = resultRow === state.searchResultIndex;
+    const cat = state.categories[result.catIndex];
+    const catName = cat ? `${ansi.gray}${cat.name}${ansi.reset}` : '';
+
+    if (isActive) {
+      const cursor = `${ansi.cyan}▶${ansi.reset}`;
+      const name = highlightMatch(result.comp.name, state.searchQuery);
+      const nameStyled = `${ansi.bold}${ansi.white}${name}${ansi.reset}`;
+      const descRaw = truncate(result.comp.description, innerW - result.comp.name.length - 14);
+      const desc = ansi.dim + highlightMatch(descRaw, state.searchQuery) + ansi.reset;
+      const inner = `${cursor} ${nameStyled}  ${catName}  ${desc}`;
+      return pad(inner, innerW) + ' ';
+    } else {
+      const name = `${ansi.white}${result.comp.name}${ansi.reset}`;
+      const descRaw = truncate(result.comp.description, innerW - result.comp.name.length - 14);
+      const desc = ansi.gray + descRaw + ansi.reset;
+      return pad(`  ${name}  ${catName}  ${desc}`, innerW) + ' ';
+    }
+  }
+
+  // ── Normal category list mode ─────────────────────────────────────────────
   const cat = state.categories[state.catIndex];
   if (!cat) return ' '.repeat(width - 1);
 
   const comps = cat.components;
-  const innerW = width - 2;
-  const rows = Math.max((process.stdout.rows || 30) - HEADER_ROWS - FOOTER_ROWS, 4);
-  const listRows = rows - 3; // header rows
 
   // Row 0: category heading bar
   if (row === 0) {

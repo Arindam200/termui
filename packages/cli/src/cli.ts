@@ -10,6 +10,8 @@ import { update } from './commands/update.js';
 import { theme } from './commands/theme.js';
 import { preview, previewHelp } from './commands/preview.js';
 import { dev } from './commands/dev.js';
+import { docs } from './commands/docs.js';
+import { publish } from './commands/publish.js';
 import { checkForUpdates } from './utils/updates.js';
 import { printLogo, intro, step, outro, hi, dim, c, sym, select, multiselect } from './utils/ui.js';
 
@@ -56,6 +58,10 @@ async function main() {
       await dev(args);
       break;
 
+    case 'docs':
+      await docs(args);
+      break;
+
     case 'completion': {
       const shell = args[0];
       if (!shell || !['bash', 'zsh', 'fish'].includes(shell)) {
@@ -65,6 +71,10 @@ async function main() {
       await runCompletion(shell as 'bash' | 'zsh' | 'fish');
       break;
     }
+
+    case 'publish':
+      await publish(args, {});
+      break;
 
     case 'create': {
       const { create } = await import('./commands/create.js');
@@ -208,7 +218,7 @@ async function runCompletion(shell: 'bash' | 'zsh' | 'fish'): Promise<void> {
   const comps = Object.keys(registry.components).join(' ');
   const THEMES = 'default dracula nord catppuccin monokai tokyo-night one-dark solarized';
   const CMDS =
-    'init add list diff update theme preview dev create completion help --help --version';
+    'init add list diff update theme preview dev docs create publish completion help --help --version';
 
   if (shell === 'bash') {
     process.stdout.write(`# TermUI bash completion — source <(npx termui completion bash)
@@ -272,15 +282,22 @@ function printHelp() {
     ['init', 'Initialize TermUI in your project'],
     ['add <component>', 'Add one or more components from the registry'],
     ['add --all', 'Add all components at once'],
+    ['add --recipe <name>', 'Install a multi-component recipe'],
     ['update <component>', 'Re-download a component from the registry'],
     ['list', 'Browse all available components'],
-    ['diff <component>', 'Show diff between local and registry version'],
-    ['theme [name]', 'List or apply a theme'],
+    ['diff <component>', 'Show diff vs registry'],
+    ['diff --props-only', 'Show only prop API changes'],
+    ['diff --breaking', 'Exit 1 if breaking API changes detected'],
+    ['docs <component>', 'Show documentation for a component'],
+    ['theme <name>', 'Apply a built-in theme'],
+    ['theme add <package>', 'Install an npm theme package'],
+    ['theme publish', 'Scaffold a publishable theme package'],
     ['preview', 'Interactive component gallery'],
     ['create <name>', 'Scaffold a new TermUI project'],
     ['list --category <cat>', 'Filter list by category'],
     ['list --search <q>', 'Search components by name/description'],
     ['list --json', 'Machine-readable JSON output'],
+    ['publish <dir>', 'Submit a component to the community registry'],
     ['completion <shell>', 'Print shell completion script (bash/zsh/fish)'],
     ['dev', 'Watch mode — hot-reload on file change'],
     ['help', 'Show this help message'],

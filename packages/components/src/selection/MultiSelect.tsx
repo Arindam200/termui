@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useTheme } from '@termui/core';
+import { useInput, useTheme, getAccessibleName } from '@termui/core';
+import type { AriaProps } from '@termui/core';
 
 export interface MultiSelectOption<T = string> {
   value: T;
@@ -9,7 +10,7 @@ export interface MultiSelectOption<T = string> {
   disabled?: boolean;
 }
 
-export interface MultiSelectProps<T = string> {
+export interface MultiSelectProps<T = string> extends AriaProps {
   options: MultiSelectOption<T>[];
   value?: T[];
   onChange?: (values: T[]) => void;
@@ -27,9 +28,19 @@ export function MultiSelect<T = string>({
   cursor = '›',
   checkmark = '◉',
   height,
+  'aria-label': ariaLabel,
+  'aria-description': ariaDescription,
+  'aria-live': ariaLive,
 }: MultiSelectProps<T>) {
   const theme = useTheme();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(() => {
+    if (controlledValue && controlledValue.length > 0) {
+      const idx = options.findIndex((o) => o.value === controlledValue[0]);
+      if (idx >= 0 && !options[idx]?.disabled) return idx;
+    }
+    const firstEnabled = options.findIndex((o) => !o.disabled);
+    return firstEnabled >= 0 ? firstEnabled : 0;
+  });
   const [internalSelected, setInternalSelected] = useState<T[]>([]);
 
   const selected = controlledValue ?? internalSelected;
@@ -75,6 +86,12 @@ export function MultiSelect<T = string>({
 
   return (
     <Box flexDirection="column">
+      {ariaDescription && (
+        <Text color={theme.colors.mutedForeground} dimColor>
+          {' '}
+          {ariaDescription}
+        </Text>
+      )}
       {visibleOptions.map((opt, visibleIdx) => {
         const idx = scrollOffset + visibleIdx;
         const isActive = idx === activeIndex;

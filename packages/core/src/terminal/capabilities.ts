@@ -1,95 +1,183 @@
 /**
- * Terminal capability detection.
- * Detects: color depth, unicode support, mouse support, true-color.
+ * Terminal capability detection — platform-aware feature flags.
+ *
+ * Detects Windows Terminal, ConPTY, VS Code terminal, WSL, Git Bash,
+ * and falls back gracefully for each capability.
  */
 
-export type ColorDepth = 1 | 4 | 8 | 24; // 1=mono, 4=16-color, 8=256-color, 24=true-color
-
 export interface TerminalCapabilities {
-  colorDepth: ColorDepth;
+  /** Operating system platform */
+  platform: NodeJS.Platform;
+  /** Detected terminal emulator name */
+  terminal: string;
+  /** Whether the terminal supports Unicode/box-drawing characters */
   supportsUnicode: boolean;
-  supportsTrueColor: boolean;
+  /** Whether 256-color ANSI is supported */
   supports256Color: boolean;
-  supportsMouse: boolean;
+  /** Whether 24-bit true-color is supported */
+  supportsTrueColor: boolean;
+  /** Whether mouse events (click/scroll/drag) are supported */
+  supportsMouseEvents: boolean;
+  /** Whether OSC 8 hyperlinks are supported */
+  supportsHyperlinks: boolean;
+  /** Windows: whether ConPTY (modern virtual terminal) is active */
+  supportsConPTY: boolean;
+  /** Whether the terminal is running inside WSL */
+  isWSL: boolean;
+  /** Whether running inside VS Code integrated terminal */
+  isVSCode: boolean;
+  /** Whether running inside Windows Terminal */
+  isWindowsTerminal: boolean;
+  /** Whether running inside tmux or screen */
+  isMultiplexer: boolean;
+  /** Whether running in a CI/CD environment */
+  isCI: boolean;
+  /** Terminal column width */
   columns: number;
+  /** Terminal row height */
   rows: number;
+  /** Whether stdout is a TTY */
   isTTY: boolean;
 }
 
-/** Detect current terminal capabilities from process environment */
-export function detectCapabilities(): TerminalCapabilities {
-  const isTTY = Boolean(process.stdout.isTTY);
-  const columns = process.stdout.columns ?? 80;
-  const rows = process.stdout.rows ?? 24;
+function detectTerminalName(): string {
+  const { env } = process;
+  if (env['WT_SESSION']) return 'windows-terminal';
+  if (env['TERM_PROGRAM'] === 'vscode') return 'vscode';
+  if (env['TERM_PROGRAM'] === 'iTerm.app') return 'iterm2';
+  if (env['TERM_PROGRAM'] === 'Hyper') return 'hyper';
+  if (env['TERM_PROGRAM'] === 'Apple_Terminal') return 'apple-terminal';
+  if (env['TMUX']) return 'tmux';
+  if (env['TERM']?.includes('screen')) return 'screen';
+  if (env['TERM'] === 'xterm-kitty') return 'kitty';
+  if (env['ALACRITTY_LOG'] || env['ALACRITTY_SOCKET']) return 'alacritty';
+  if (env['WEZTERM_EXECUTABLE']) return 'wezterm';
+  if (env['MSYSTEM']) return 'msys2-git-bash';
+  if (process.platform === 'win32') return 'windows-console';
+  return env['TERM'] ?? 'unknown';
+}
 
-  // NO_COLOR / FORCE_COLOR env vars
-  const noColor = 'NO_COLOR' in process.env;
-  const forceColor = process.env['FORCE_COLOR'];
+function detectUnicodeSupport(): boolean {
+  const { env, platform } = process;
+  // WSL always supports Unicode
+  if (env['WSL_DISTRO_NAME']) return true;
+  // Windows Terminal supports Unicode
+  if (env['WT_SESSION']) return true;
+  // VS Code terminal supports Unicode
+  if (env['TERM_PROGRAM'] === 'vscode') return true;
+  // MSYS2/Git Bash: partial support
+  if (env['MSYSTEM']) return false;
+  // Classic Windows cmd.exe: no Unicode box-drawing
+  if (platform === 'win32' && !env['WT_SESSION'] && !env['TERM']) return false;
+  // macOS and Linux: Unicode supported
+  if (platform === 'darwin' || platform === 'linux') return true;
+  return true;
+}
 
-  // Color depth detection
-  let colorDepth: ColorDepth = 1;
+function detectColorSupport(): { color256: boolean; trueColor: boolean } {
+  const { env } = process;
 
-  if (!noColor) {
-    if (forceColor === '3' || forceColor === 'true' || forceColor === '1') {
-      colorDepth = 24;
-    } else if (forceColor === '2') {
-      colorDepth = 8;
-    } else if (isTTY) {
-      // Check COLORTERM env for true-color
-      const colorterm = (process.env['COLORTERM'] ?? '').toLowerCase();
-      if (colorterm === 'truecolor' || colorterm === '24bit') {
-        colorDepth = 24;
-      } else if (
-        (process.env['TERM_PROGRAM'] ?? '').toLowerCase().includes('iterm') ||
-        (process.env['TERM_PROGRAM'] ?? '').toLowerCase() === 'hyper'
-      ) {
-        colorDepth = 24;
-      } else if ((process.env['TERM'] ?? '').includes('256color')) {
-        colorDepth = 8;
-      } else if (process.env['TERM'] === 'xterm' || isTTY) {
-        colorDepth = 4;
-      }
-    }
-  }
+  if (env['NO_COLOR']) return { color256: false, trueColor: false };
 
-  const supportsTrueColor = colorDepth === 24;
-  const supports256Color = colorDepth >= 8;
+  const forceColor = env['FORCE_COLOR'];
+  if (forceColor === '3' || forceColor === 'true') return { color256: true, trueColor: true };
+  if (forceColor === '2') return { color256: true, trueColor: false };
+  if (forceColor === '1') return { color256: false, trueColor: false };
 
-  // Unicode detection
-  const lang = process.env['LANG'] ?? process.env['LC_ALL'] ?? '';
-  const supportsUnicode =
-    lang.toLowerCase().includes('utf-8') ||
-    lang.toLowerCase().includes('utf8') ||
-    process.platform === 'darwin' ||
-    (process.env['TERM_PROGRAM'] ?? '') !== '';
+  const term = env['TERM'] ?? '';
+  const colorTerm = env['COLORTERM'] ?? '';
 
-  // Mouse support (most modern terminals support xterm mouse protocol)
-  const supportsMouse = isTTY;
+  const trueColor =
+    colorTerm === 'truecolor' ||
+    colorTerm === '24bit' ||
+    !!env['WT_SESSION'] ||
+    env['TERM_PROGRAM'] === 'vscode' ||
+    env['TERM_PROGRAM'] === 'iTerm.app';
 
-  return {
-    colorDepth,
-    supportsUnicode,
-    supportsTrueColor,
-    supports256Color,
-    supportsMouse,
-    columns,
-    rows,
-    isTTY,
+  const color256 = trueColor || term.includes('256color') || term.includes('xterm');
+
+  return { color256, trueColor };
+}
+
+/**
+ * Get terminal capabilities. Cached after first call.
+ */
+let cached: TerminalCapabilities | null = null;
+
+export function getTerminalCapabilities(): TerminalCapabilities {
+  if (cached) return cached;
+
+  const { env, platform } = process;
+  const { color256, trueColor } = detectColorSupport();
+
+  cached = {
+    platform,
+    terminal: detectTerminalName(),
+    supportsUnicode: detectUnicodeSupport(),
+    supports256Color: color256,
+    supportsTrueColor: trueColor,
+    supportsMouseEvents: !!(env['TERM'] && !env['NO_COLOR']),
+    supportsHyperlinks:
+      !!env['WT_SESSION'] ||
+      env['TERM_PROGRAM'] === 'vscode' ||
+      env['TERM_PROGRAM'] === 'iTerm.app' ||
+      env['TERM'] === 'xterm-kitty',
+    supportsConPTY: platform === 'win32' && !!env['WT_SESSION'],
+    isWSL: !!env['WSL_DISTRO_NAME'],
+    isVSCode: env['TERM_PROGRAM'] === 'vscode',
+    isWindowsTerminal: !!env['WT_SESSION'],
+    isMultiplexer: !!env['TMUX'] || (env['TERM']?.includes('screen') ?? false),
+    isCI: !!env['CI'],
+    columns: process.stdout.columns ?? 80,
+    rows: process.stdout.rows ?? 24,
+    isTTY: Boolean(process.stdout.isTTY),
   };
-}
 
-/** Singleton instance for the current terminal session */
-let _capabilities: TerminalCapabilities | null = null;
-
-export function getCapabilities(): TerminalCapabilities {
-  if (!_capabilities) {
-    _capabilities = detectCapabilities();
+  // On Windows: attempt to enable virtual terminal processing
+  if (platform === 'win32') {
+    enableWindowsVT();
   }
-  return _capabilities;
+
+  return cached;
 }
 
-/** Force re-detect capabilities (useful after SIGWINCH) */
+function enableWindowsVT(): void {
+  try {
+    // Attempt to enable ANSI virtual terminal via SetConsoleMode
+    // This requires the 'ffi-napi' or 'koffi' package to call Win32 API.
+    // As a fallback, we just set the TERM variable.
+    if (!process.env['TERM']) {
+      process.env['TERM'] = 'xterm-256color';
+    }
+  } catch {
+    // If kernel32 is not available, proceed without VT processing
+  }
+}
+
+/**
+ * Reset the capabilities cache (useful in tests).
+ */
+export function resetCapabilitiesCache(): void {
+  cached = null;
+}
+
+// ---------------------------------------------------------------------------
+// Legacy aliases — kept for backwards compatibility with existing consumers
+// that import getCapabilities / refreshCapabilities from this module.
+// ---------------------------------------------------------------------------
+
+/** @deprecated Use getTerminalCapabilities() instead */
+export function getCapabilities(): TerminalCapabilities {
+  return getTerminalCapabilities();
+}
+
+/** @deprecated Use resetCapabilitiesCache() then getTerminalCapabilities() instead */
 export function refreshCapabilities(): TerminalCapabilities {
-  _capabilities = detectCapabilities();
-  return _capabilities;
+  resetCapabilitiesCache();
+  return getTerminalCapabilities();
+}
+
+/** @deprecated Use getTerminalCapabilities() instead */
+export function detectCapabilities(): TerminalCapabilities {
+  return getTerminalCapabilities();
 }

@@ -1,0 +1,9 @@
+{
+  "name": "multi-progress",
+  "description": "Parallel progress display for package managers, build pipelines, and deploy tools",
+  "version": "0.1.0",
+  "category": "feedback",
+  "files": ["MultiProgress.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

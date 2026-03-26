@@ -1,0 +1,9 @@
+{
+  "name": "chat-message",
+  "description": "Chat message bubble with role label, streaming indicator, and collapsible content",
+  "category": "ai",
+  "version": "1.0.0",
+  "files": ["ChatMessage.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

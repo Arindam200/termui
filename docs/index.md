@@ -35,11 +35,14 @@ npx termui preview
 | [Forms](./forms.md)           | Form, FormField, Wizard, Confirm, DatePicker, TimePicker, FilePicker                                                       |
 | [Charts](./charts.md)         | Sparkline, BarChart, LineChart, PieChart, HeatMap, Gauge                                                                   |
 | [Utility](./utility.md)       | Timer, Stopwatch, Clock, Clipboard, KeyboardShortcuts, Help, ErrorBoundary, Log, Image, QRCode, EmbeddedTerminal, Profiler |
+| [AI](./ai.md)                 | ChatMessage, ChatThread, ToolCall, ThinkingBlock, TokenUsage, ContextMeter, ToolApproval, ModelSelector, FileChange        |
+| [Templates](./templates.md)   | SplashScreen, AppShell, WelcomeScreen, LoginFlow, SetupFlow, UsageMonitor, BulletList, InfoBox, HelpScreen                 |
 
 ## API Reference
 
 - [Core Hooks](./api/hooks.md)
 - [CLI Commands](./api/cli.md)
+- [Adapters](./adapters.md)
 - [@termui/testing](./api/testing.md)
 
 ## Theming

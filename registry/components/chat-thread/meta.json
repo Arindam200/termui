@@ -1,0 +1,9 @@
+{
+  "name": "chat-thread",
+  "description": "Scrollable container for stacking ChatMessage components in a conversation thread",
+  "category": "ai",
+  "version": "1.0.0",
+  "files": ["ChatThread.tsx"],
+  "deps": [],
+  "peerComponents": ["chat-message"]
+}

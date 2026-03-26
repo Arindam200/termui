@@ -6,6 +6,7 @@ export { Toast } from './Toast.js';
 export { Banner } from './Banner.js';
 export { Skeleton } from './Skeleton.js';
 export { ProgressCircle } from './ProgressCircle.js';
+export { MultiProgress } from './MultiProgress.js';
 export type { SpinnerProps, SpinnerStyle } from './Spinner.js';
 export type { ProgressBarProps } from './ProgressBar.js';
 export type { AlertProps, AlertVariant } from './Alert.js';
@@ -14,3 +15,8 @@ export type { ToastProps, ToastVariant } from './Toast.js';
 export type { BannerProps, BannerVariant } from './Banner.js';
 export type { SkeletonProps } from './Skeleton.js';
 export type { ProgressCircleProps, ProgressCircleSize } from './ProgressCircle.js';
+export type {
+  MultiProgressItem,
+  MultiProgressProps,
+  MultiProgressStatus,
+} from './MultiProgress.js';

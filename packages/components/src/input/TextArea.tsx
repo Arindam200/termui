@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useFocus, useTheme } from '@termui/core';
+import { useInput, useFocus, useTheme, getAccessibleName } from '@termui/core';
+import type { AriaProps } from '@termui/core';
 
-export interface TextAreaProps {
+export interface TextAreaProps extends AriaProps {
   value?: string;
   onChange?: (value: string) => void;
   onSubmit?: (value: string) => void;
@@ -36,6 +37,9 @@ export function TextArea({
   borderStyle = 'round',
   paddingX = 1,
   cursor = '█',
+  'aria-label': ariaLabel,
+  'aria-description': ariaDescription,
+  'aria-live': ariaLive,
 }: TextAreaProps) {
   const [internalValue, setInternalValue] = useState('');
   const [cursorLine, setCursorLine] = useState(0);
@@ -45,6 +49,7 @@ export function TextArea({
   const { isFocused } = useFocus({ id });
 
   const value = controlledValue ?? internalValue;
+  const accessibleLabel = getAccessibleName(ariaLabel, label ?? placeholder ?? 'Text area');
 
   function setValue(newVal: string) {
     onChange ? onChange(newVal) : setInternalValue(newVal);
@@ -210,6 +215,12 @@ export function TextArea({
   return (
     <Box flexDirection="column">
       {label && <Text bold>{label}</Text>}
+      {ariaDescription && (
+        <Text color={theme.colors.mutedForeground} dimColor>
+          {' '}
+          {ariaDescription}
+        </Text>
+      )}
       <Box
         flexDirection="column"
         borderStyle={borderStyle}

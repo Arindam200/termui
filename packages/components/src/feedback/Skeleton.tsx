@@ -1,20 +1,28 @@
 import React from 'react';
 import { Box, Text } from 'ink';
-import { useTheme, useAnimation } from '@termui/core';
+import { useTheme, useAnimation, useMotion } from '@termui/core';
 
 export interface SkeletonProps {
   width?: number;
   height?: number;
   animated?: boolean;
+  reducedMotion?: boolean;
 }
 
-export function Skeleton({ width = 20, height = 1, animated = true }: SkeletonProps) {
+export function Skeleton({
+  width = 20,
+  height = 1,
+  animated = true,
+  reducedMotion,
+}: SkeletonProps) {
   const theme = useTheme();
+  const { reduced } = useMotion();
+  const isReduced = reducedMotion ?? reduced;
   // fps=4 gives slow shimmer; frame increments at ~4 fps
   const frame = useAnimation(4);
 
   // Offset cycles 0 → width repeatedly
-  const offset = animated ? frame % (width + 6) : -1;
+  const offset = animated && !isReduced ? frame % (width + 6) : -1;
 
   const buildRow = (): string => {
     let row = '';
@@ -27,7 +35,7 @@ export function Skeleton({ width = 20, height = 1, animated = true }: SkeletonPr
 
   const rows = Array.from({ length: height }, (_, rowIndex) => {
     // Stagger each row's shimmer slightly by shifting the offset
-    const rowOffset = animated ? (frame + rowIndex * 2) % (width + 6) : -1;
+    const rowOffset = animated && !isReduced ? (frame + rowIndex * 2) % (width + 6) : -1;
     let row = '';
     for (let i = 0; i < width; i++) {
       const inHighlight = i >= rowOffset - 3 && i <= rowOffset + 3;

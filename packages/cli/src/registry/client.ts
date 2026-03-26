@@ -9,6 +9,8 @@ export interface ComponentMeta {
   deps?: string[];
   peerComponents?: string[];
   files: string[];
+  author?: { name: string; url?: string; github?: string };
+  registry?: 'core' | 'community';
 }
 
 export interface RegistryManifest {

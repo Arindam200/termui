@@ -18,6 +18,7 @@ Full props for all 101 components. Components are copied into your project via `
 10. [Charts](#charts)
 11. [Utility](#utility)
 12. [Templates](#templates)
+13. [AI Components](#ai-components)
 
 ---
 
@@ -159,10 +160,28 @@ Removable tag chip.
 
 ### `Markdown`
 
-Renders basic markdown in the terminal (bold, italic, code, headers, lists).
+Renders markdown in the terminal. Supports a `streaming` prop for live LLM output.
 
 ```tsx
 <Markdown>{markdownString}</Markdown>
+
+// Streaming LLM output — handles partial code fences, appends cursor
+<Markdown streaming cursor="▌">{partialFromLLM}</Markdown>
+```
+
+### `StreamingText`
+
+Token-by-token streaming text with optional blinking cursor. For LLM output.
+
+```tsx
+// Controlled — re-render as tokens arrive
+<StreamingText text={partialResponse} cursor="▌" />
+
+// From AsyncIterable
+<StreamingText stream={tokenStream} onComplete={(full) => save(full)} />
+
+// Typing animation for pre-buffered text
+<StreamingText text={fullText} animate speed={30} />
 ```
 
 ### `JSON` (JSONView)
@@ -508,6 +527,22 @@ Section with optional header/footer.
 <Panel header={<Text bold>Title</Text>} footer={<Text dimColor>footer text</Text>}>
   {children}
 </Panel>
+```
+
+### `DiffView`
+
+Unified or split diff with syntax highlighting.
+
+```tsx
+<DiffView
+  oldText={originalCode}
+  newText={modifiedCode}
+  filename="src/index.ts"
+  language="typescript"
+  mode="unified" // 'unified'|'split'|'inline'
+  context={3} // lines of context around each hunk
+  showLineNumbers
+/>
 ```
 
 ---
@@ -1205,4 +1240,149 @@ Full-screen keyboard shortcut reference.
   ]}
   onClose={() => setHelp(false)}
 />
+```
+
+---
+
+## AI Components
+
+Install: `npx termui add chat-thread tool-call thinking-block tool-approval token-usage model-selector file-change`
+
+### `ChatThread` + `ChatMessage`
+
+Scrollable chat history. `ChatMessage` handles per-role styling.
+
+```tsx
+<ChatThread maxHeight={30} autoScroll>
+  <ChatMessage role="user" name="You">
+    Explain React hooks
+  </ChatMessage>
+  <ChatMessage role="assistant" name="Claude" streaming>
+    <StreamingText text={response} cursor="▌" />
+  </ChatMessage>
+  <ChatMessage role="system" collapsed>
+    You are a helpful assistant…
+  </ChatMessage>
+  <ChatMessage role="error">Rate limit exceeded. Retry in 10s.</ChatMessage>
+</ChatThread>
+// role: 'user'|'assistant'|'system'|'error'
+// streaming: shows ●●● typing indicator until false
+// collapsed: system messages hidden until Enter/Space
+```
+
+### `ToolCall`
+
+Visualize agent tool calls with status, args, and collapsible result.
+
+```tsx
+<ToolCall
+  name="read_file"
+  args={{ path: '/src/index.ts', lines: '1-50' }}
+  status="success" // 'pending'|'running'|'success'|'error'
+  result={fileContents}
+  duration={230}
+  collapsible
+  defaultCollapsed={false}
+/>
+// pending  → dim icon + tool name + args summary
+// running  → spinner + elapsed ms
+// success  → green ✓ + collapsible result
+// error    → red ✗ + error message
+```
+
+### `ThinkingBlock`
+
+Extended thinking / chain-of-thought display. Collapsible, shows token count.
+
+```tsx
+<ThinkingBlock
+  content={thinkingTokens}
+  streaming
+  defaultCollapsed={true}
+  label="Reasoning"
+  tokenCount={1247}
+/>
+// Collapsed: ▶ Reasoning (1,247 tokens)
+// Keys: Space/Enter toggle
+```
+
+### `ToolApproval`
+
+Interactive permission gate for risky AI actions.
+
+```tsx
+<ToolApproval
+  name="run_command"
+  description="Run shell command"
+  args={{ command: 'rm -rf node_modules && npm install' }}
+  risk="medium" // 'low'|'medium'|'high' — affects border color
+  onApprove={() => runCommand()}
+  onDeny={() => skipCommand()}
+  onAlwaysAllow={() => setAlwaysAllow(true)}
+  timeout={30} // auto-deny after N seconds
+/>
+// Keys: y approve, n deny, a always-allow
+```
+
+### `TokenUsage`
+
+Compact inline token + cost display.
+
+```tsx
+<TokenUsage prompt={1200} completion={850} model="claude-sonnet-4-6" showCost />
+// ⟨ 1.2k in / 850 out · $0.003 ⟩
+```
+
+### `ContextMeter`
+
+Progress bar for context window usage with semantic color thresholds.
+
+```tsx
+<ContextMeter
+  used={45000}
+  limit={200000}
+  label="Context"
+  showPercent
+  warnAt={80} // yellow at 80%
+  criticalAt={95} // red at 95%
+/>
+// Context ████████░░░░░░░ 22% (45k / 200k)
+```
+
+### `ModelSelector`
+
+Provider-grouped model picker built on `<Select>`.
+
+```tsx
+<ModelSelector
+  models={[
+    { id: 'claude-sonnet-4-6', name: 'Claude Sonnet', provider: 'anthropic', context: 200000 },
+    { id: 'gpt-4o', name: 'GPT-4o', provider: 'openai', context: 128000 },
+    { id: 'llama3:70b', name: 'Llama 3 70B', provider: 'ollama', context: 8192 },
+  ]}
+  selected={currentModel}
+  onSelect={setModel}
+  showContext
+  showProvider
+  groupByProvider
+/>
+```
+
+### `FileChange`
+
+AI-proposed file edits — tree view with per-file diff expansion and accept/reject.
+
+```tsx
+<FileChange
+  changes={[
+    { path: 'src/index.ts', type: 'modify', diff: unifiedDiff },
+    { path: 'src/utils.ts', type: 'create', content: newContent },
+    { path: 'old.ts', type: 'delete' },
+  ]}
+  onAccept={(path) => applyChange(path)}
+  onReject={(path) => rejectChange(path)}
+  onAcceptAll={() => applyAll()}
+/>
+// type icons: M modified (yellow), A added (green), D deleted (red)
+// Keys: ↑↓ navigate, Enter expand inline DiffView, y accept, n reject
 ```

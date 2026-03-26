@@ -1,0 +1,23 @@
+{
+  "name": "@termui/ai-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.tsx",
+    "shell": "tsx src/agent-shell.tsx"
+  },
+  "dependencies": {
+    "@termui/core": "workspace:*",
+    "@termui/components": "workspace:*",
+    "@termui/adapters": "workspace:*",
+    "ink": "^5.0.0",
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}

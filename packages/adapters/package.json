@@ -1,6 +1,6 @@
 {
   "name": "@termui/adapters",
-  "version": "1.0.0",
+  "version": "1.3.0",
   "description": "TermUI ecosystem adapters — clack, picocolors, git, GitHub, PTY, and more",
   "type": "module",
   "main": "./dist/args/index.js",
@@ -57,6 +57,30 @@
       ],
       "conversation-store": [
         "./dist/conversation-store/index.d.ts"
+      ],
+      "imperative": [
+        "./dist/imperative/index.d.ts"
+      ],
+      "chalk": [
+        "./dist/chalk/index.d.ts"
+      ],
+      "ora": [
+        "./dist/ora/index.d.ts"
+      ],
+      "meow": [
+        "./dist/meow/index.d.ts"
+      ],
+      "commander": [
+        "./dist/commander/index.d.ts"
+      ],
+      "vue": [
+        "./dist/vue/index.d.ts"
+      ],
+      "svelte": [
+        "./dist/svelte/index.d.ts"
+      ],
+      "inquirer": [
+        "./dist/inquirer/index.d.ts"
       ]
     }
   },
@@ -128,6 +152,38 @@
     "./conversation-store": {
       "types": "./dist/conversation-store/index.d.ts",
       "import": "./dist/conversation-store/index.js"
+    },
+    "./imperative": {
+      "import": "./dist/imperative/index.js",
+      "types": "./dist/imperative/index.d.ts"
+    },
+    "./chalk": {
+      "types": "./dist/chalk/index.d.ts",
+      "import": "./dist/chalk/index.js"
+    },
+    "./ora": {
+      "types": "./dist/ora/index.d.ts",
+      "import": "./dist/ora/index.js"
+    },
+    "./meow": {
+      "types": "./dist/meow/index.d.ts",
+      "import": "./dist/meow/index.js"
+    },
+    "./commander": {
+      "types": "./dist/commander/index.d.ts",
+      "import": "./dist/commander/index.js"
+    },
+    "./vue": {
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/index.js"
+    },
+    "./svelte": {
+      "types": "./dist/svelte/index.d.ts",
+      "import": "./dist/svelte/index.js"
+    },
+    "./inquirer": {
+      "types": "./dist/inquirer/index.d.ts",
+      "import": "./dist/inquirer/index.js"
     }
   },
   "sideEffects": false,
@@ -142,6 +198,7 @@
   "peerDependencies": {
     "@termui/components": "workspace:*",
     "@termui/core": "workspace:*",
+    "@termui/types": "workspace:*",
     "ink": "^5.0.0",
     "react": "^18.0.0",
     "@octokit/rest": "^21.0.2",
@@ -155,13 +212,22 @@
     "semver": "^7.6.3",
     "simple-git": "^3.27.0",
     "yaml": "^2.6.0",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2",
+    "chalk": ">=5.0.0",
+    "ora": ">=8.0.0",
+    "meow": ">=13.0.0",
+    "vue": ">=3.0.0",
+    "svelte": ">=4.0.0",
+    "inquirer": ">=9.0.0"
   },
   "peerDependenciesMeta": {
     "@termui/components": {
       "optional": true
     },
     "@termui/core": {
+      "optional": true
+    },
+    "@termui/types": {
       "optional": true
     },
     "ink": {
@@ -205,11 +271,30 @@
     },
     "yargs": {
       "optional": true
+    },
+    "chalk": {
+      "optional": true
+    },
+    "ora": {
+      "optional": true
+    },
+    "meow": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "inquirer": {
+      "optional": true
     }
   },
   "devDependencies": {
     "@termui/components": "workspace:*",
     "@termui/core": "workspace:*",
+    "@termui/types": "workspace:*",
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
     "@types/semver": "^7.5.8",

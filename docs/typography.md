@@ -246,3 +246,43 @@ import { Digits } from 'termui/components';
 
 <Digits value={42} color="green" />;
 ```
+
+---
+
+## StreamingText
+
+Renders text that arrives incrementally — from an `AsyncIterable<string>` stream or via a typing animation. Shows a blinking `▌` cursor while streaming.
+
+**Props:**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `text` | `string` | `—` | Controlled text (static or with `animate`) |
+| `stream` | `AsyncIterable<string>` | `—` | Live token stream; component manages state internally |
+| `cursor` | `boolean` | `true` | Show blinking ▌ cursor while streaming |
+| `animate` | `boolean` | `false` | Typing animation for pre-buffered `text` |
+| `speed` | `number` | `30` | Typing speed in ms per character |
+| `onComplete` | `(text: string) => void` | `—` | Called when streaming or animation completes |
+| `cursorColor` | `string` | theme primary | Cursor color |
+
+**Usage — typing animation:**
+
+```tsx
+import { StreamingText } from 'termui/components';
+
+<StreamingText text="Hello, world!" animate speed={40} />;
+```
+
+**Usage — live AI token stream:**
+
+```tsx
+import { StreamingText } from 'termui/components';
+
+async function* tokenStream() {
+  for (const chunk of ['Hello', ', ', 'world', '!']) {
+    await new Promise((r) => setTimeout(r, 80));
+    yield chunk;
+  }
+}
+
+<StreamingText stream={tokenStream()} onComplete={(t) => console.log('done:', t)} />;
+```

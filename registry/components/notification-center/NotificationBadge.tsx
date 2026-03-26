@@ -1,0 +1,15 @@
+import React from 'react';
+import { Text } from 'ink';
+import { useTheme } from '@termui/core';
+
+export interface NotificationBadgeProps {
+  count: number;
+  color?: string;
+}
+
+export function NotificationBadge({ count, color }: NotificationBadgeProps) {
+  const theme = useTheme();
+  if (count === 0) return null;
+  const resolvedColor = color ?? theme.colors.error;
+  return <Text color={resolvedColor}>[{count}]</Text>;
+}

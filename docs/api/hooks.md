@@ -170,3 +170,58 @@ Tracks render timing. For development / performance profiling.
 ```ts
 useRenderTime(): { lastRenderMs: number; totalMs: number; count: number }
 ```
+
+---
+
+## `useMotion()`
+
+Returns the reduced-motion preference. Reads `NO_MOTION=1` or `CI=true` env vars and the optional `reducedMotion` prop on `ThemeProvider`.
+
+```ts
+useMotion(): { reduced: boolean }
+```
+
+**Example:**
+
+```tsx
+const { reduced } = useMotion();
+if (reduced) return <Text>[loading]</Text>;
+return <Spinner />;
+```
+
+---
+
+## `useNotifications()` / `useNotificationsProvider()`
+
+In-app notification queue. Call `useNotificationsProvider()` once in a parent component and `useNotifications()` anywhere in the tree to push notifications.
+
+```ts
+useNotificationsProvider(): {
+  value: NotificationsContextValue;
+}
+
+useNotifications(): {
+  notifications: Notification[];
+  notify(opts: Omit<Notification, 'id' | 'timestamp' | 'read'>): string;
+  dismiss(id: string): void;
+  markRead(id: string): void;
+  clear(): void;
+}
+```
+
+**Example:**
+
+```tsx
+// In root component:
+const { value } = useNotificationsProvider();
+return (
+  <NotificationsContext.Provider value={value}>
+    <App />
+    <NotificationCenter />
+  </NotificationsContext.Provider>
+);
+
+// Anywhere in the tree:
+const { notify } = useNotifications();
+notify({ title: 'Done!', variant: 'success', duration: 3000 });
+```

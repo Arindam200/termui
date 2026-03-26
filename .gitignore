@@ -14,6 +14,12 @@ build/
 # TypeScript incremental build
 *.tsbuildinfo
 
+# Stale tsc output emitted alongside source (outDir should be dist/)
+# Only ignore compiler-generated maps; hand-written .d.ts (e.g. ambient type
+# declarations) and .js source files are intentionally NOT ignored here.
+packages/*/src/**/*.d.ts.map
+packages/*/src/**/*.js.map
+
 # Logs
 *.log
 npm-debug.log*

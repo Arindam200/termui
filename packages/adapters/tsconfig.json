@@ -6,11 +6,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "paths": {
-      "@termui/core": ["../core/src/index.ts"],
-      "@termui/core/hooks": ["../core/src/hooks/index.ts"],
-      "@termui/core/styling": ["../core/src/styling/index.ts"],
-      "@termui/core/terminal": ["../core/src/terminal/index.ts"],
-      "@termui/components": ["../components/src/index.ts"]
+      "@termui/types": ["../types/src/index.ts"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

@@ -26,9 +26,12 @@ export function RadioGroup<T = string>({
 }: RadioGroupProps<T>) {
   const theme = useTheme();
   const [activeIndex, setActiveIndex] = useState(() => {
-    if (controlledValue === undefined) return 0;
-    const idx = options.findIndex((o) => o.value === controlledValue);
-    return idx >= 0 ? idx : 0;
+    if (controlledValue !== undefined) {
+      const idx = options.findIndex((o) => o.value === controlledValue);
+      return idx >= 0 ? idx : 0;
+    }
+    const first = options.findIndex((o) => !o.disabled);
+    return first >= 0 ? first : 0;
   });
   const [internalValue, setInternalValue] = useState<T | undefined>(controlledValue);
 

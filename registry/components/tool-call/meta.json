@@ -1,0 +1,9 @@
+{
+  "name": "tool-call",
+  "description": "Displays an AI tool invocation with status indicator, args, result, and elapsed time",
+  "category": "ai",
+  "version": "1.0.0",
+  "files": ["ToolCall.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

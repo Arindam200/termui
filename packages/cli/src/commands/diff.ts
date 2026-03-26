@@ -28,6 +28,76 @@ const CATEGORY_DIR: Record<string, string> = {
   templates: 'templates',
 };
 
+// ---------------------------------------------------------------------------
+// Prop extraction helpers
+// ---------------------------------------------------------------------------
+
+interface PropInfo {
+  name: string;
+  type: string;
+  required: boolean;
+}
+
+function extractProps(source: string, componentName: string): PropInfo[] {
+  // Look for the Props interface: interface XxxProps { ... }
+  // Use a regex to find the interface block
+  const interfaceRegex = new RegExp(
+    `interface\\s+${componentName}Props[\\s\\S]*?\\{([^}]+)\\}`,
+    'g'
+  );
+
+  const props: PropInfo[] = [];
+  const match = interfaceRegex.exec(source);
+  if (!match) return props;
+
+  const body = match[1]!;
+  // Match each prop: name?: type or name: type
+  const propRegex = /^\s*(?:\/\*[\s\S]*?\*\/)?\s*(\w+)(\??):\s*([^;]+);/gm;
+  let propMatch: RegExpExecArray | null;
+
+  while ((propMatch = propRegex.exec(body)) !== null) {
+    const name = propMatch[1]!;
+    const optional = propMatch[2] === '?';
+    const type = propMatch[3]!.trim();
+    props.push({ name, type, required: !optional });
+  }
+
+  return props;
+}
+
+function diffProps(
+  oldProps: PropInfo[],
+  newProps: PropInfo[]
+): { added: PropInfo[]; removed: PropInfo[]; changed: Array<{ old: PropInfo; new: PropInfo }> } {
+  const oldMap = new Map(oldProps.map((p) => [p.name, p]));
+  const newMap = new Map(newProps.map((p) => [p.name, p]));
+
+  const added: PropInfo[] = [];
+  const removed: PropInfo[] = [];
+  const changed: Array<{ old: PropInfo; new: PropInfo }> = [];
+
+  for (const [name, prop] of newMap) {
+    if (!oldMap.has(name)) {
+      added.push(prop);
+    } else {
+      const old = oldMap.get(name)!;
+      if (old.type !== prop.type || old.required !== prop.required) {
+        changed.push({ old, new: prop });
+      }
+    }
+  }
+
+  for (const [name, prop] of oldMap) {
+    if (!newMap.has(name)) removed.push(prop);
+  }
+
+  return { added, removed, changed };
+}
+
+// ---------------------------------------------------------------------------
+// Code diff helper
+// ---------------------------------------------------------------------------
+
 function computeDiff(original: string, updated: string, fileName: string): string {
   const origLines = original.split('\n');
   const updLines = updated.split('\n');
@@ -62,12 +132,22 @@ function computeDiff(original: string, updated: string, fileName: string): strin
   return lines.join('\n');
 }
 
+// ---------------------------------------------------------------------------
+// Main diff command
+// ---------------------------------------------------------------------------
+
 export async function diff(args: string[]): Promise<void> {
-  if (args.length === 0) {
+  // Strip flag args before treating as component names
+  const componentArgs = args.filter((a) => !a.startsWith('--'));
+
+  if (componentArgs.length === 0) {
     console.error(c.red('Error:') + ' Please specify a component name.');
     console.error('  Example: ' + c.cyan('npx termui diff spinner') + '\n');
     process.exit(1);
   }
+
+  const propsOnly = args.includes('--props-only');
+  const breakingCheck = args.includes('--breaking');
 
   const cwd = process.cwd();
   const config = getConfig(cwd);
@@ -82,7 +162,9 @@ export async function diff(args: string[]): Promise<void> {
     registry = getLocalRegistry();
   }
 
-  for (const componentName of args) {
+  let hasBreakingChanges = false;
+
+  for (const componentName of componentArgs) {
     const meta = registry.components[componentName];
 
     if (!meta) {
@@ -99,6 +181,10 @@ export async function diff(args: string[]): Promise<void> {
     let hasAnyDiff = false;
     let hasSkipped = false;
     let checkedCount = 0;
+
+    // Collect sources for prop analysis (keyed by file name)
+    let localSource: string | null = null;
+    let registrySource: string | null = null;
 
     for (const fileName of meta.files) {
       const filePath = join(outDir, fileName);
@@ -127,15 +213,72 @@ export async function diff(args: string[]): Promise<void> {
 
       checkedCount++;
       const localContent = readFileSync(filePath, 'utf-8');
-      const diffOutput = computeDiff(localContent, registryContent, fileName);
 
-      if (!diffOutput) {
-        console.log(c.green(`  ✓ ${fileName}: up to date`));
-      } else {
-        hasAnyDiff = true;
-        console.log(`  ${c.yellow('~')} ${fileName}:`);
-        console.log(diffOutput);
+      // Keep the first .tsx/.ts file for prop analysis
+      if (localSource === null && /\.[tj]sx?$/.test(fileName)) {
+        localSource = localContent;
+        registrySource = registryContent;
       }
+
+      if (!propsOnly) {
+        const diffOutput = computeDiff(localContent, registryContent, fileName);
+
+        if (!diffOutput) {
+          console.log(c.green(`  ✓ ${fileName}: up to date`));
+        } else {
+          hasAnyDiff = true;
+          console.log(`  ${c.yellow('~')} ${fileName}:`);
+          console.log(diffOutput);
+        }
+      }
+    }
+
+    // Prop-changes section
+    if (localSource !== null && registrySource !== null) {
+      const compName = componentName
+        .split('-')
+        .map((s) => s[0]!.toUpperCase() + s.slice(1))
+        .join('');
+      const localProps = extractProps(localSource, compName);
+      const registryProps = extractProps(registrySource, compName);
+
+      if (localProps.length > 0 || registryProps.length > 0) {
+        const { added, removed, changed } = diffProps(localProps, registryProps);
+
+        if (added.length > 0 || removed.length > 0 || changed.length > 0) {
+          console.log(`\n${c.bold('Prop changes:')}`);
+
+          for (const p of added) {
+            console.log(`  \x1b[32m+ ${p.name}${p.required ? '' : '?'}: ${p.type}\x1b[0m`);
+          }
+          for (const p of removed) {
+            console.log(
+              `  \x1b[31m- ${p.name}${p.required ? '' : '?'}: ${p.type}\x1b[0m  ${c.dim('(REMOVED)')}`
+            );
+          }
+          for (const ch of changed) {
+            console.log(
+              `  \x1b[33m~ ${ch.old.name}${ch.old.required ? '' : '?'}: ${ch.old.type}\x1b[0m`
+            );
+            console.log(
+              `    \x1b[33m→ ${ch.new.name}${ch.new.required ? '' : '?'}: ${ch.new.type}\x1b[0m`
+            );
+          }
+
+          // Track breaking changes: removed props or props that became required
+          if (
+            breakingCheck &&
+            (removed.length > 0 || changed.some((ch) => ch.new.required && !ch.old.required))
+          ) {
+            hasBreakingChanges = true;
+          }
+        }
+      }
+    }
+
+    if (propsOnly) {
+      // Skip the code-diff verdict when --props-only is set
+      continue;
     }
 
     if (hasSkipped && checkedCount === 0) {
@@ -154,5 +297,9 @@ export async function diff(args: string[]): Promise<void> {
     } else {
       console.log(c.green(`\n✓ ${meta.name} is up to date.\n`));
     }
+  }
+
+  if (breakingCheck && hasBreakingChanges) {
+    process.exit(1);
   }
 }

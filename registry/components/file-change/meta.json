@@ -1,0 +1,9 @@
+{
+  "name": "file-change",
+  "description": "Interactive file-change review list with diff expansion, per-file accept/reject actions, and accept-all shortcut",
+  "category": "ai",
+  "version": "1.0.0",
+  "files": ["FileChange.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

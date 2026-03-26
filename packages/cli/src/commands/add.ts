@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { join, dirname } from 'path';
 import { getConfig } from '../utils/config.js';
 import { fetchManifest, fetchComponentFile, type ComponentMeta } from '../registry/client.js';
 import {
@@ -70,6 +70,93 @@ function findClosestMatch(
 export async function add(args: string[], opts?: { isNested?: boolean }): Promise<void> {
   const isDryRun = args.includes('--dry-run');
   const filteredArgs = args.filter((a) => a !== '--dry-run');
+
+  // Handle --recipe flag early
+  const recipeIdx = filteredArgs.indexOf('--recipe');
+  if (recipeIdx !== -1) {
+    const recipeName = filteredArgs[recipeIdx + 1];
+
+    const cwd = process.cwd();
+    const config = getConfig(cwd);
+    const registryUrl = config.registry ?? 'https://arindam200.github.io/termui';
+
+    if (!opts?.isNested) {
+      printLogo();
+      intro('termui');
+    }
+
+    if (!recipeName) {
+      fail('Please specify a recipe name: npx termui add --recipe <name>');
+      process.exit(1);
+    }
+
+    // Resolve registry manifest
+    active('Connecting to registry…');
+    let registry: Awaited<ReturnType<typeof fetchManifest>>;
+    try {
+      registry = await fetchManifest(registryUrl);
+    } catch {
+      fail(`Failed to fetch registry from ${bold(registryUrl)}`);
+      process.exit(2);
+    }
+
+    if (isDryRun) {
+      step(`${c.yellow}[dry-run]${c.reset} No files will be written`);
+    }
+
+    active(`Fetching recipe ${bold(recipeName)}…`);
+    let recipe: {
+      name: string;
+      components: string[];
+      wiringFile: string;
+      wiringContent: string;
+      description?: string;
+    };
+    try {
+      const url = `${registryUrl}/recipes/${recipeName}.json`;
+      const res = await fetch(url);
+      if (!res.ok) {
+        fail(`Recipe '${recipeName}' not found in registry.`);
+        process.exit(2);
+      }
+      recipe = (await res.json()) as typeof recipe;
+    } catch {
+      fail(`Could not fetch recipe '${recipeName}' from registry.`);
+      process.exit(2);
+    }
+
+    step(`Recipe: ${hi(recipe.name)} — ${recipe.description ?? ''}`);
+    step(`Components: ${hi(recipe.components.join(', '))}`);
+
+    const recipeInstalled = new Set<string>();
+    // Install all components
+    for (const compName of recipe.components) {
+      const meta = registry.components[compName];
+      if (meta) {
+        await installComponent(
+          meta,
+          config.componentsDir,
+          cwd,
+          registry,
+          registryUrl,
+          recipeInstalled,
+          isDryRun
+        );
+      }
+    }
+
+    // Write wiring file
+    const wiringPath = join(cwd, config.componentsDir, recipe.wiringFile);
+    if (!isDryRun) {
+      if (!existsSync(dirname(wiringPath))) mkdirSync(dirname(wiringPath), { recursive: true });
+      writeFileSync(wiringPath, recipe.wiringContent, 'utf-8');
+      step(`${hi('◇')} ${recipe.wiringFile} (wiring)`);
+    }
+
+    done(`Recipe ${hi(recipe.name)} installed`);
+    outro(`Import from ${hi(`'./components/ui'`)}`);
+    return;
+  }
 
   if (filteredArgs.length === 0) {
     console.error(`\x1b[31mError:\x1b[0m Please specify a component name.`);

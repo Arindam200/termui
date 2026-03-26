@@ -2,9 +2,21 @@ import { useCallback } from 'react';
 import { osc } from '../terminal/ansi.js';
 
 /**
- * OSC 52 clipboard hook.
- * write() sends data to the terminal's clipboard via OSC 52.
- * Note: read() is not universally supported; returns null on unsupported terminals.
+ * Write to the system clipboard using OSC 52 sequences.
+ *
+ * OSC 52 is supported by most modern terminals (iTerm2, Windows Terminal,
+ * Alacritty, Kitty, VS Code terminal). Falls back gracefully when not
+ * supported — writes are silently ignored.
+ *
+ * @returns `{ write(text): void }` — `write` sends `text` to the terminal
+ *   clipboard via an OSC 52 escape sequence.
+ *
+ * @example
+ * ```tsx
+ * const { write } = useClipboard();
+ * // Copy to clipboard:
+ * write('some text');
+ * ```
  */
 export function useClipboard() {
   const write = useCallback((text: string) => {

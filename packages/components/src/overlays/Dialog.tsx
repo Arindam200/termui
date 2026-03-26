@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useTheme } from '@termui/core';
+import { useInput, useTheme, getAccessibleName } from '@termui/core';
+import type { AriaProps } from '@termui/core';
 import type { ReactNode } from 'react';
 
-export interface DialogProps {
+export interface DialogProps extends AriaProps {
   title?: string;
   children: ReactNode;
   confirmLabel?: string;
@@ -23,8 +24,12 @@ export function Dialog({
   onCancel,
   variant = 'default',
   isOpen = false,
+  'aria-label': ariaLabel,
+  'aria-description': ariaDescription,
+  'aria-live': ariaLive,
 }: DialogProps) {
   const theme = useTheme();
+  const accessibleLabel = getAccessibleName(ariaLabel, title ?? 'Dialog');
   // focusedButton: 0 = cancel, 1 = confirm
   const [focusedButton, setFocusedButton] = useState<0 | 1>(0);
 
@@ -71,6 +76,12 @@ export function Dialog({
       <Box marginBottom={1} flexDirection="column">
         {children}
       </Box>
+      {ariaDescription && (
+        <Text color={theme.colors.mutedForeground} dimColor>
+          {' '}
+          {ariaDescription}
+        </Text>
+      )}
       <Box flexDirection="row" gap={2} justifyContent="flex-end" marginTop={1}>
         <Text
           color={focusedButton === 0 ? theme.colors.foreground : theme.colors.mutedForeground}

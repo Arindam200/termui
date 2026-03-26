@@ -5,43 +5,41 @@ on:
     branches: [main]
     paths:
       - 'registry/**'
-      - 'packages/components/src/**'
-      - 'scripts/publish-registry.mjs'
-      - '.github/workflows/publish-registry.yml'
-  workflow_dispatch:
-
-permissions:
-  contents: read
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
-  build:
-    name: Build registry
+  validate:
+    name: Validate Registry
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
-
-      - name: Sync registry from source
-        run: node scripts/publish-registry.mjs
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: registry
+          node-version: '20'
+      - name: Validate all schema.json entries have source files
+        run: |
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+          const schema = JSON.parse(fs.readFileSync('registry/schema.json', 'utf8'));
+          const components = schema.components || {};
+          let failed = false;
+          for (const [name, meta] of Object.entries(components)) {
+            const files = meta.files || [];
+            for (const file of files) {
+              const src = path.join('registry/components', name, file);
+              if (!fs.existsSync(src)) {
+                console.error('MISSING:', src);
+                failed = true;
+              }
+            }
+          }
+          if (failed) process.exit(1);
+          console.log('All registry source files present');
+          "
 
   deploy:
     name: Deploy to GitHub Pages
-    needs: build
+    needs: validate
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -50,6 +48,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: registry
+      - id: deployment
         uses: actions/deploy-pages@v4

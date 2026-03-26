@@ -17,6 +17,7 @@ import {
   getPropKind,
   getEnumValues,
   initPlayProps,
+  buildSearchResults,
 } from '../preview/render.js';
 import type { PreviewState } from '../preview/render.js';
 
@@ -38,6 +39,10 @@ export async function preview(_args: string[]): Promise<void> {
     playEditing: false,
     playEditBuffer: '',
     playScroll: 0,
+    searchMode: false,
+    searchQuery: '',
+    searchResults: [],
+    searchResultIndex: 0,
   };
 
   process.stdout.write(ansi.hideCursor);
@@ -68,6 +73,63 @@ export async function preview(_args: string[]): Promise<void> {
     const cat = state.categories[state.catIndex]!;
     const termRows = (process.stdout.rows || 30) - HEADER_ROWS - FOOTER_ROWS;
     const listRows = termRows - 3;
+
+    // ── search mode ────────────────────────────────────────────────────────
+    if (state.searchMode) {
+      if (key.name === 'escape') {
+        // Clear search entirely
+        state.searchMode = false;
+        state.searchQuery = '';
+        state.searchResults = [];
+        state.searchResultIndex = 0;
+        state.scrollOffset = 0;
+      } else if (key.name === 'return') {
+        // Jump to selected search result
+        if (state.searchResults.length > 0) {
+          const result = state.searchResults[state.searchResultIndex];
+          if (result) {
+            state.catIndex = result.catIndex;
+            state.compIndex = result.compIndex;
+            state.scrollOffset = 0;
+            state.detailScroll = 0;
+            // Exit search and enter detail view
+            state.searchMode = false;
+            state.searchQuery = '';
+            state.searchResults = [];
+            state.searchResultIndex = 0;
+            state.mode = 'detail';
+          }
+        } else {
+          state.searchMode = false;
+        }
+      } else if (key.name === 'up' || key.name === 'k') {
+        if (state.searchResultIndex > 0) {
+          state.searchResultIndex--;
+          if (state.searchResultIndex < state.scrollOffset) {
+            state.scrollOffset = state.searchResultIndex;
+          }
+        }
+      } else if (key.name === 'down' || key.name === 'j') {
+        if (state.searchResultIndex < state.searchResults.length - 1) {
+          state.searchResultIndex++;
+          if (state.searchResultIndex >= state.scrollOffset + listRows) {
+            state.scrollOffset = state.searchResultIndex - listRows + 1;
+          }
+        }
+      } else if (key.name === 'backspace') {
+        state.searchQuery = state.searchQuery.slice(0, -1);
+        state.searchResults = buildSearchResults(state.categories, state.searchQuery);
+        state.searchResultIndex = 0;
+        state.scrollOffset = 0;
+      } else if (_str && !key.ctrl && !key.meta && _str.length === 1) {
+        state.searchQuery += _str;
+        state.searchResults = buildSearchResults(state.categories, state.searchQuery);
+        state.searchResultIndex = 0;
+        state.scrollOffset = 0;
+      }
+      render(state);
+      return;
+    }
 
     // ── playground mode ────────────────────────────────────────────────────
     if (state.mode === 'playground') {
@@ -178,6 +240,13 @@ export async function preview(_args: string[]): Promise<void> {
         state.playEditing = false;
         state.playScroll = 0;
         state.mode = 'playground';
+      } else if (_str === '/') {
+        // Enter search mode
+        state.searchMode = true;
+        state.searchQuery = '';
+        state.searchResults = [];
+        state.searchResultIndex = 0;
+        state.scrollOffset = 0;
       }
 
       // ── detail mode ────────────────────────────────────────────────────────
@@ -215,6 +284,14 @@ export async function preview(_args: string[]): Promise<void> {
           state.compIndex = 0;
           state.scrollOffset = 0;
         }
+      } else if (_str === '/') {
+        // Enter search mode from detail view too
+        state.searchMode = true;
+        state.searchQuery = '';
+        state.searchResults = [];
+        state.searchResultIndex = 0;
+        state.scrollOffset = 0;
+        state.mode = 'list';
       }
     }
 
@@ -241,7 +318,15 @@ ${ansi.bold}Navigation:${ansi.reset}
   ${ansi.cyan}← Esc h${ansi.reset}      Back to list
   ${ansi.cyan}Tab${ansi.reset}          Next component (in detail view)
   ${ansi.cyan}p${ansi.reset}            Open Props Playground for current component
+  ${ansi.cyan}/${ansi.reset}            Open fuzzy search across all components
   ${ansi.cyan}q${ansi.reset}            Quit
+
+${ansi.bold}Search:${ansi.reset}
+  ${ansi.cyan}/${ansi.reset}            Enter search mode (available in list and detail modes)
+  ${ansi.cyan}type${ansi.reset}         Filter components by name or description in real-time
+  ${ansi.cyan}↑ ↓${ansi.reset}          Navigate through results
+  ${ansi.cyan}Enter${ansi.reset}         Jump to selected component's detail view
+  ${ansi.cyan}Esc${ansi.reset}          Clear search and return to full list
 
 ${ansi.bold}Props Playground:${ansi.reset}
   ${ansi.cyan}↑ ↓${ansi.reset}          Navigate props

@@ -1,0 +1,9 @@
+{
+  "name": "notification-center",
+  "description": "Persistent queue-based notification panel with useNotifications hook",
+  "version": "0.1.0",
+  "category": "overlays",
+  "files": ["NotificationCenter.tsx", "NotificationBadge.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

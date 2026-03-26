@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useFocus, useTheme } from '@termui/core';
+import { useInput, useFocus, useTheme, getAccessibleName } from '@termui/core';
+import type { AriaProps } from '@termui/core';
 
-export interface ToggleProps {
+export interface ToggleProps extends AriaProps {
   checked?: boolean;
   onChange?: (checked: boolean) => void;
   label?: string;
@@ -39,11 +40,15 @@ export function Toggle({
   uncheckedIcon = '○',
   borderStyle = 'round',
   paddingX = 1,
+  'aria-label': ariaLabel,
+  'aria-description': ariaDescription,
+  'aria-live': ariaLive,
 }: ToggleProps) {
   const theme = useTheme();
   const { isFocused } = useFocus({ id });
   const [internalChecked, setInternalChecked] = useState(false);
   const checked = controlledChecked ?? internalChecked;
+  const accessibleLabel = getAccessibleName(ariaLabel, label ?? 'Toggle');
 
   useInput((input) => {
     if (!isFocused || disabled) return;
@@ -58,15 +63,23 @@ export function Toggle({
   const stateLabel = checked ? onLabel : offLabel;
 
   return (
-    <Box gap={1} alignItems="center">
-      <Box borderStyle={borderStyle} borderColor={focusColor} paddingX={paddingX}>
-        <Text color={focusColor} bold={checked}>
-          {checked ? checkedIcon : uncheckedIcon} {stateLabel}
-        </Text>
+    <Box flexDirection="column">
+      <Box gap={1} alignItems="center">
+        <Box borderStyle={borderStyle} borderColor={focusColor} paddingX={paddingX}>
+          <Text color={focusColor} bold={checked}>
+            {checked ? checkedIcon : uncheckedIcon} {stateLabel}
+          </Text>
+        </Box>
+        {label && (
+          <Text color={disabled ? theme.colors.mutedForeground : theme.colors.foreground}>
+            {label}
+          </Text>
+        )}
       </Box>
-      {label && (
-        <Text color={disabled ? theme.colors.mutedForeground : theme.colors.foreground}>
-          {label}
+      {ariaDescription && (
+        <Text color={theme.colors.mutedForeground} dimColor>
+          {' '}
+          {ariaDescription}
         </Text>
       )}
     </Box>

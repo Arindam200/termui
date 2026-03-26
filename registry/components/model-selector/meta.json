@@ -1,0 +1,9 @@
+{
+  "name": "model-selector",
+  "description": "Keyboard-navigable list for selecting an AI model, with optional provider grouping and context-window display",
+  "category": "ai",
+  "version": "1.0.0",
+  "files": ["ModelSelector.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

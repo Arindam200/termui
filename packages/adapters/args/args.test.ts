@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createCLI } from './index.js';
+import { createCLI, createMinimalCLI } from './index.js';
 import type { CLIConfig } from './index.js';
 
 // ── Fixture CLI config ─────────────────────────────────────────────────────
@@ -289,5 +289,85 @@ describe('parse — multiple args mixed styles', () => {
     const result = cli.parse(['build', '--output', 'prod', '--minify=true']);
     expect(result!.args['output']).toBe('prod');
     expect(result!.args['minify']).toBe(true);
+  });
+});
+
+// ── createMinimalCLI — basic usage ────────────────────────────────────────
+
+describe('createMinimalCLI — basic usage', () => {
+  it('is the same function reference as createCLI', () => {
+    expect(createMinimalCLI).toBe(createCLI);
+  });
+
+  it('returns an object with parse, help and version methods', () => {
+    const cli = createMinimalCLI({ name: 'minimal', version: '0.0.1', commands: {} });
+    expect(typeof cli.parse).toBe('function');
+    expect(typeof cli.help).toBe('function');
+    expect(typeof cli.version).toBe('function');
+  });
+});
+
+// ── createMinimalCLI — help output with name ──────────────────────────────
+
+describe('createMinimalCLI — help output', () => {
+  beforeEach(() => vi.spyOn(console, 'log').mockImplementation(() => {}));
+  afterEach(() => vi.restoreAllMocks());
+
+  it('--help output includes the CLI name', () => {
+    const cli = createMinimalCLI({ name: 'my-tool', version: '1.0.0', commands: {} });
+    cli.parse(['--help']);
+    const allOutput = (console.log as ReturnType<typeof vi.fn>).mock.calls
+      .map(([arg]) => stripAnsi(String(arg)))
+      .join('\n');
+    expect(allOutput).toContain('my-tool');
+  });
+
+  it('help() with an empty commands object still renders the CLI name', () => {
+    const cli = createMinimalCLI({ name: 'empty-cli', version: '0.1.0', commands: {} });
+    cli.help();
+    const allOutput = (console.log as ReturnType<typeof vi.fn>).mock.calls
+      .map(([arg]) => stripAnsi(String(arg)))
+      .join('\n');
+    expect(allOutput).toContain('empty-cli');
+  });
+});
+
+// ── createCLI — version in help output ────────────────────────────────────
+
+describe('createCLI — version in help output', () => {
+  beforeEach(() => vi.spyOn(console, 'log').mockImplementation(() => {}));
+  afterEach(() => vi.restoreAllMocks());
+
+  it('help() output includes the version string', () => {
+    const cli = createCLI({ name: 'my-cli', version: '1.0.0', commands: {} });
+    cli.help();
+    const allOutput = (console.log as ReturnType<typeof vi.fn>).mock.calls
+      .map(([arg]) => stripAnsi(String(arg)))
+      .join('\n');
+    expect(allOutput).toContain('1.0.0');
+  });
+
+  it('help() output includes both name and version together', () => {
+    const cli = createCLI({ name: 'versioned-cli', version: '2.5.3', commands: {} });
+    cli.help();
+    const allOutput = (console.log as ReturnType<typeof vi.fn>).mock.calls
+      .map(([arg]) => stripAnsi(String(arg)))
+      .join('\n');
+    expect(allOutput).toContain('versioned-cli');
+    expect(allOutput).toContain('2.5.3');
+  });
+
+  it('help() output includes description when provided', () => {
+    const cli = createCLI({
+      name: 'described-cli',
+      version: '1.0.0',
+      description: 'Builds and deploys things',
+      commands: {},
+    });
+    cli.help();
+    const allOutput = (console.log as ReturnType<typeof vi.fn>).mock.calls
+      .map(([arg]) => stripAnsi(String(arg)))
+      .join('\n');
+    expect(allOutput).toContain('Builds and deploys things');
   });
 });

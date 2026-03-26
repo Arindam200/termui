@@ -1,9 +1,10 @@
 import React from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useTheme } from '@termui/core';
+import { useInput, useTheme, getAccessibleName } from '@termui/core';
+import type { AriaProps } from '@termui/core';
 import type { ReactNode } from 'react';
 
-export interface ModalProps {
+export interface ModalProps extends AriaProps {
   open: boolean;
   onClose: () => void;
   title?: string;
@@ -49,9 +50,13 @@ export function Modal({
   paddingY = 0,
   titleBorderStyle = 'single',
   closeHint = 'Press Esc to close',
+  'aria-label': ariaLabel,
+  'aria-description': ariaDescription,
+  'aria-live': ariaLive,
 }: ModalProps) {
   const theme = useTheme();
   const resolvedBorderColor = borderColor ?? theme.colors.primary;
+  const accessibleLabel = getAccessibleName(ariaLabel, title ?? 'Modal');
 
   useInput(
     (input, key) => {
@@ -85,6 +90,12 @@ export function Modal({
         </Box>
       )}
       <Box flexDirection="column">{children}</Box>
+      {ariaDescription && (
+        <Text color={theme.colors.mutedForeground} dimColor>
+          {' '}
+          {ariaDescription}
+        </Text>
+      )}
       {closeHint !== false && (
         <Box marginTop={1}>
           <Text color={theme.colors.mutedForeground} dimColor>

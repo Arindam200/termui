@@ -1,0 +1,9 @@
+{
+  "name": "tool-approval",
+  "description": "Interactive approval prompt for AI tool calls with risk-level badge, args display, and auto-deny timeout",
+  "category": "ai",
+  "version": "1.0.0",
+  "files": ["ToolApproval.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

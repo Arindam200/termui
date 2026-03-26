@@ -26,7 +26,10 @@ export function CheckboxGroup({
   max,
 }: CheckboxGroupProps) {
   const theme = useTheme();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(() => {
+    const first = options.findIndex((o) => !o.disabled);
+    return first >= 0 ? first : 0;
+  });
   const [internalSelected, setInternalSelected] = useState<string[]>([]);
   const [error, setError] = useState<string | undefined>(undefined);
 

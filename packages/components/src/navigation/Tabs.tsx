@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Box, Text, useStdout } from 'ink';
-import { useInput, useTheme } from '@termui/core';
+import { Box, Text } from 'ink';
+import { useInput, useTheme, getAccessibleName } from '@termui/core';
+import type { AriaProps } from '@termui/core';
 import type { ReactNode } from 'react';
 
 export interface Tab {
@@ -9,7 +10,7 @@ export interface Tab {
   content: ReactNode;
 }
 
-export interface TabsProps {
+export interface TabsProps extends AriaProps {
   tabs: Tab[];
   defaultTab?: string;
   activeTab?: string;
@@ -45,9 +46,11 @@ export function Tabs({
   tabBarPaddingX = 2,
   paddingX = 1,
   paddingY = 0,
+  'aria-label': ariaLabel,
+  'aria-description': ariaDescription,
+  'aria-live': ariaLive,
 }: TabsProps) {
   const theme = useTheme();
-  const { stdout } = useStdout();
   const [internalTab, setInternalTab] = useState(defaultTab ?? tabs[0]?.key ?? '');
   const activeKey = controlledTab ?? internalTab;
   const activeIndex = tabs.findIndex((t) => t.key === activeKey);
@@ -56,13 +59,10 @@ export function Tabs({
 
   function switchTab(nextKey: string | undefined) {
     if (!nextKey || nextKey === activeKey) return;
-    // Clear the entire screen before switching so Ink redraws from a clean
-    // slate — prevents old lines from a taller tab persisting as ghost content.
-    stdout.write('\x1b[2J\x1b[H');
     onTabChange ? onTabChange(nextKey) : setInternalTab(nextKey);
   }
 
-  useInput((input, key) => {
+  useInput((_input, key) => {
     if (key.leftArrow || (key.shift && key.tab)) {
       switchTab(tabs[Math.max(0, activeIndex - 1)]?.key);
     } else if (key.rightArrow || key.tab) {
@@ -74,6 +74,12 @@ export function Tabs({
 
   return (
     <Box flexDirection="column">
+      {ariaDescription && (
+        <Text color={theme.colors.mutedForeground} dimColor>
+          {' '}
+          {ariaDescription}
+        </Text>
+      )}
       {/* Tab bar — plain row, no border */}
       <Box paddingX={tabBarPaddingX} gap={0}>
         {tabs.map((tab, idx) => {

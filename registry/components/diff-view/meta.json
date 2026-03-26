@@ -1,0 +1,9 @@
+{
+  "name": "diff-view",
+  "description": "Unified, split, and inline diff viewer with LCS-based diff algorithm and line numbers",
+  "version": "1.0.0",
+  "category": "data",
+  "files": ["DiffView.tsx"],
+  "deps": [],
+  "peerComponents": []
+}

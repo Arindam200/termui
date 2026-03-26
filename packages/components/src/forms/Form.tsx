@@ -1,6 +1,7 @@
 import React, { useState, useCallback, createContext, useContext } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useTheme } from '@termui/core';
+import { useInput, useTheme, getAccessibleName } from '@termui/core';
+import type { AriaProps } from '@termui/core';
 import type { ReactNode } from 'react';
 
 interface FormContextValue {
@@ -28,15 +29,24 @@ export interface FormField {
   validate?: (value: unknown) => string | null;
 }
 
-export interface FormProps {
+export interface FormProps extends AriaProps {
   onSubmit: (values: Record<string, unknown>) => void;
   initialValues?: Record<string, unknown>;
   fields?: FormField[];
   children: ReactNode;
 }
 
-export function Form({ onSubmit, initialValues = {}, fields = [], children }: FormProps) {
+export function Form({
+  onSubmit,
+  initialValues = {},
+  fields = [],
+  children,
+  'aria-label': ariaLabel,
+  'aria-description': ariaDescription,
+  'aria-live': ariaLive,
+}: FormProps) {
   const theme = useTheme();
+  const accessibleLabel = getAccessibleName(ariaLabel, 'Form');
   const [values, setValues] = useState<Record<string, unknown>>(initialValues);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isDirty, setIsDirty] = useState(false);
@@ -69,6 +79,12 @@ export function Form({ onSubmit, initialValues = {}, fields = [], children }: Fo
   return (
     <FormContext.Provider value={{ values, errors, isDirty, setFieldValue, setFieldError }}>
       <Box flexDirection="column" gap={1}>
+        {ariaDescription && (
+          <Text color={theme.colors.mutedForeground} dimColor>
+            {' '}
+            {ariaDescription}
+          </Text>
+        )}
         {children}
         <Text color={theme.colors.mutedForeground} dimColor>
           Press Ctrl+S to submit

@@ -11,39 +11,147 @@
 
 import readline from 'readline';
 
-// ─── ANSI helpers ─────────────────────────────────────────────────────────────
+// ─── Color environment detection ──────────────────────────────────────────────
+// Respects NO_COLOR (https://no-color.org), FORCE_COLOR, and CLICOLOR.
+
+function isColorEnabled(): boolean {
+  const noColor = process.env['NO_COLOR'];
+  if (noColor !== undefined && noColor !== '') return false;
+  const force = process.env['FORCE_COLOR'];
+  if (force === '0' || force === 'false') return false;
+  if (force === '1' || force === '2' || force === '3' || force === 'true') return true;
+  const cliColor = process.env['CLICOLOR'];
+  if (cliColor === '0') return false;
+  if (cliColor === '1') return true;
+  return process.stdout.isTTY === true;
+}
+
+// ─── picocolors-style wrap helper ─────────────────────────────────────────────
+
+function wrap(open: string, close: string) {
+  return (str: string): string => {
+    if (!isColorEnabled()) return str;
+    return `${open}${str}${close}`;
+  };
+}
+
+// ─── pc — functional color API (picocolors-compatible) ────────────────────────
+
+export const pc = {
+  // Modifiers
+  reset: wrap('\x1b[0m', '\x1b[0m'),
+  bold: wrap('\x1b[1m', '\x1b[22m'),
+  dim: wrap('\x1b[2m', '\x1b[22m'),
+  // Foreground colors
+  gray: wrap('\x1b[90m', '\x1b[39m'),
+  white: wrap('\x1b[97m', '\x1b[39m'),
+  cyan: wrap('\x1b[36m', '\x1b[39m'),
+  magenta: wrap('\x1b[35m', '\x1b[39m'),
+  green: wrap('\x1b[32m', '\x1b[39m'),
+  yellow: wrap('\x1b[33m', '\x1b[39m'),
+  red: wrap('\x1b[31m', '\x1b[39m'),
+  blue: wrap('\x1b[34m', '\x1b[39m'),
+  // Background colors
+  bgCyan: wrap('\x1b[46m', '\x1b[49m'),
+  bgGreen: wrap('\x1b[42m', '\x1b[49m'),
+  bgRed: wrap('\x1b[41m', '\x1b[49m'),
+  // 256-color foreground (medium gray for logo)
+  ansi256(code: number): (str: string) => string {
+    return (str: string): string => {
+      if (!isColorEnabled()) return str;
+      return `\x1b[38;5;${code}m${str}\x1b[39m`;
+    };
+  },
+};
+
+// ─── ANSI helpers (backward-compatible raw-string object) ─────────────────────
+// Callers that reference e.g. `c.bold`, `c.cyan`, `${c.red}...${c.reset}` as
+// plain strings continue to work.  Color stripping is applied here so that
+// NO_COLOR / FORCE_COLOR is respected even for the raw-string API.
+
+function raw(ansi: string, fallback = ''): string {
+  return isColorEnabled() ? ansi : fallback;
+}
 
 export const c = {
-  reset: '\x1b[0m',
-  bold: '\x1b[1m',
-  dim: '\x1b[2m',
+  get reset() {
+    return raw('\x1b[0m');
+  },
+  get bold() {
+    return raw('\x1b[1m');
+  },
+  get dim() {
+    return raw('\x1b[2m');
+  },
   // Foreground
-  gray: '\x1b[90m',
-  white: '\x1b[97m',
-  cyan: '\x1b[36m',
-  magenta: '\x1b[35m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  red: '\x1b[31m',
-  blue: '\x1b[34m',
+  get gray() {
+    return raw('\x1b[90m');
+  },
+  get white() {
+    return raw('\x1b[97m');
+  },
+  get cyan() {
+    return raw('\x1b[36m');
+  },
+  get magenta() {
+    return raw('\x1b[35m');
+  },
+  get green() {
+    return raw('\x1b[32m');
+  },
+  get yellow() {
+    return raw('\x1b[33m');
+  },
+  get red() {
+    return raw('\x1b[31m');
+  },
+  get blue() {
+    return raw('\x1b[34m');
+  },
   // Background
-  bgCyan: '\x1b[46m',
-  bgGreen: '\x1b[42m',
-  bgRed: '\x1b[41m',
+  get bgCyan() {
+    return raw('\x1b[46m');
+  },
+  get bgGreen() {
+    return raw('\x1b[42m');
+  },
+  get bgRed() {
+    return raw('\x1b[41m');
+  },
   // 256-color foreground (medium gray for logo)
-  logoGray: '\x1b[38;5;245m',
+  get logoGray() {
+    return raw('\x1b[38;5;245m');
+  },
 };
 
 export const sym = {
-  pipe: `${c.gray}│${c.reset}`,
-  hollow: `${c.gray}◇${c.reset}`,
-  filled: `${c.cyan}◆${c.reset}`,
-  done: `${c.green}◆${c.reset}`,
-  warn: `${c.yellow}◇${c.reset}`,
-  error: `${c.red}◆${c.reset}`,
-  corner: `${c.gray}└${c.reset}`,
-  tick: `${c.green}✓${c.reset}`,
-  skip: `${c.yellow}~${c.reset}`,
+  get pipe() {
+    return pc.gray('│');
+  },
+  get hollow() {
+    return pc.gray('◇');
+  },
+  get filled() {
+    return pc.cyan('◆');
+  },
+  get done() {
+    return pc.green('◆');
+  },
+  get warn() {
+    return pc.yellow('◇');
+  },
+  get error() {
+    return pc.red('◆');
+  },
+  get corner() {
+    return pc.gray('└');
+  },
+  get tick() {
+    return pc.green('✓');
+  },
+  get skip() {
+    return pc.yellow('~');
+  },
 };
 
 // ─── ASCII art logo ────────────────────────────────────────────────────────────
@@ -61,7 +169,7 @@ const LOGO_LINES = [
 export function printLogo(): void {
   console.log('');
   for (const line of LOGO_LINES) {
-    console.log(`  ${c.logoGray}${line}${c.reset}`);
+    console.log(`  ${pc.ansi256(245)(line)}`);
   }
   console.log('');
 }
@@ -69,7 +177,9 @@ export function printLogo(): void {
 // ─── Badge ────────────────────────────────────────────────────────────────────
 
 export function badge(text: string): string {
-  return `${c.bold}${c.bgCyan}\x1b[30m ${text} ${c.reset}`;
+  // Bold + bgCyan + black fg (30m) around the label
+  if (!isColorEnabled()) return ` ${text} `;
+  return `\x1b[1m\x1b[46m\x1b[30m ${text} \x1b[0m`;
 }
 
 // ─── Step lines ───────────────────────────────────────────────────────────────
@@ -113,16 +223,16 @@ export function outro(text: string): void {
 // ─── Inline highlights ────────────────────────────────────────────────────────
 
 export function hi(text: string): string {
-  return `${c.cyan}${text}${c.reset}`;
+  return pc.cyan(text);
 }
 export function dim(text: string): string {
-  return `${c.dim}${text}${c.reset}`;
+  return pc.dim(text);
 }
 export function bold(text: string): string {
-  return `${c.bold}${text}${c.reset}`;
+  return pc.bold(text);
 }
 export function gr(text: string): string {
-  return `${c.green}${text}${c.reset}`;
+  return pc.green(text);
 }
 
 // ─── Interactive: single-choice select ────────────────────────────────────────
