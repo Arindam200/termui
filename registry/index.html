@@ -5,46 +5,584 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TermUI Registry</title>
   <style>
-    body { font-family: monospace; max-width: 860px; margin: 40px auto; padding: 0 20px; background: #0d0d0d; color: #cdd6f4; }
-    h1 { color: #cba6f7; } h2 { color: #89b4fa; border-bottom: 1px solid #313244; padding-bottom: 6px; }
-    a { color: #89dceb; text-decoration: none; } a:hover { text-decoration: underline; }
-    code { background: #181825; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
-    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-    td { padding: 6px 10px; vertical-align: top; border-bottom: 1px solid #1e1e2e; }
-    .cat { color: #a6e3a1; white-space: nowrap; width: 120px; }
-    .meta { color: #6c7086; font-size: 0.85em; margin-top: 8px; }
-    pre { background: #181825; padding: 12px 16px; border-radius: 6px; overflow-x: auto; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0d0d0d;
+      --surface:  #111116;
+      --border:   #1e1e2e;
+      --border2:  #313244;
+      --fg:       #cdd6f4;
+      --muted:    #6c7086;
+      --purple:   #cba6f7;
+      --blue:     #89b4fa;
+      --cyan:     #89dceb;
+      --green:    #a6e3a1;
+      --yellow:   #f9e2af;
+      --red:      #f38ba8;
+      --pink:     #f5c2e7;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      border-bottom: 1px solid var(--border);
+      padding: 60px 24px 48px;
+      text-align: center;
+    }
+    .hero-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .hero-logo .icon {
+      font-size: 2.4rem;
+      line-height: 1;
+    }
+    .hero-logo h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: -0.5px;
+    }
+    .hero-tagline {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+    }
+    .hero-badges {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      color: var(--muted);
+    }
+    .badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .badge.purple .dot { background: var(--purple); }
+    .badge.blue   .dot { background: var(--blue);   }
+    .badge.green  .dot { background: var(--green);  }
+    .badge.cyan   .dot { background: var(--cyan);   }
+
+    .install-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 0.95rem;
+      color: var(--cyan);
+    }
+    .install-box .prompt { color: var(--muted); user-select: none; }
+    .install-box .copy-btn {
+      background: none;
+      border: 1px solid var(--border2);
+      color: var(--muted);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .install-box .copy-btn:hover { color: var(--fg); border-color: var(--fg); }
+
+    /* ── Layout ── */
+    .content {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── Section headers ── */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 20px;
+      margin-top: 48px;
+    }
+    .section-header:first-of-type { margin-top: 0; }
+    .section-header h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .section-header .count {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    hr.section-rule {
+      border: none;
+      border-top: 1px solid var(--border);
+      flex: 1;
+    }
+
+    /* ── Quick-start cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      transition: border-color 0.15s;
+    }
+    .card:hover { border-color: var(--border2); }
+    .card .card-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    .card pre {
+      font-size: 0.85rem;
+      color: var(--cyan);
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* ── Component table ── */
+    .comp-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .comp-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .comp-row:hover .comp-names { background: #16161e; }
+    .comp-cat {
+      display: flex;
+      align-items: flex-start;
+      padding: 10px 12px;
+      background: var(--surface);
+      color: var(--green);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-right: 1px solid var(--border);
+      border: 1px solid var(--border);
+      border-right: none;
+      border-radius: 6px 0 0 6px;
+    }
+    .comp-cat .cat-icon {
+      margin-right: 6px;
+      opacity: 0.7;
+    }
+    .comp-names {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 10px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: none;
+      border-radius: 0 6px 6px 0;
+      transition: background 0.1s;
+    }
+    .comp-names a {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #1e1e2e;
+      color: var(--cyan);
+      font-size: 0.8rem;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: border-color 0.12s, color 0.12s;
+    }
+    .comp-names a:hover {
+      border-color: var(--cyan);
+      color: #fff;
+    }
+    .comp-names a.new {
+      color: var(--yellow);
+    }
+    .comp-names a.new:hover {
+      border-color: var(--yellow);
+    }
+    .comp-names a.ai-tag {
+      color: var(--purple);
+    }
+    .comp-names a.ai-tag:hover {
+      border-color: var(--purple);
+    }
+
+    /* ── API reference ── */
+    .api-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .api-table th {
+      text-align: left;
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      border-bottom: 1px solid var(--border);
+    }
+    .api-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .api-table td:first-child { color: var(--cyan); }
+    .api-table td:last-child { color: var(--muted); font-size: 0.82rem; }
+    .api-table tr:last-child td { border-bottom: none; }
+    .api-table a { color: inherit; text-decoration: none; }
+    .api-table a:hover { text-decoration: underline; }
+    .api-table code {
+      background: var(--border);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 0.82em;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    .footer a { color: var(--blue); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .footer .sep { margin: 0 10px; opacity: 0.4; }
   </style>
 </head>
 <body>
-  <h1>TermUI Registry</h1>
-  <p class="meta">91 components &nbsp;·&nbsp; v1.0.0 &nbsp;·&nbsp; Updated 2026-03-22</p>
 
-  <h2>Install a component</h2>
-  <pre>npx termui add spinner</pre>
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-logo">
+      <span class="icon">◆</span>
+      <h1>TermUI Registry</h1>
+    </div>
+    <p class="hero-tagline">shadcn-style terminal UI components for React + Ink</p>
+    <div class="hero-badges">
+      <span class="badge purple"><span class="dot"></span>113 components</span>
+      <span class="badge blue"><span class="dot"></span>v1.4.0</span>
+      <span class="badge green"><span class="dot"></span>13 categories</span>
+      <span class="badge cyan"><span class="dot"></span>TypeScript</span>
+    </div>
+    <div class="install-box">
+      <span class="prompt">$</span>
+      <span>npx termui add &lt;component&gt;</span>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText('npx termui add spinner');this.textContent='copied!';setTimeout(()=>this.textContent='copy',1500)">copy</button>
+    </div>
+  </div>
 
-  <h2>API endpoints</h2>
-  <ul>
-    <li><a href="schema.json">schema.json</a> — full component manifest</li>
-    <li><code>components/&lt;name&gt;/meta.json</code> — component metadata</li>
-    <li><code>components/&lt;name&gt;/&lt;Name&gt;.tsx</code> — component source</li>
-  </ul>
+  <div class="content">
 
-  <h2>Components (91)</h2>
-  <table><tr><td class="cat">layout</td><td><a href="components/box/meta.json"><code>box</code></a> <a href="components/stack/meta.json"><code>stack</code></a> <a href="components/grid/meta.json"><code>grid</code></a> <a href="components/scroll-view/meta.json"><code>scroll-view</code></a> <a href="components/divider/meta.json"><code>divider</code></a> <a href="components/spacer/meta.json"><code>spacer</code></a> <a href="components/columns/meta.json"><code>columns</code></a> <a href="components/center/meta.json"><code>center</code></a> <a href="components/aspect-ratio/meta.json"><code>aspect-ratio</code></a></td></tr>
-<tr><td class="cat">typography</td><td><a href="components/text/meta.json"><code>text</code></a> <a href="components/badge/meta.json"><code>badge</code></a> <a href="components/heading/meta.json"><code>heading</code></a> <a href="components/code/meta.json"><code>code</code></a> <a href="components/link/meta.json"><code>link</code></a> <a href="components/tag/meta.json"><code>tag</code></a> <a href="components/markdown/meta.json"><code>markdown</code></a> <a href="components/gradient/meta.json"><code>gradient</code></a> <a href="components/big-text/meta.json"><code>big-text</code></a> <a href="components/digits/meta.json"><code>digits</code></a></td></tr>
-<tr><td class="cat">input</td><td><a href="components/text-input/meta.json"><code>text-input</code></a> <a href="components/text-area/meta.json"><code>text-area</code></a> <a href="components/password-input/meta.json"><code>password-input</code></a> <a href="components/number-input/meta.json"><code>number-input</code></a> <a href="components/search-input/meta.json"><code>search-input</code></a> <a href="components/masked-input/meta.json"><code>masked-input</code></a> <a href="components/email-input/meta.json"><code>email-input</code></a> <a href="components/path-input/meta.json"><code>path-input</code></a></td></tr>
-<tr><td class="cat">selection</td><td><a href="components/checkbox/meta.json"><code>checkbox</code></a> <a href="components/select/meta.json"><code>select</code></a> <a href="components/multi-select/meta.json"><code>multi-select</code></a> <a href="components/radio-group/meta.json"><code>radio-group</code></a> <a href="components/checkbox-group/meta.json"><code>checkbox-group</code></a> <a href="components/tree-select/meta.json"><code>tree-select</code></a> <a href="components/tag-input/meta.json"><code>tag-input</code></a> <a href="components/color-picker/meta.json"><code>color-picker</code></a></td></tr>
-<tr><td class="cat">data</td><td><a href="components/list/meta.json"><code>list</code></a> <a href="components/table/meta.json"><code>table</code></a> <a href="components/json/meta.json"><code>json</code></a> <a href="components/virtual-list/meta.json"><code>virtual-list</code></a> <a href="components/tree/meta.json"><code>tree</code></a> <a href="components/directory-tree/meta.json"><code>directory-tree</code></a> <a href="components/key-value/meta.json"><code>key-value</code></a> <a href="components/definition/meta.json"><code>definition</code></a> <a href="components/card/meta.json"><code>card</code></a> <a href="components/git-status/meta.json"><code>git-status</code></a></td></tr>
-<tr><td class="cat">feedback</td><td><a href="components/spinner/meta.json"><code>spinner</code></a> <a href="components/progress-bar/meta.json"><code>progress-bar</code></a> <a href="components/alert/meta.json"><code>alert</code></a> <a href="components/progress-circle/meta.json"><code>progress-circle</code></a> <a href="components/status-message/meta.json"><code>status-message</code></a> <a href="components/toast/meta.json"><code>toast</code></a> <a href="components/banner/meta.json"><code>banner</code></a> <a href="components/skeleton/meta.json"><code>skeleton</code></a></td></tr>
-<tr><td class="cat">navigation</td><td><a href="components/tabs/meta.json"><code>tabs</code></a> <a href="components/tabbed-content/meta.json"><code>tabbed-content</code></a> <a href="components/breadcrumb/meta.json"><code>breadcrumb</code></a> <a href="components/pagination/meta.json"><code>pagination</code></a> <a href="components/command-palette/meta.json"><code>command-palette</code></a> <a href="components/menu/meta.json"><code>menu</code></a> <a href="components/sidebar/meta.json"><code>sidebar</code></a></td></tr>
-<tr><td class="cat">overlays</td><td><a href="components/modal/meta.json"><code>modal</code></a> <a href="components/dialog/meta.json"><code>dialog</code></a> <a href="components/drawer/meta.json"><code>drawer</code></a> <a href="components/tooltip/meta.json"><code>tooltip</code></a> <a href="components/popover/meta.json"><code>popover</code></a></td></tr>
-<tr><td class="cat">forms</td><td><a href="components/form/meta.json"><code>form</code></a> <a href="components/form-field/meta.json"><code>form-field</code></a> <a href="components/wizard/meta.json"><code>wizard</code></a> <a href="components/confirm/meta.json"><code>confirm</code></a> <a href="components/date-picker/meta.json"><code>date-picker</code></a> <a href="components/time-picker/meta.json"><code>time-picker</code></a> <a href="components/file-picker/meta.json"><code>file-picker</code></a></td></tr>
-<tr><td class="cat">utility</td><td><a href="components/panel/meta.json"><code>panel</code></a> <a href="components/toggle/meta.json"><code>toggle</code></a> <a href="components/embedded-terminal/meta.json"><code>embedded-terminal</code></a> <a href="components/timer/meta.json"><code>timer</code></a> <a href="components/stopwatch/meta.json"><code>stopwatch</code></a> <a href="components/clock/meta.json"><code>clock</code></a> <a href="components/clipboard/meta.json"><code>clipboard</code></a> <a href="components/keyboard-shortcuts/meta.json"><code>keyboard-shortcuts</code></a> <a href="components/help/meta.json"><code>help</code></a> <a href="components/error-boundary/meta.json"><code>error-boundary</code></a> <a href="components/log/meta.json"><code>log</code></a> <a href="components/image/meta.json"><code>image</code></a> <a href="components/qr-code/meta.json"><code>qr-code</code></a></td></tr>
-<tr><td class="cat">charts</td><td><a href="components/sparkline/meta.json"><code>sparkline</code></a> <a href="components/bar-chart/meta.json"><code>bar-chart</code></a> <a href="components/line-chart/meta.json"><code>line-chart</code></a> <a href="components/pie-chart/meta.json"><code>pie-chart</code></a> <a href="components/heat-map/meta.json"><code>heat-map</code></a> <a href="components/gauge/meta.json"><code>gauge</code></a></td></tr></table>
+    <!-- Quick start -->
+    <div class="section-header">
+      <h2>Quick start</h2>
+      <hr class="section-rule" />
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">Initialize</div>
+        <pre>npx termui init</pre>
+      </div>
+      <div class="card">
+        <div class="card-label">Add a component</div>
+        <pre>npx termui add spinner</pre>
+      </div>
+      <div class="card">
+        <div class="card-label">Browse interactively</div>
+        <pre>npx termui preview</pre>
+      </div>
+      <div class="card">
+        <div class="card-label">Apply a theme</div>
+        <pre>npx termui theme</pre>
+      </div>
+    </div>
 
-  <p class="meta">
-    <a href="https://github.com/arindam200/termui">GitHub</a>
-  </p>
+    <!-- API -->
+    <div class="section-header">
+      <h2>API endpoints</h2>
+      <hr class="section-rule" />
+    </div>
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th>Endpoint</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="schema.json">schema.json</a></td>
+          <td>Full component manifest — all 113 entries with category, deps, and file list</td>
+        </tr>
+        <tr>
+          <td><code>components/&lt;name&gt;/meta.json</code></td>
+          <td>Per-component metadata: name, version, description, files, deps</td>
+        </tr>
+        <tr>
+          <td><code>components/&lt;name&gt;/&lt;Name&gt;.tsx</code></td>
+          <td>Raw component source — fetched by <code>npx termui add</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Components -->
+    <div class="section-header">
+      <h2>Components</h2>
+      <span class="count">113 total</span>
+      <hr class="section-rule" />
+    </div>
+    <div class="comp-grid">
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">▤</span>layout</div>
+        <div class="comp-names">
+          <a href="components/box/meta.json">box</a>
+          <a href="components/stack/meta.json">stack</a>
+          <a href="components/grid/meta.json">grid</a>
+          <a href="components/scroll-view/meta.json">scroll-view</a>
+          <a href="components/divider/meta.json">divider</a>
+          <a href="components/spacer/meta.json">spacer</a>
+          <a href="components/columns/meta.json">columns</a>
+          <a href="components/center/meta.json">center</a>
+          <a href="components/aspect-ratio/meta.json">aspect-ratio</a>
+        </div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">T</span>typography</div>
+        <div class="comp-names">
+          <a href="components/text/meta.json">text</a>
+          <a href="components/badge/meta.json">badge</a>
+          <a href="components/heading/meta.json">heading</a>
+          <a href="components/code/meta.json">code</a>
+          <a href="components/link/meta.json">link</a>
+          <a href="components/tag/meta.json">tag</a>
+          <a href="components/markdown/meta.json">markdown</a>
+          <a href="components/gradient/meta.json">gradient</a>
+          <a href="components/big-text/meta.json">big-text</a>
+          <a href="components/digits/meta.json">digits</a>
+        </div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">✎</span>input</div>
+        <div class="comp-names">
+          <a href="components/text-input/meta.json">text-input</a>
+          <a href="components/text-area/meta.json">text-area</a>
+          <a href="components/password-input/meta.json">password-input</a>
+          <a href="components/number-input/meta.json">number-input</a>
+          <a href="components/search-input/meta.json">search-input</a>
+          <a href="components/masked-input/meta.json">masked-input</a>
+          <a href="components/email-input/meta.json">email-input</a>
+          <a href="components/path-input/meta.json">path-input</a>
+        </div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">◉</span>selection</div>
+        <div class="comp-names">
+          <a href="components/checkbox/meta.json">checkbox</a>
+          <a href="components/select/meta.json">select</a>
+          <a href="components/multi-select/meta.json">multi-select</a>
+          <a href="components/radio-group/meta.json">radio-group</a>
+          <a href="components/checkbox-group/meta.json">checkbox-group</a>
+          <a href="components/tree-select/meta.json">tree-select</a>
+          <a href="components/tag-input/meta.json">tag-input</a>
+          <a href="components/color-picker/meta.json">color-picker</a>
+        </div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">≡</span>data</div>
+        <div class="comp-names">
+          <a href="components/list/meta.json">list</a>
+          <a href="components/table/meta.json">table</a>
+          <a href="components/json/meta.json">json</a>
+          <a href="components/virtual-list/meta.json">virtual-list</a>
+          <a href="components/tree/meta.json">tree</a>
+          <a href="components/directory-tree/meta.json">directory-tree</a>
+          <a href="components/key-value/meta.json">key-value</a>
+          <a href="components/definition/meta.json">definition</a>
+          <a href="components/card/meta.json">card</a>
+          <a href="components/git-status/meta.json">git-status</a>
+          <a href="components/data-grid/meta.json" class="new">data-grid</a>
+          <a href="components/diff-view/meta.json" class="new">diff-view</a>
+        </div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">◎</span>feedback</div>
+        <div class="comp-names">
+          <a href="components/spinner/meta.json">spinner</a>
+          <a href="components/progress-bar/meta.json">progress-bar</a>
+          <a href="components/alert/meta.json">alert</a>
+          <a href="components/progress-circle/meta.json">progress-circle</a>
+          <a href="components/status-message/meta.json">status-message</a>
+          <a href="components/toast/meta.json">toast</a>
+          <a href="components/banner/meta.json">banner</a>
+          <a href="components/skeleton/meta.json">skeleton</a>
+          <a href="components/multi-progress/meta.json" class="new">multi-progress</a>
+        </div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">→</span>navigation</div>
+        <div class="comp-names">
+          <a href="components/tabs/meta.json">tabs</a>
+          <a href="components/tabbed-content/meta.json">tabbed-content</a>
+          <a href="components/breadcrumb/meta.json">breadcrumb</a>
+          <a href="components/pagination/meta.json">pagination</a>
+          <a href="components/command-palette/meta.json">command-palette</a>
+          <a href="components/menu/meta.json">menu</a>
+          <a href="components/sidebar/meta.json">sidebar</a>
+        </div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">⬡</span>overlays</div>
+        <div class="comp-names">
+          <a href="components/modal/meta.json">modal</a>
+          <a href="components/dialog/meta.json">dialog</a>
+          <a href="components/drawer/meta.json">drawer</a>
+          <a href="components/tooltip/meta.json">tooltip</a>
+          <a href="components/popover/meta.json">popover</a>
+          <a href="components/notification-center/meta.json" class="new">notification-center</a>
+        </div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">◻</span>forms</div>
+        <div class="comp-names">
+          <a href="components/form/meta.json">form</a>
+          <a href="components/form-field/meta.json">form-field</a>
+          <a href="components/wizard/meta.json">wizard</a>
+          <a href="components/confirm/meta.json">confirm</a>
+          <a href="components/date-picker/meta.json">date-picker</a>
+          <a href="components/time-picker/meta.json">time-picker</a>
+          <a href="components/file-picker/meta.json">file-picker</a>
+        </div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">#</span>utility</div>
+        <div class="comp-names">
+          <a href="components/panel/meta.json">panel</a>
+          <a href="components/toggle/meta.json">toggle</a>
+          <a href="components/embedded-terminal/meta.json">embedded-terminal</a>
+          <a href="components/timer/meta.json">timer</a>
+          <a href="components/stopwatch/meta.json">stopwatch</a>
+          <a href="components/clock/meta.json">clock</a>
+          <a href="components/clipboard/meta.json">clipboard</a>
+          <a href="components/keyboard-shortcuts/meta.json">keyboard-shortcuts</a>
+          <a href="components/help/meta.json">help</a>
+          <a href="components/error-boundary/meta.json">error-boundary</a>
+          <a href="components/log/meta.json">log</a>
+          <a href="components/image/meta.json">image</a>
+          <a href="components/qr-code/meta.json">qr-code</a>
+        </div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">▲</span>charts</div>
+        <div class="comp-names">
+          <a href="components/sparkline/meta.json">sparkline</a>
+          <a href="components/bar-chart/meta.json">bar-chart</a>
+          <a href="components/line-chart/meta.json">line-chart</a>
+          <a href="components/pie-chart/meta.json">pie-chart</a>
+          <a href="components/heat-map/meta.json">heat-map</a>
+          <a href="components/gauge/meta.json">gauge</a>
+        </div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">⬚</span>templates</div>
+        <div class="comp-names">
+          <a href="components/splash-screen/meta.json" class="new">splash-screen</a>
+          <a href="components/info-box/meta.json" class="new">info-box</a>
+          <a href="components/bullet-list/meta.json" class="new">bullet-list</a>
+          <a href="components/app-shell/meta.json" class="new">app-shell</a>
+          <a href="components/welcome-screen/meta.json" class="new">welcome-screen</a>
+          <a href="components/login-flow/meta.json" class="new">login-flow</a>
+          <a href="components/usage-monitor/meta.json" class="new">usage-monitor</a>
+          <a href="components/setup-flow/meta.json" class="new">setup-flow</a>
+          <a href="components/help-screen/meta.json" class="new">help-screen</a>
+        </div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cat"><span class="cat-icon">◆</span>ai</div>
+        <div class="comp-names">
+          <a href="components/chat-message/meta.json" class="ai-tag">chat-message</a>
+          <a href="components/chat-thread/meta.json" class="ai-tag">chat-thread</a>
+          <a href="components/tool-call/meta.json" class="ai-tag">tool-call</a>
+          <a href="components/tool-approval/meta.json" class="ai-tag">tool-approval</a>
+          <a href="components/thinking-block/meta.json" class="ai-tag">thinking-block</a>
+          <a href="components/token-usage/meta.json" class="ai-tag">token-usage</a>
+          <a href="components/model-selector/meta.json" class="ai-tag">model-selector</a>
+          <a href="components/file-change/meta.json" class="ai-tag">file-change</a>
+          <a href="components/streaming-text/meta.json" class="ai-tag">streaming-text</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Legend -->
+    <p style="margin-top:16px; font-size:0.78rem; color:var(--muted);">
+      <span style="color:var(--yellow)">yellow</span> = added since v1.0 &nbsp;&nbsp;
+      <span style="color:var(--purple)">purple</span> = AI category
+    </p>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <a href="https://github.com/Arindam200/termui">GitHub</a>
+    <span class="sep">|</span>
+    <a href="https://github.com/Arindam200/termui/blob/main/CHANGELOG.md">Changelog</a>
+    <span class="sep">|</span>
+    <a href="https://github.com/Arindam200/termui/issues">Issues</a>
+    <span class="sep">|</span>
+    v1.4.0 &nbsp;&middot;&nbsp; 113 components &nbsp;&middot;&nbsp; MIT
+  </div>
+
 </body>
 </html>
