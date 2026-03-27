@@ -13,14 +13,17 @@ vi.mock('../utils/ui.js', async (importOriginal) => {
     warn: vi.fn(),
     done: vi.fn(),
     outro: vi.fn(),
-    // select: theme picker — default theme
-    select: vi.fn().mockResolvedValue('default'),
-    // text: components directory prompt — return default value
-    text: vi.fn().mockResolvedValue('./components/ui'),
-    // confirm: install deps prompt — skip install
-    confirm: vi.fn().mockResolvedValue(false),
   };
 });
+
+vi.mock('../utils/clack.js', () => ({
+  // select: theme picker — default theme
+  select: vi.fn().mockResolvedValue('default'),
+  // text: components directory prompt — return default value
+  text: vi.fn().mockResolvedValue('./components/ui'),
+  // confirm: install deps prompt — skip install
+  confirm: vi.fn().mockResolvedValue(false),
+}));
 
 import { init } from './init.js';
 

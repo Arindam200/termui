@@ -10,4 +10,4 @@ export { monokaiTheme } from './themes/monokai.js';
 export { solarizedTheme } from './themes/solarized.js';
 export { tokyoNightTheme } from './themes/tokyoNight.js';
 export { oneDarkTheme } from './themes/oneDark.js';
-export { highContrastTheme } from './themes/highContrast.js';
+export { highContrastTheme, highContrastLightTheme } from './themes/highContrast.js';

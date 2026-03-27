@@ -22,6 +22,7 @@ const AVAILABLE_THEMES = [
   'tokyo-night',
   'one-dark',
   'high-contrast',
+  'high-contrast-light',
 ];
 
 const THEME_DESCRIPTIONS: Record<string, string> = {
@@ -33,7 +34,8 @@ const THEME_DESCRIPTIONS: Record<string, string> = {
   solarized: 'Precision colors for machines and people',
   'tokyo-night': 'Dark theme inspired by Tokyo at night',
   'one-dark': 'Atom One Dark color scheme',
-  'high-contrast': 'WCAG AA high-contrast theme for accessibility',
+  'high-contrast': 'WCAG AA high-contrast — dark (white-on-black)',
+  'high-contrast-light': 'WCAG AA high-contrast — light (black-on-white)',
 };
 
 const THEME_PREVIEWS: Record<string, string> = {
@@ -46,6 +48,7 @@ const THEME_PREVIEWS: Record<string, string> = {
   'tokyo-night': '\x1b[34m■\x1b[0m \x1b[35m■\x1b[0m \x1b[36m■\x1b[0m \x1b[33m■\x1b[0m',
   'one-dark': '\x1b[34m■\x1b[0m \x1b[36m■\x1b[0m \x1b[32m■\x1b[0m \x1b[33m■\x1b[0m',
   'high-contrast': '\x1b[97m■\x1b[0m \x1b[93m■\x1b[0m \x1b[96m■\x1b[0m \x1b[92m■\x1b[0m',
+  'high-contrast-light': '\x1b[30m■\x1b[0m \x1b[34m■\x1b[0m \x1b[35m■\x1b[0m \x1b[32m■\x1b[0m',
 };
 
 function listThemes(currentTheme: string): void {

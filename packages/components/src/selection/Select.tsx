@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Text } from 'ink';
 import { useInput, useTheme, getAccessibleName } from '@termui/core';
 import type { AriaProps } from '@termui/core';
@@ -38,6 +38,13 @@ export function Select<T = string>({
     const idx = options.findIndex((o) => o.value === controlledValue);
     return idx >= 0 ? idx : 0;
   });
+
+  // Resync cursor when the controlled value changes after mount
+  useEffect(() => {
+    if (controlledValue === undefined) return;
+    const idx = options.findIndex((o) => o.value === controlledValue);
+    if (idx >= 0) setActiveIndex(idx);
+  }, [controlledValue, options]);
 
   const accessibleLabel = getAccessibleName(ariaLabel, label ?? 'Select');
 

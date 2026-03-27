@@ -367,6 +367,9 @@ importers:
 
   packages/cli:
     dependencies:
+      '@termui/adapters':
+        specifier: workspace:*
+        version: link:../adapters
       '@termui/core':
         specifier: workspace:*
         version: link:../core

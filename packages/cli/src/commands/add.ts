@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join, dirname } from 'path';
+import { join, dirname, resolve } from 'path';
+import { pathToFileURL } from 'url';
 import { getConfig } from '../utils/config.js';
 import { fetchManifest, fetchComponentFile, type ComponentMeta } from '../registry/client.js';
 import {
@@ -65,6 +66,32 @@ function findClosestMatch(
     }
   }
   return best;
+}
+
+// ─── Prettier formatting (optional) ──────────────────────────────────────────
+
+async function formatWithPrettier(source: string, filePath: string, cwd: string): Promise<string> {
+  // Try ESM entry (Prettier 3.x) first, then CJS (Prettier 2.x)
+  const candidates = ['index.mjs', 'index.js', 'index.cjs'];
+  for (const entry of candidates) {
+    const candidate = resolve(cwd, 'node_modules', 'prettier', entry);
+    if (!existsSync(candidate)) continue;
+    try {
+      const prettierUrl = pathToFileURL(candidate).href;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const prettier = (await import(prettierUrl)) as any;
+      const mod = prettier.default ?? prettier; // handle ESM default export
+      const config = (await mod.resolveConfig(filePath)) ?? {};
+      return await mod.format(source, {
+        ...config,
+        filepath: filePath,
+        parser: 'typescript',
+      });
+    } catch {
+      // Try next candidate
+    }
+  }
+  return source;
 }
 
 export async function add(args: string[], opts?: { isNested?: boolean }): Promise<void> {
@@ -338,10 +365,19 @@ async function installComponent(
       continue;
     }
 
+    // Format with Prettier if available in the user's project
+    const formatted = await formatWithPrettier(source, outPath, cwd);
+
     if (isDryRun) {
       console.log(`  ${c.yellow}[dry-run]${c.reset} Would write: ${relPath}`);
+      const preview = formatted
+        .split('\n')
+        .slice(0, 8)
+        .map((l) => dim(`    ${l}`))
+        .join('\n');
+      if (preview) console.log(preview);
     } else {
-      writeFileSync(outPath, source, 'utf-8');
+      writeFileSync(outPath, formatted, 'utf-8');
       step(`${hi('◇')} ${relPath}`);
     }
     added++;

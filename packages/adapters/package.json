@@ -1,6 +1,6 @@
 {
   "name": "@termui/adapters",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "TermUI ecosystem adapters — clack, picocolors, git, GitHub, PTY, and more",
   "type": "module",
   "main": "./dist/args/index.js",

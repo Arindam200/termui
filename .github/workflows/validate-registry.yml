@@ -1,0 +1,98 @@
+name: Validate Registry
+
+on:
+  push:
+    paths:
+      - 'registry/**'
+  pull_request:
+    paths:
+      - 'registry/**'
+
+jobs:
+  validate:
+    name: Validate registry source files
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check every component in schema.json has a source file
+        run: |
+          set -e
+          SCHEMA="registry/schema.json"
+          ERRORS=0
+
+          if [ ! -f "$SCHEMA" ]; then
+            echo "::error::registry/schema.json not found"
+            exit 1
+          fi
+
+          # Extract component names from schema.json
+          COMPONENTS=$(node -e "
+            const schema = JSON.parse(require('fs').readFileSync('$SCHEMA', 'utf8'));
+            console.log(Object.keys(schema.components).join('\n'));
+          ")
+
+          while IFS= read -r comp; do
+            COMP_DIR="registry/components/$comp"
+            META="$COMP_DIR/meta.json"
+
+            # Check meta.json exists
+            if [ ! -f "$META" ]; then
+              echo "::error::Missing meta.json for component: $comp"
+              ERRORS=$((ERRORS + 1))
+              continue
+            fi
+
+            # Check version field in meta.json
+            VERSION=$(node -e "
+              const m = JSON.parse(require('fs').readFileSync('$META', 'utf8'));
+              process.stdout.write(m.version ?? '');
+            ")
+            if [ -z "$VERSION" ]; then
+              echo "::error::Missing 'version' field in $META"
+              ERRORS=$((ERRORS + 1))
+            fi
+
+            # Check each file listed in meta.json exists
+            node -e "
+              const m = JSON.parse(require('fs').readFileSync('$META', 'utf8'));
+              const files = m.files ?? [];
+              let ok = true;
+              for (const f of files) {
+                const path = '$COMP_DIR/' + f;
+                if (!require('fs').existsSync(path)) {
+                  process.stderr.write('::error::Missing source file: ' + path + '\n');
+                  ok = false;
+                }
+              }
+              if (!ok) process.exit(1);
+            " || ERRORS=$((ERRORS + 1))
+
+          done <<< "$COMPONENTS"
+
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "::error::Registry validation failed with $ERRORS error(s)"
+            exit 1
+          fi
+
+          echo "Registry validation passed — all components have source files and version fields."
+
+      - name: Check schema.json matches component directories
+        run: |
+          set -e
+          ERRORS=0
+
+          # Every directory in registry/components/ should be in schema.json
+          for dir in registry/components/*/; do
+            comp=$(basename "$dir")
+            EXISTS=$(node -e "
+              const s = JSON.parse(require('fs').readFileSync('registry/schema.json', 'utf8'));
+              process.stdout.write(s.components['$comp'] ? 'yes' : 'no');
+            ")
+            if [ "$EXISTS" = "no" ]; then
+              echo "::warning::Component directory '$comp' exists but is not in schema.json"
+            fi
+          done
+
+          echo "Schema cross-check complete."

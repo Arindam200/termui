@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Text } from 'ink';
 import { useInput, useTheme } from '@termui/core';
 
@@ -33,6 +33,14 @@ export function RadioGroup<T = string>({
     const first = options.findIndex((o) => !o.disabled);
     return first >= 0 ? first : 0;
   });
+
+  // Resync cursor when the controlled value changes after mount
+  useEffect(() => {
+    if (controlledValue === undefined) return;
+    const idx = options.findIndex((o) => o.value === controlledValue);
+    if (idx >= 0) setActiveIndex(idx);
+  }, [controlledValue, options]);
+
   const [internalValue, setInternalValue] = useState<T | undefined>(controlledValue);
 
   const selected = controlledValue ?? internalValue;

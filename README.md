@@ -322,12 +322,12 @@ expect(screen.hasText('⠋', output)).toBe(true);
 
 In-repo docs live under [`docs/`](./docs). Start at **[docs/index.md](./docs/index.md)** for the overview and category guides (layout, typography, feedback, charts, and more). API-focused pages:
 
-| Doc | Contents |
-| --- | -------- |
-| [docs/api/cli.md](./docs/api/cli.md) | CLI reference |
-| [docs/api/hooks.md](./docs/api/hooks.md) | Hooks API |
+| Doc                                          | Contents          |
+| -------------------------------------------- | ----------------- |
+| [docs/api/cli.md](./docs/api/cli.md)         | CLI reference     |
+| [docs/api/hooks.md](./docs/api/hooks.md)     | Hooks API         |
 | [docs/api/testing.md](./docs/api/testing.md) | Testing utilities |
-| [docs/adapters.md](./docs/adapters.md) | Adapters overview |
+| [docs/adapters.md](./docs/adapters.md)       | Adapters overview |
 
 ---
 
@@ -372,10 +372,10 @@ This repository is a **pnpm** workspace with **Turborepo**. Use the same toolcha
 
 ### Prerequisites
 
-| Requirement | Notes |
-| ----------- | ----- |
-| **Node.js** | **18+** (CI runs 18, 20, and 22) |
-| **pnpm** | **9.x** — this repo pins `packageManager` in `package.json`. Enable with [Corepack](https://nodejs.org/api/corepack.html): `corepack enable` then `corepack prepare pnpm@9.0.0 --activate` (or match the version in `package.json`). |
+| Requirement | Notes                                                                                                                                                                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Node.js** | **18+** (CI runs 18, 20, and 22)                                                                                                                                                                                                     |
+| **pnpm**    | **9.x** — this repo pins `packageManager` in `package.json`. Enable with [Corepack](https://nodejs.org/api/corepack.html): `corepack enable` then `corepack prepare pnpm@9.0.0 --activate` (or match the version in `package.json`). |
 
 Do not use `npm` or `yarn` at the repo root; workspace protocol and scripts expect **pnpm**.
 
@@ -425,12 +425,12 @@ pnpm --filter @termui/cli dev
 
 ### Troubleshooting
 
-| Problem | What to try |
-| ------- | ----------- |
+| Problem                              | What to try                                                                                |
+| ------------------------------------ | ------------------------------------------------------------------------------------------ |
 | Build or test fails after `git pull` | `pnpm install`, then `pnpm --filter @termui/core build`, then `pnpm build` or `pnpm test`. |
-| Wrong package manager errors | Use **pnpm** from the repo root, not npm/yarn. |
-| Stale Turborepo cache | `pnpm exec turbo run build --force` (or your usual clean build). |
-| Type errors across packages | Run `pnpm typecheck` after a full `pnpm build`. |
+| Wrong package manager errors         | Use **pnpm** from the repo root, not npm/yarn.                                             |
+| Stale Turborepo cache                | `pnpm exec turbo run build --force` (or your usual clean build).                           |
+| Type errors across packages          | Run `pnpm typecheck` after a full `pnpm build`.                                            |
 
 ---
 

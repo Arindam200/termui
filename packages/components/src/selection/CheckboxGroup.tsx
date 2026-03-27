@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Text } from 'ink';
 import { useInput, useTheme } from '@termui/core';
 
@@ -27,9 +27,22 @@ export function CheckboxGroup({
 }: CheckboxGroupProps) {
   const theme = useTheme();
   const [activeIndex, setActiveIndex] = useState(() => {
+    // Start cursor at the first selected item, or the first enabled item if none selected
+    if (controlledValue && controlledValue.length > 0) {
+      const idx = options.findIndex((o) => o.value === controlledValue[0] && !o.disabled);
+      if (idx >= 0) return idx;
+    }
     const first = options.findIndex((o) => !o.disabled);
     return first >= 0 ? first : 0;
   });
+
+  // Resync cursor to the first selected item when the controlled value changes after mount
+  useEffect(() => {
+    if (!controlledValue || controlledValue.length === 0) return;
+    const idx = options.findIndex((o) => o.value === controlledValue[0] && !o.disabled);
+    if (idx >= 0) setActiveIndex(idx);
+  }, [controlledValue, options]);
+
   const [internalSelected, setInternalSelected] = useState<string[]>([]);
   const [error, setError] = useState<string | undefined>(undefined);
 

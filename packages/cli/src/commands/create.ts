@@ -1,17 +1,6 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import {
-  printLogo,
-  intro,
-  step,
-  warn,
-  done,
-  outro,
-  hi,
-  dim,
-  select,
-  confirm,
-} from '../utils/ui.js';
+import { printLogo, intro, step, done, outro, hi, dim, select, confirm } from '../utils/ui.js';
 
 type Template = 'minimal' | 'cli' | 'dashboard' | 'wizard' | 'ai-assistant';
 
@@ -79,6 +68,12 @@ export async function create(args: string[]): Promise<void> {
   const entryContent = TEMPLATES_MAP[template];
   writeFileSync(join(projectDir, 'src', 'index.tsx'), entryContent, 'utf-8');
   step(`Created ${hi('src/index.tsx')}`);
+
+  // ai-assistant: also write the setup script
+  if (template === 'ai-assistant') {
+    writeFileSync(join(projectDir, 'src', 'setup.ts'), AI_ASSISTANT_SETUP, 'utf-8');
+    step(`Created ${hi('src/setup.ts')}`);
+  }
 
   // Write README
   writeFileSync(join(projectDir, 'README.md'), buildReadme(projectName, template), 'utf-8');
@@ -271,6 +266,7 @@ main();
 import { render } from 'ink';
 import { ThemeProvider, useTheme, useInput, useInterval } from '@termui/core';
 import { Box, Text } from 'ink';
+import { createCLI } from 'termui/args';
 
 // ─── Types ────────────────────────────────────────────────────────
 
@@ -401,11 +397,12 @@ function ChatMessage({ message, termWidth }: { message: Message; termWidth: numb
 
 // ─── Main App ─────────────────────────────────────────────────────────────────────────
 
-function App() {
+function App({ model, systemPrompt }: { model?: string; systemPrompt?: string }) {
   const theme = useTheme();
   const { messages, sendMessage, isStreaming, abort } = useSimpleChat();
   const [input, setInput] = useState('');
   const [termWidth] = useState(process.stdout.columns ?? 80);
+  void model; void systemPrompt; // Wire to termui/ai useChat() when ready
 
   useInput((char, key) => {
     if (key.ctrl && char === 'c') process.exit(0);
@@ -504,17 +501,160 @@ function App() {
   );
 }
 
+// Parse CLI flags via termui/args
+const cli = createCLI({
+  name: 'ai-assistant',
+  version: '0.1.0',
+  description: 'AI assistant powered by TermUI',
+  commands: {
+    chat: {
+      name: 'chat',
+      description: 'Start a chat session',
+      args: {
+        model:    { description: 'Model ID to use (e.g. claude-sonnet-4-6)' },
+        system:   { description: 'System prompt override' },
+        stream:   { description: 'Enable streaming (default: true)' },
+        json:     { description: 'Output responses as JSON' },
+      },
+    },
+    setup: {
+      name: 'setup',
+      description: 'Configure provider and API key',
+    },
+  },
+});
+
+// cli.parse() returns null after printing help/version — exit cleanly.
+// Default to 'chat' when no subcommand is given.
+const argv = process.argv.slice(2);
+const parsed = argv.length === 0
+  ? { command: 'chat', args: {} as Record<string, unknown> }
+  : cli.parse(argv);
+if (!parsed) process.exit(0);
+
+// Route: 'setup' command defers to src/setup.ts
+if (parsed.command === 'setup') {
+  console.error('Run: npm run setup');
+  process.exit(0);
+}
+
 render(
   <ThemeProvider>
-    <App />
+    <App
+      model={typeof parsed.args.model === 'string' ? parsed.args.model : undefined}
+      systemPrompt={typeof parsed.args.system === 'string' ? parsed.args.system : undefined}
+    />
   </ThemeProvider>
 );
 `,
 };
 
+// ─── AI assistant setup script (src/setup.ts) ─────────────────────────────────
+
+const AI_ASSISTANT_SETUP = `/**
+ * AI Assistant Setup — run with: npm run setup
+ *
+ * Guides you through provider selection and stores your API key securely
+ * using the OS keychain (via termui/keychain + keytar).
+ *
+ * Install keytar for secure storage:
+ *   npm install keytar
+ */
+import { intro, outro, select, text, confirm, spinner, log } from 'termui/clack';
+
+const APP_NAME = 'ai-assistant';
+
+async function main() {
+  intro('AI Assistant Setup');
+
+  // 1 — Provider selection
+  const provider = await select({
+    message: 'Choose your AI provider',
+    options: [
+      { value: 'anthropic', label: 'Anthropic (Claude)', hint: 'claude-sonnet-4-6, claude-opus-4-6' },
+      { value: 'openai',    label: 'OpenAI (GPT)',       hint: 'gpt-4o, gpt-4-turbo' },
+      { value: 'ollama',    label: 'Ollama (local)',      hint: 'llama3, mistral, phi3 — no API key needed' },
+    ],
+  });
+
+  // 2 — Model selection
+  const MODEL_DEFAULTS: Record<string, string> = {
+    anthropic: 'claude-sonnet-4-6',
+    openai: 'gpt-4o',
+    ollama: 'llama3',
+  };
+  const model = await text({
+    message: 'Model ID',
+    placeholder: MODEL_DEFAULTS[provider as string] ?? 'your-model-id',
+    initialValue: MODEL_DEFAULTS[provider as string] ?? '',
+  });
+
+  // 3 — API key (skipped for Ollama)
+  let apiKey: string | undefined;
+  if (provider !== 'ollama') {
+    const envVar = provider === 'anthropic' ? 'ANTHROPIC_API_KEY' : 'OPENAI_API_KEY';
+    const existing = process.env[envVar];
+
+    if (existing) {
+      log.info(\`Using \${envVar} from environment\`);
+    } else {
+      apiKey = await text({
+        message: \`Paste your \${String(provider).toUpperCase()} API key\`,
+        placeholder: 'sk-...',
+        validate: (v) => (v.trim().length < 8 ? 'API key looks too short' : undefined),
+      });
+
+      const storeInKeychain = await confirm({
+        message: 'Store in OS keychain for future sessions?',
+        initialValue: true,
+      });
+
+      if (storeInKeychain && apiKey) {
+        const s = spinner();
+        s.start('Saving to keychain…');
+        try {
+          // Requires: npm install keytar
+          const keytar = await import('keytar');
+          await keytar.setPassword(APP_NAME, String(provider), String(apiKey));
+          s.stop('Saved to keychain ✓');
+        } catch {
+          s.stop('keytar not available — set via env var instead');
+          log.warn(\`export \${envVar}=<your-key>\`);
+        }
+      }
+    }
+  }
+
+  // 4 — Write .env file
+  const writeEnv = await confirm({
+    message: 'Write provider settings to .env.local?',
+    initialValue: true,
+  });
+
+  if (writeEnv) {
+    const { writeFileSync } = await import('fs');
+    const lines = [
+      \`AI_PROVIDER=\${provider}\`,
+      \`AI_MODEL=\${model}\`,
+      ...(apiKey ? [\`\${provider === 'anthropic' ? 'ANTHROPIC' : 'OPENAI'}_API_KEY=\${apiKey}\`] : []),
+    ];
+    writeFileSync('.env.local', lines.join('\\n') + '\\n', 'utf-8');
+    log.success('Written .env.local');
+  }
+
+  outro(\`Setup complete — run \\\`npm start\\\` to launch the assistant\`);
+}
+
+main().catch((err) => {
+  console.error('Setup failed:', err.message ?? err);
+  process.exit(1);
+});
+`;
+
 // ─── Static file content ──────────────────────────────────────────────────────
 
 function buildPackageJson(name: string, template: Template): object {
+  const isAI = template === 'ai-assistant';
   return {
     name,
     version: '0.1.0',
@@ -523,13 +663,21 @@ function buildPackageJson(name: string, template: Template): object {
       start: 'tsx src/index.tsx',
       build: 'tsc',
       dev: 'tsx watch src/index.tsx',
+      ...(isAI ? { setup: 'tsx src/setup.ts' } : {}),
     },
     dependencies: {
       termui: 'latest',
       '@termui/core': 'latest',
       ink: '^5.0.0',
       react: '^18.0.0',
-      ...(template === 'cli' ? {} : {}),
+      ...(isAI
+        ? {
+            // Optional peer deps for AI features — install what you use
+            // keytar: '^7.9.0',  // secure API key storage (uncomment to enable)
+            // @anthropic-ai/sdk: '^0.26.0',
+            // openai: '^4.0.0',
+          }
+        : {}),
     },
     devDependencies: {
       typescript: '^5.0.0',

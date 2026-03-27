@@ -1,20 +1,8 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join, relative } from 'path';
-import { writeConfig, readConfig, type TermUIConfig } from '../utils/config.js';
-import {
-  printLogo,
-  intro,
-  step,
-  warn,
-  done,
-  outro,
-  hi,
-  dim,
-  bold,
-  select,
-  confirm,
-  text,
-} from '../utils/ui.js';
+import { writeConfig, type TermUIConfig } from '../utils/config.js';
+import { printLogo, intro, step, warn, done, outro, hi, dim, bold } from '../utils/ui.js';
+import { select, confirm, text } from '../utils/clack.js';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -166,7 +154,7 @@ export async function init(_args: string[], opts?: { isNested?: boolean }): Prom
   const configJsonPath = join(cwd, 'termui.config.json');
   if (existsSync(configJsonPath)) {
     warn(`${hi('termui.config.json')} already exists — overwrite?`);
-    const overwrite = await confirm('Overwrite existing config?', false);
+    const overwrite = await confirm({ message: 'Overwrite existing config?', initialValue: false });
     if (!overwrite) {
       outro(`Aborted — your existing config is unchanged.`);
       return;
@@ -174,8 +162,9 @@ export async function init(_args: string[], opts?: { isNested?: boolean }): Prom
   }
 
   // ─── Step 3: Components directory ─────────────────────────────────────────
-  const componentsDir = await text('Components directory', {
-    defaultValue: './components/ui',
+  const componentsDir = await text({
+    message: 'Components directory',
+    placeholder: './components/ui',
     validate: (v) => {
       if (v.includes('..')) return 'Path must not contain ".."';
       return undefined;
@@ -183,10 +172,13 @@ export async function init(_args: string[], opts?: { isNested?: boolean }): Prom
   });
 
   // ─── Step 4: Theme selection ───────────────────────────────────────────────
-  const theme = await select<Theme>('Pick a theme', [...THEMES]);
+  const theme = await select<Theme>({ message: 'Pick a theme', options: [...THEMES] });
 
   // ─── Step 5: Install dependencies ─────────────────────────────────────────
-  const shouldInstall = await confirm('Install dependencies? (react, ink, termui)', true);
+  const shouldInstall = await confirm({
+    message: 'Install dependencies? (react, ink, termui)',
+    initialValue: true,
+  });
 
   // ─── Step 6: Create components directory ──────────────────────────────────
   const resolvedComponentsDir = join(cwd, componentsDir.replace(/^\.\//, ''));

@@ -4,39 +4,40 @@ import { useInput, useTheme } from '@termui/core';
 
 export interface PaginationProps {
   total: number;
-  current: number;
+  /** Controlled current page (1-based). Omit for uncontrolled mode. */
+  current?: number;
   onChange?: (page: number) => void;
   showEdges?: boolean;
   siblings?: number;
 }
 
-function buildPages(total: number, current: number, siblings: number): (number | '...')[] {
+function buildPages(
+  total: number,
+  current: number,
+  siblings: number,
+  showEdges: boolean
+): (number | '...')[] {
   if (total <= 7) {
     return Array.from({ length: total }, (_, i) => i + 1);
   }
 
   const pages: (number | '...')[] = [];
 
-  // Always include first page
-  pages.push(1);
-
-  const leftSibling = Math.max(2, current - siblings);
-  const rightSibling = Math.min(total - 1, current + siblings);
-
-  if (leftSibling > 2) {
-    pages.push('...');
+  if (showEdges) {
+    // Always include first page with optional ellipsis
+    pages.push(1);
+    const leftSibling = Math.max(2, current - siblings);
+    const rightSibling = Math.min(total - 1, current + siblings);
+    if (leftSibling > 2) pages.push('...');
+    for (let i = leftSibling; i <= rightSibling; i++) pages.push(i);
+    if (rightSibling < total - 1) pages.push('...');
+    pages.push(total);
+  } else {
+    // Only show the sibling window around the current page
+    const left = Math.max(1, current - siblings);
+    const right = Math.min(total, current + siblings);
+    for (let i = left; i <= right; i++) pages.push(i);
   }
-
-  for (let i = leftSibling; i <= rightSibling; i++) {
-    pages.push(i);
-  }
-
-  if (rightSibling < total - 1) {
-    pages.push('...');
-  }
-
-  // Always include last page
-  pages.push(total);
 
   return pages;
 }
@@ -49,16 +50,19 @@ export function Pagination({
   siblings = 1,
 }: PaginationProps) {
   const theme = useTheme();
-  const [internalPage, setInternalPage] = useState(current);
+  const [internalPage, setInternalPage] = useState(current ?? 1);
+  // In controlled mode (current provided), the parent owns the page value.
+  // In uncontrolled mode (current omitted), use internal state.
   const activePage = current ?? internalPage;
 
   function goTo(page: number) {
     const clamped = Math.min(Math.max(1, page), total);
     if (clamped === activePage) return;
-    if (onChange) {
-      onChange(clamped);
+    if (current !== undefined) {
+      onChange?.(clamped);
     } else {
       setInternalPage(clamped);
+      onChange?.(clamped);
     }
   }
 
@@ -67,7 +71,7 @@ export function Pagination({
     if (key.rightArrow) goTo(activePage + 1);
   });
 
-  const pages = buildPages(total, activePage, siblings);
+  const pages = buildPages(total, activePage, siblings, showEdges);
 
   return (
     <Box flexDirection="row" alignItems="center" gap={1}>
@@ -78,8 +82,6 @@ export function Pagination({
       >
         ‹
       </Text>
-
-      {showEdges && total > 7 ? null : null}
 
       {pages.map((p, idx) => {
         if (p === '...') {

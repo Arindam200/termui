@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Text } from 'ink';
 import { useInput, useTheme, getAccessibleName } from '@termui/core';
 import type { AriaProps } from '@termui/core';
@@ -41,6 +41,14 @@ export function MultiSelect<T = string>({
     const firstEnabled = options.findIndex((o) => !o.disabled);
     return firstEnabled >= 0 ? firstEnabled : 0;
   });
+
+  // Resync cursor to the first selected item when the controlled value changes after mount
+  useEffect(() => {
+    if (!controlledValue || controlledValue.length === 0) return;
+    const idx = options.findIndex((o) => o.value === controlledValue[0]);
+    if (idx >= 0 && !options[idx]?.disabled) setActiveIndex(idx);
+  }, [controlledValue, options]);
+
   const [internalSelected, setInternalSelected] = useState<T[]>([]);
 
   const selected = controlledValue ?? internalSelected;

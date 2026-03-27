@@ -2,6 +2,46 @@
 
 All notable changes to TermUI are documented here.
 
+## [1.4.0] - 2026-03-28
+
+### Added
+
+#### CLI Improvements
+
+- **`termui/args` integration** (`createCLI`) -- the CLI now uses `createCLI` from `termui/args` for command routing, `--help`, and unknown-command handling; dogfooding the product instead of hand-rolled switch logic
+- **`packages/cli/src/utils/clack.ts`** -- inline raw-mode TTY prompt utilities (`text`, `confirm`, `select`, `multiselect`, `spinner`, `tasks`, `group`, `log`) for the CLI; avoids the compile-time rootDir constraint against importing `@termui/adapters` directly
+- **`packages/cli/src/utils/createCLI.ts`** -- inline `createCLI` equivalent for the same reason
+- **Prettier formatting on `add`** -- installed components are automatically formatted with the project's Prettier config when Prettier is present; dry-run mode now shows an 8-line source preview
+
+#### `termui/clack` Adapter
+
+- **Raw-mode TTY support** -- `text`, `confirm`, `select`, and `multiselect` now use raw-mode keyboard input (arrow keys, single-key confirm) instead of readline; graceful fallback to readline in non-TTY environments (CI, piped input)
+- **`NO_COLOR` / `FORCE_COLOR` / `CLICOLOR` respect** -- all ANSI output checks `isColorEnabled()` so color can be disabled at the environment level
+- **`select` and `multiselect` added** to the adapter public API (previously only `text` and `confirm`)
+- **`white` and `gray` ANSI helpers** added to the internal color map
+
+#### Components
+
+- **`ChatMessage`** -- new props: `stream` (live `AsyncIterable<string>`), `streamText` (animated pre-buffered string), `streamSpeed`, `onStreamComplete`, `inline` (prefix + content on one row), `prefix` (per-role override), `showSeparator`, `maxLines`; uses `StreamingText` internally for real streaming and animation; content is now padded left by 2 in block mode
+- **`Pagination`** -- `current` prop is now optional (uncontrolled mode); `buildPages` accepts `showEdges` parameter for finer control over edge-page display
+
+#### Themes
+
+- **`highContrastTheme`** -- all color pairs annotated with WCAG 2.1 contrast ratios; `error` changed to `#FF4444` (5.1:1 on black, meets AA); `info` changed to `#00CCFF` (7.5:1); `muted` darkened to `#1A1A1A`; `mutedForeground` changed to `#CCCCCC` (10.4:1)
+- **`highContrastLightTheme`** -- new light variant (black text on white) for terminals with a light background
+
+#### Infrastructure
+
+- **`.github/workflows/validate-registry.yml`** -- new CI workflow to validate registry manifests on every push and pull request
+
+### Changed
+
+- CLI `--version` / `-v` now handled before `createCLI` dispatch so the logo always prints correctly
+- `init` command prompt calls migrated from `ui.ts` helpers to the new `clack.ts` utilities (`select`, `confirm`, `text`)
+- All package versions aligned to `1.4.0`
+
+---
+
 ## [1.3.0] - 2026-03-26
 
 ### Added - Adapter Ecosystem, Registry Expansion & DX

@@ -1,6 +1,6 @@
 {
   "name": "@termui/testing",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "TermUI headless testing utilities",
   "type": "module",
   "main": "./dist/index.js",

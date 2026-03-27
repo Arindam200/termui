@@ -1,5 +1,7 @@
 /**
  * TermUI CLI — npx termui
+ *
+ * Command routing uses createCLI from termui/args (@termui/adapters) — dogfooding the product.
  */
 
 import { init } from './commands/init.js';
@@ -13,57 +15,125 @@ import { dev } from './commands/dev.js';
 import { docs } from './commands/docs.js';
 import { publish } from './commands/publish.js';
 import { checkForUpdates } from './utils/updates.js';
-import { printLogo, intro, step, outro, hi, dim, c, sym, select, multiselect } from './utils/ui.js';
+import { printLogo, intro, step, outro, hi, dim, select, multiselect } from './utils/ui.js';
+import { createCLI } from './utils/createCLI.js';
 
-const [, , command, ...args] = process.argv;
+// ─── CLI config (termui/args — dogfooding) ────────────────────────────────────
+
+const cli = createCLI({
+  name: 'termui',
+  version: '1.3.0',
+  description: 'TermUI — shadcn-style terminal UI component library',
+  commands: {
+    init: { name: 'init', description: 'Initialize TermUI in your project' },
+    add: {
+      name: 'add',
+      description: 'Add one or more components from the registry',
+      args: { component: { description: 'Component name(s) or --all / --recipe <name>' } },
+    },
+    list: {
+      name: 'list',
+      description: 'Browse available components',
+      args: {
+        category: { description: 'Filter by category (--category <name>)' },
+        search: { description: 'Fuzzy search (--search <query>)' },
+      },
+    },
+    diff: { name: 'diff', description: 'Show diff vs registry' },
+    update: { name: 'update', description: 'Re-download a component from the registry' },
+    theme: { name: 'theme', description: 'Apply a built-in theme' },
+    preview: { name: 'preview', description: 'Interactive component gallery' },
+    create: { name: 'create', description: 'Scaffold a new TermUI project' },
+    dev: { name: 'dev', description: 'Watch mode — hot-reload on file change' },
+    docs: { name: 'docs', description: 'Show inline docs for a component' },
+    publish: { name: 'publish', description: 'Submit a component to the community registry' },
+    completion: {
+      name: 'completion',
+      description: 'Print shell completion script (bash/zsh/fish)',
+      args: { shell: { description: 'Shell: bash | zsh | fish', required: true } },
+    },
+  },
+});
+
+// ─── Dispatch ─────────────────────────────────────────────────────────────────
 
 async function main() {
   // Show update notice on every command (non-blocking)
   checkForUpdates().catch(() => {}); // fire and forget
 
+  const rawArgs = process.argv.slice(2);
+
+  // No command → interactive menu
+  if (rawArgs.length === 0) {
+    await interactiveMenu();
+    return;
+  }
+
+  // --version / -v handled before createCLI so we can show the logo
+  if (rawArgs[0] === '--version' || rawArgs[0] === '-v') {
+    const { createRequire } = await import('module');
+    const require = createRequire(import.meta.url);
+    const pkg = require('../package.json') as { version: string };
+    printLogo();
+    intro('termui');
+    step(`Version ${hi(`v${pkg.version}`)}`);
+    outro(`${hi('npx termui help')} for commands`);
+    return;
+  }
+
+  // Delegate routing + --help/unknown-command to createCLI (termui/args)
+  const parsed = cli.parse(rawArgs);
+  if (!parsed) {
+    // createCLI already printed help or an error
+    return;
+  }
+
+  const { command } = parsed;
+  const cmdArgs = rawArgs.slice(1);
+
   switch (command) {
     case 'init':
-      await init(args);
+      await init(cmdArgs);
       break;
 
     case 'add':
-      await add(args);
+      await add(cmdArgs);
       break;
 
     case 'list':
-      await list(args);
+      await list(cmdArgs);
       break;
 
     case 'diff':
-      await diff(args);
+      await diff(cmdArgs);
       break;
 
     case 'update':
-      await update(args);
+      await update(cmdArgs);
       break;
 
     case 'theme':
-      await theme(args);
+      await theme(cmdArgs);
       break;
 
     case 'preview':
-      if (args.includes('--help') || args.includes('-h')) {
+      if (cmdArgs.includes('--help') || cmdArgs.includes('-h')) {
         previewHelp();
       } else {
-        await preview(args);
+        await preview(cmdArgs);
       }
       break;
 
     case 'dev':
-      await dev(args);
+      await dev(cmdArgs);
       break;
 
     case 'docs':
-      await docs(args);
+      await docs(cmdArgs);
       break;
 
     case 'completion': {
-      const shell = args[0];
+      const shell = cmdArgs[0];
       if (!shell || !['bash', 'zsh', 'fish'].includes(shell)) {
         console.error(`\x1b[31mError:\x1b[0m Usage: npx termui completion <bash|zsh|fish>`);
         process.exit(1);
@@ -73,44 +143,14 @@ async function main() {
     }
 
     case 'publish':
-      await publish(args, {});
+      await publish(cmdArgs, {});
       break;
 
     case 'create': {
       const { create } = await import('./commands/create.js');
-      await create(args);
+      await create(cmdArgs);
       break;
     }
-
-    case 'help':
-    case '--help':
-    case '-h':
-      printHelp();
-      break;
-
-    case undefined:
-      await interactiveMenu();
-      break;
-
-    case '--version':
-    case '-v': {
-      const { createRequire } = await import('module');
-      const require = createRequire(import.meta.url);
-      const pkg = require('../package.json') as { version: string };
-      printLogo();
-      intro('termui');
-      step(`Version ${hi(`v${pkg.version}`)}`);
-      outro(`${hi('npx termui help')} for commands`);
-      break;
-    }
-
-    default:
-      printLogo();
-      intro('termui');
-      console.log(`${sym.pipe}`);
-      console.log(`${sym.error}  Unknown command: ${c.bold}${command}${c.reset}`);
-      outro(`Run ${hi('npx termui help')} to see available commands`);
-      process.exit(1);
   }
 }
 
@@ -208,7 +248,7 @@ async function interactiveMenu(): Promise<void> {
   } else if (action === 'dev') {
     await dev([]);
   } else {
-    printHelp();
+    cli.help();
   }
 }
 
@@ -216,7 +256,8 @@ async function runCompletion(shell: 'bash' | 'zsh' | 'fish'): Promise<void> {
   const { getLocalRegistry } = await import('./registry/client.js');
   const registry = getLocalRegistry();
   const comps = Object.keys(registry.components).join(' ');
-  const THEMES = 'default dracula nord catppuccin monokai tokyo-night one-dark solarized';
+  const THEMES =
+    'default dracula nord catppuccin monokai tokyo-night one-dark solarized high-contrast high-contrast-light';
   const CMDS =
     'init add list diff update theme preview dev docs create publish completion help --help --version';
 
@@ -272,57 +313,6 @@ _termui
     }
     process.stdout.write(compLines.join('\n') + '\n');
   }
-}
-
-function printHelp() {
-  printLogo();
-  intro('termui');
-
-  const cmds: [string, string][] = [
-    ['init', 'Initialize TermUI in your project'],
-    ['add <component>', 'Add one or more components from the registry'],
-    ['add --all', 'Add all components at once'],
-    ['add --recipe <name>', 'Install a multi-component recipe'],
-    ['update <component>', 'Re-download a component from the registry'],
-    ['list', 'Browse all available components'],
-    ['diff <component>', 'Show diff vs registry'],
-    ['diff --props-only', 'Show only prop API changes'],
-    ['diff --breaking', 'Exit 1 if breaking API changes detected'],
-    ['docs <component>', 'Show documentation for a component'],
-    ['theme <name>', 'Apply a built-in theme'],
-    ['theme add <package>', 'Install an npm theme package'],
-    ['theme publish', 'Scaffold a publishable theme package'],
-    ['preview', 'Interactive component gallery'],
-    ['create <name>', 'Scaffold a new TermUI project'],
-    ['list --category <cat>', 'Filter list by category'],
-    ['list --search <q>', 'Search components by name/description'],
-    ['list --json', 'Machine-readable JSON output'],
-    ['publish <dir>', 'Submit a component to the community registry'],
-    ['completion <shell>', 'Print shell completion script (bash/zsh/fish)'],
-    ['dev', 'Watch mode — hot-reload on file change'],
-    ['help', 'Show this help message'],
-  ];
-
-  step(`${c.bold}Usage${c.reset}  npx termui ${c.gray}<command>${c.reset}`);
-  console.log(`${sym.pipe}`);
-  console.log(`${sym.hollow}  ${c.bold}Commands${c.reset}`);
-  for (const [cmd, desc] of cmds) {
-    console.log(`${c.gray}│${c.reset}    ${hi(cmd.padEnd(24))}${dim(desc)}`);
-  }
-
-  step(`${c.bold}Examples${c.reset}`);
-  const examples = [
-    'npx termui init',
-    'npx termui add spinner table',
-    'npx termui add --all',
-    'npx termui theme dracula',
-    'npx termui preview',
-  ];
-  for (const ex of examples) {
-    console.log(`${c.gray}│${c.reset}    ${hi(ex)}`);
-  }
-
-  outro(`Docs: ${hi('https://arindam200.github.io/termui')}  ·  v1.1.3`);
 }
 
 main().catch((err) => {
