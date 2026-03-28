@@ -186,6 +186,12 @@
       "import": "./dist/inquirer/index.js"
     }
   },
+  "files": [
+    "dist",
+    "svelte/terminalSize.svelte.ts",
+    "svelte/themeTokens.svelte.ts",
+    "pty/README.md"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup",

@@ -1,4 +1,9 @@
 {
-  "extends": "./tsconfig.json",
-  "exclude": ["**/*.test.ts", "**/*.spec.ts"]
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/*.test.ts", "**/*.spec.ts", "src/test-setup.ts"]
 }
