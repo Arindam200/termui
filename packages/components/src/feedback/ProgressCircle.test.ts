@@ -17,7 +17,9 @@ function getSmChar(value: number): string {
 }
 
 function wrap(el: React.ReactElement) {
-  return React.createElement(ThemeProvider, {}, el);
+  // noUnicode={false} forces Unicode mode so tests pass on all platforms
+  // (Windows CI has no WT_SESSION/TERM and would otherwise detect ASCII-only).
+  return React.createElement(ThemeProvider, { noUnicode: false }, el);
 }
 
 // ---------------------------------------------------------------------------
