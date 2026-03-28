@@ -10,7 +10,10 @@
   "dependencies": {
     "react": "^18.2.0",
     "ink": "^5.0.1",
-    "termui": "latest"
+    "termui": "latest",
+    "@termui/core": "latest",
+    "@termui/components": "latest",
+    "@termui/adapters": "latest"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
