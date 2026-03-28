@@ -22,7 +22,7 @@ import { createCLI } from './utils/createCLI.js';
 
 const cli = createCLI({
   name: 'termui',
-  version: '1.3.0',
+  version: '1.4.1',
   description: 'TermUI — shadcn-style terminal UI component library',
   commands: {
     init: { name: 'init', description: 'Initialize TermUI in your project' },

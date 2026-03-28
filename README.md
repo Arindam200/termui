@@ -18,7 +18,7 @@
 
 ---
 
-TermUI is a comprehensive terminal UI framework for TypeScript, with **101+ components**, **9 themes**, **12 hooks**, and a shadcn-style CLI that copies source code directly into your project. No black-box dependency. No version lock-in. Just code you own and can customize.
+TermUI is a comprehensive terminal UI framework for TypeScript, with **101+ components**, **8 themes**, **12 hooks**, and a shadcn-style CLI that copies source code directly into your project. No black-box dependency. No version lock-in. Just code you own and can customize.
 
 ```bash
 npx termui add spinner table select alert
@@ -108,20 +108,20 @@ render(<App />);
 
 ## Component Categories
 
-| Category              | Components                                                                                                                               |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| **Layout** (9)        | `Box` `Stack` `Grid` `Divider` `Spacer` `ScrollView` `Columns` `Center` `AspectRatio`                                                    |
-| **Typography** (11)   | `Text` `Heading` `Code` `Link` `Badge` `Tag` `Markdown` `JSON` `Gradient` `BigText` `Digits`                                             |
-| **Input** (8)         | `TextInput` `TextArea` `PasswordInput` `NumberInput` `SearchInput` `MaskedInput` `EmailInput` `PathInput`                                |
-| **Selection** (9)     | `Select` `MultiSelect` `RadioGroup` `Checkbox` `CheckboxGroup` `Toggle` `TreeSelect` `TagInput` `ColorPicker`                            |
-| **Data Display** (10) | `Table` `DataGrid` `List` `VirtualList` `Tree` `DirectoryTree` `KeyValue` `Definition` `Card` `Panel`                                    |
-| **Feedback** (9)      | `Spinner` `ProgressBar` `ProgressCircle` `StatusMessage` `Toast` `Alert` `Banner` `Skeleton` `MultiProgress`                             |
-| **Navigation** (7)    | `Tabs` `TabbedContent` `Breadcrumb` `Pagination` `CommandPalette` `Menu` `Sidebar`                                                       |
-| **Overlays** (7)      | `Modal` `Dialog` `Drawer` `Tooltip` `Popover` `NotificationCenter` `NotificationBadge`                                                   |
-| **Forms** (7)         | `Form` `FormField` `Wizard` `Confirm` `DatePicker` `TimePicker` `FilePicker`                                                             |
-| **Charts** (6)        | `Sparkline` `BarChart` `LineChart` `PieChart` `HeatMap` `Gauge`                                                                          |
-| **Utility** (12)      | `Timer` `Stopwatch` `Clock` `Clipboard` `KeyboardShortcuts` `Help` `ErrorBoundary` `Log` `Image` `QRCode` `EmbeddedTerminal` `GitStatus` |
-| **Templates** (9)     | `SplashScreen` `InfoBox` `AppShell` `BulletList` `WelcomeScreen` `LoginFlow` `UsageMonitor` `SetupFlow` `HelpScreen`                     |
+| Category              | Components                                                                                                                              |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **Layout** (9)        | `Box` `Stack` `Grid` `Divider` `Spacer` `ScrollView` `Columns` `Center` `AspectRatio`                                                   |
+| **Typography** (11)   | `Text` `Heading` `Code` `Link` `Badge` `Tag` `Markdown` `JSON` `Gradient` `BigText` `Digits`                                            |
+| **Input** (8)         | `TextInput` `TextArea` `PasswordInput` `NumberInput` `SearchInput` `MaskedInput` `EmailInput` `PathInput`                               |
+| **Selection** (9)     | `Select` `MultiSelect` `RadioGroup` `Checkbox` `CheckboxGroup` `Toggle` `TreeSelect` `TagInput` `ColorPicker`                           |
+| **Data Display** (11) | `Table` `DataGrid` `List` `VirtualList` `Tree` `DirectoryTree` `KeyValue` `Definition` `Card` `Panel` `GitStatus`                       |
+| **Feedback** (9)      | `Spinner` `ProgressBar` `ProgressCircle` `StatusMessage` `Toast` `Alert` `Banner` `Skeleton` `MultiProgress`                            |
+| **Navigation** (7)    | `Tabs` `TabbedContent` `Breadcrumb` `Pagination` `CommandPalette` `Menu` `Sidebar`                                                      |
+| **Overlays** (7)      | `Modal` `Dialog` `Drawer` `Tooltip` `Popover` `NotificationCenter` `NotificationBadge`                                                  |
+| **Forms** (7)         | `Form` `FormField` `Wizard` `Confirm` `DatePicker` `TimePicker` `FilePicker`                                                            |
+| **Charts** (6)        | `Sparkline` `BarChart` `LineChart` `PieChart` `HeatMap` `Gauge`                                                                         |
+| **Utility** (12)      | `Timer` `Stopwatch` `Clock` `Clipboard` `KeyboardShortcuts` `Help` `ErrorBoundary` `Log` `Image` `QRCode` `EmbeddedTerminal` `Profiler` |
+| **Templates** (9)     | `SplashScreen` `InfoBox` `AppShell` `BulletList` `WelcomeScreen` `LoginFlow` `UsageMonitor` `SetupFlow` `HelpScreen`                    |
 
 Browse everything: `npx termui list` or `npx termui preview`
 
@@ -201,7 +201,7 @@ import type { AlertProps, SelectProps } from 'termui/svelte';
 
 ## Theming
 
-TermUI ships 9 built-in themes.
+TermUI ships 8 built-in themes.
 
 ```bash
 npx termui theme dracula
@@ -209,17 +209,16 @@ npx termui theme nord
 npx termui theme catppuccin
 ```
 
-| Theme           | Description                     |
-| --------------- | ------------------------------- |
-| `default`       | Clean, neutral palette          |
-| `dracula`       | Dark purple with vibrant colors |
-| `nord`          | Arctic, north-bluish palette    |
-| `catppuccin`    | Soothing pastel mocha tones     |
-| `monokai`       | Classic warm dark theme         |
-| `tokyo-night`   | Vibrant neon city               |
-| `one-dark`      | Atom-inspired dark              |
-| `solarized`     | Ethan Schoonover classic        |
-| `high-contrast` | Accessibility-focused palette   |
+| Theme         | Description                     |
+| ------------- | ------------------------------- |
+| `default`     | Clean, neutral palette          |
+| `dracula`     | Dark purple with vibrant colors |
+| `nord`        | Arctic, north-bluish palette    |
+| `catppuccin`  | Soothing pastel mocha tones     |
+| `monokai`     | Classic warm dark theme         |
+| `tokyo-night` | Vibrant neon city               |
+| `one-dark`    | Atom-inspired dark              |
+| `solarized`   | Ethan Schoonover classic        |
 
 Or use a theme programmatically:
 

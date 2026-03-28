@@ -1,3 +1,4 @@
+import { execSync } from 'child_process';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join, relative } from 'path';
 import { writeConfig, type TermUIConfig } from '../utils/config.js';
@@ -226,10 +227,15 @@ export async function init(_args: string[], opts?: { isNested?: boolean }): Prom
     warn(`${hi(`src/index.${ext}`)} already exists — skipping`);
   }
 
-  // ─── Step 10: Print install command if requested ───────────────────────────
+  // ─── Step 10: Install dependencies ──────────────────────────────────────────
   if (shouldInstall) {
     const installCmd = buildInstallCommand(pm);
-    step(`Run: ${hi(installCmd)}`);
+    step(`Installing dependencies…`);
+    try {
+      execSync(installCmd, { stdio: 'inherit', cwd });
+    } catch {
+      warn(`Install failed. Run manually: ${hi(installCmd)}`);
+    }
   }
 
   // ─── Done ──────────────────────────────────────────────────────────────────

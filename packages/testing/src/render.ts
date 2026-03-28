@@ -16,7 +16,7 @@
 
 import React, { type ReactElement } from 'react';
 import { render as inkRender, type Instance } from 'ink';
-import { Writable } from 'stream';
+import { PassThrough, Writable } from 'stream';
 import stripAnsi from 'strip-ansi';
 
 export interface RenderResult {
@@ -55,6 +55,24 @@ class CaptureStream extends Writable {
   clear(): void {
     this.chunks = [];
   }
+}
+
+/**
+ * Build a minimal stdin mock that satisfies Ink's raw-mode check.
+ * Without this, Ink throws "Raw mode is not supported" whenever a component
+ * calls useInput(), which React reports to stderr via its error-boundary logic.
+ */
+function makeMockStdin(): NodeJS.ReadStream {
+  const stream = new PassThrough() as unknown as NodeJS.ReadStream;
+  // Ink checks `stdin.isTTY` before calling setRawMode; mark it true so the
+  // check passes, then no-op the actual call since there's no real terminal.
+  Object.assign(stream, {
+    isTTY: true,
+    setRawMode: () => {},
+    ref: () => {},
+    unref: () => {},
+  });
+  return stream;
 }
 
 /** Build a minimal TTY-like stream Ink accepts */
@@ -103,6 +121,7 @@ export async function renderToString(
 
   const instance = inkRender(element, {
     stdout: stream as unknown as NodeJS.WriteStream,
+    stdin: makeMockStdin(),
     exitOnCtrlC: false,
     debug: true,
   });
@@ -136,6 +155,7 @@ export function createTestRenderer(options: { cols?: number; rows?: number } = {
       const stream = makeMockStdout(cols, rows);
       const instance = inkRender(element, {
         stdout: stream as unknown as NodeJS.WriteStream,
+        stdin: makeMockStdin(),
         exitOnCtrlC: false,
         debug: true,
       });

@@ -1,6 +1,6 @@
 {
   "name": "@termui/components",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "TermUI component library — 101 terminal UI components",
   "type": "module",
   "main": "./dist/index.js",

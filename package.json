@@ -1,7 +1,7 @@
 {
   "name": "termui",
   "private": false,
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A TypeScript/React terminal UI framework with 100+ components, 8 themes, and a shadcn-style CLI",
   "keywords": [
     "terminal",
@@ -163,6 +163,38 @@
     "./conversation-store": {
       "import": "./dist/conversation-store.js",
       "types": "./dist/conversation-store.d.ts"
+    },
+    "./chalk": {
+      "import": "./dist/chalk.js",
+      "types": "./dist/chalk.d.ts"
+    },
+    "./ora": {
+      "import": "./dist/ora.js",
+      "types": "./dist/ora.d.ts"
+    },
+    "./meow": {
+      "import": "./dist/meow.js",
+      "types": "./dist/meow.d.ts"
+    },
+    "./commander": {
+      "import": "./dist/commander.js",
+      "types": "./dist/commander.d.ts"
+    },
+    "./inquirer": {
+      "import": "./dist/inquirer.js",
+      "types": "./dist/inquirer.d.ts"
+    },
+    "./imperative": {
+      "import": "./dist/imperative.js",
+      "types": "./dist/imperative.d.ts"
+    },
+    "./svelte": {
+      "import": "./dist/svelte.js",
+      "types": "./dist/svelte.d.ts"
+    },
+    "./vue": {
+      "import": "./dist/vue.js",
+      "types": "./dist/vue.d.ts"
     }
   },
   "dependencies": {

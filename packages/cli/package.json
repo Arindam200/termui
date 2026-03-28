@@ -1,6 +1,6 @@
 {
   "name": "termui",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "TermUI CLI — shadcn-style terminal UI component distribution",
   "type": "module",
   "bin": {

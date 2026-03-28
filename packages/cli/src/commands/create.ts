@@ -37,7 +37,13 @@ export async function create(args: string[]): Promise<void> {
     }
   }
 
-  const template = await select<Template>('Choose a starter template', TEMPLATES);
+  const templateFlagIdx = args.indexOf('--template');
+  const templateFlag =
+    templateFlagIdx !== -1 && TEMPLATES.some((t) => t.value === args[templateFlagIdx + 1])
+      ? (args[templateFlagIdx + 1] as Template)
+      : undefined;
+
+  const template = templateFlag ?? (await select<Template>('Choose a starter template', TEMPLATES));
 
   step(`Scaffolding ${hi(projectName)} with ${hi(template)} template…`);
 

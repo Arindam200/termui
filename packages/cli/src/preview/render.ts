@@ -183,7 +183,7 @@ export function render(state: PreviewState): void {
   const title =
     `${ansi.bold}${ansi.magenta} TermUI ${ansi.reset}` +
     `${ansi.bold}${ansi.white}Preview${ansi.reset}` +
-    `${ansi.dim}  v0.1.5${ansi.reset}`;
+    `${ansi.dim}  v1.4.1${ansi.reset}`;
   const hints = state.searchMode
     ? `${ansi.dim}type to search  Enter=jump  Esc=clear  ↑↓ results${ansi.reset}`
     : state.mode === 'playground'
