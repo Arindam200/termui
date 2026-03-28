@@ -45,3 +45,6 @@ export type {
   PttState,
   PttAction,
 } from './usePushToTalk.js';
+
+export { useUnicode, UnicodeContext, isNoUnicode } from './useUnicode.js';
+export type { UnicodeContextValue } from './useUnicode.js';

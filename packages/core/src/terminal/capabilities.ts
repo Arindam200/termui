@@ -59,6 +59,8 @@ function detectTerminalName(): string {
 
 function detectUnicodeSupport(): boolean {
   const { env, platform } = process;
+  // NO_UNICODE=1 forces ASCII mode globally
+  if (env['NO_UNICODE'] === '1' || env['NO_UNICODE'] === 'true') return false;
   // WSL always supports Unicode
   if (env['WSL_DISTRO_NAME']) return true;
   // Windows Terminal supports Unicode

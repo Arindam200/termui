@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'ink';
-import { useAnimation, useTheme, useMotion } from '@termui/core';
+import { useAnimation, useTheme, useMotion, useUnicode } from '@termui/core';
 
 export type SpinnerStyle =
   | 'dots'
@@ -17,19 +17,22 @@ export type SpinnerStyle =
   | 'earth';
 
 const FRAMES: Record<SpinnerStyle, string[]> = {
-  dots: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
-  line: ['—', '\\', '|', '/'],
-  star: ['✶', '✸', '✹', '✺', '✹', '✸'],
-  clock: ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚', '🕛'],
+  dots:   ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
+  line:   ['—', '\\', '|', '/'],
+  star:   ['✶', '✸', '✹', '✺', '✹', '✸'],
+  clock:  ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚', '🕛'],
   bounce: ['⠁', '⠂', '⠄', '⡀', '⡈', '⠠', '⠐', '⠈'],
-  bar: ['▏', '▎', '▍', '▌', '▋', '▊', '▉', '█', '▉', '▊', '▋', '▌', '▍', '▎'],
-  arc: ['◜', '◠', '◝', '◞', '◡', '◟'],
-  arrow: ['←', '↖', '↑', '↗', '→', '↘', '↓', '↙'],
+  bar:    ['▏', '▎', '▍', '▌', '▋', '▊', '▉', '█', '▉', '▊', '▋', '▌', '▍', '▎'],
+  arc:    ['◜', '◠', '◝', '◞', '◡', '◟'],
+  arrow:  ['←', '↖', '↑', '↗', '→', '↘', '↓', '↙'],
   toggle: ['⊶', '⊷'],
-  box: ['▖', '▘', '▝', '▗'],
-  pipe: ['┤', '┘', '┴', '└', '├', '┌', '┬', '┐'],
-  earth: ['🌍', '🌎', '🌏'],
+  box:    ['▖', '▘', '▝', '▗'],
+  pipe:   ['┤', '┘', '┴', '└', '├', '┌', '┬', '┐'],
+  earth:  ['🌍', '🌎', '🌏'],
 };
+
+/** Pure ASCII fallback frames used when NO_UNICODE=1 or supportsUnicode is false. */
+const ASCII_FRAMES: string[] = ['|', '/', '-', '\\'];
 
 export interface SpinnerProps {
   style?: SpinnerStyle;
@@ -51,16 +54,21 @@ export function Spinner({
 }: SpinnerProps) {
   const theme = useTheme();
   const { reduced } = useMotion();
+  const unicode = useUnicode();
   const isReduced = reducedMotion ?? reduced;
   const frame = useAnimation(fps);
-  const frames = customFrames ?? FRAMES[spinnerStyle];
+
+  // When unicode is unavailable, always use the pure ASCII rotation regardless
+  // of the requested style. Custom frames are passed through unchanged so
+  // callers can supply their own ASCII sequences.
+  const frames = customFrames ?? (unicode ? FRAMES[spinnerStyle] : ASCII_FRAMES);
   const icon = frames[frame % frames.length];
   const resolvedColor = color ?? theme.colors.primary;
 
   if (isReduced) {
     return (
       <Text>
-        <Text color={resolvedColor}>[…]</Text>
+        <Text color={resolvedColor}>{unicode ? '[…]' : '[.]'}</Text>
         {label && <Text> {label}</Text>}
       </Text>
     );

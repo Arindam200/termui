@@ -1,7 +1,58 @@
 /**
  * termui/args adapter — createCLI helper with styled help output using ANSI codes.
  * Optional bridges: yargs (applyYargsStyledHelp) and commander (createCommanderProgram).
+ *
+ * Also exports cross-platform signal/exit utilities (W6).
  */
+
+// ─── Cross-platform process exit helpers (W6) ────────────────────────────────
+
+/**
+ * Register a callback that fires when the process is about to exit.
+ *
+ * On all platforms: `SIGINT` (Ctrl+C) and `process.on('exit')` are hooked.
+ * On Unix only: `SIGTERM` and `SIGHUP` are also hooked — Windows does not
+ * support these signals. Apps that use SIGHUP for config-reload must provide
+ * their own Windows fallback (e.g. a file-watcher or IPC channel).
+ *
+ * The callback is called at most once (guarded by a flag) to prevent
+ * duplicate cleanup when multiple signals fire in quick succession.
+ *
+ * @returns A `dispose` function that removes all registered listeners.
+ *
+ * @example
+ * ```ts
+ * const dispose = onProcessExit(() => {
+ *   db.close();
+ *   console.log('Goodbye!');
+ * });
+ * // Later, if you want to remove the handler:
+ * dispose();
+ * ```
+ */
+export function onProcessExit(handler: () => void): () => void {
+  let called = false;
+  const once = () => { if (!called) { called = true; handler(); } };
+
+  process.on('exit', once);
+  process.on('SIGINT', once);
+
+  if (process.platform !== 'win32') {
+    // SIGTERM and SIGHUP are not available on Windows.
+    // ConPTY correctly forwards Ctrl+C as SIGINT on Windows — no special handling needed.
+    process.on('SIGTERM', once);
+    process.on('SIGHUP', once);
+  }
+
+  return () => {
+    process.off('exit', once);
+    process.off('SIGINT', once);
+    if (process.platform !== 'win32') {
+      process.off('SIGTERM', once);
+      process.off('SIGHUP', once);
+    }
+  };
+}
 
 const c = {
   bold: (s: string) => `\x1b[1m${s}\x1b[0m`,

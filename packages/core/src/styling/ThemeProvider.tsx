@@ -2,8 +2,11 @@ import React, { createContext, useContext, type ReactNode } from 'react';
 import type { Theme } from './tokens.js';
 import { defaultTheme } from './themes/default.js';
 import { MotionContext, isReducedMotion } from '../hooks/useMotion.js';
+import { UnicodeContext, isNoUnicode } from '../hooks/useUnicode.js';
 export type { MotionContextValue } from '../hooks/useMotion.js';
 export { MotionContext, isReducedMotion } from '../hooks/useMotion.js';
+export { UnicodeContext, isNoUnicode } from '../hooks/useUnicode.js';
+export type { UnicodeContextValue } from '../hooks/useUnicode.js';
 
 /**
  * Detect whether the terminal uses a dark or light background.
@@ -90,6 +93,12 @@ const ThemeContext = createContext<ThemeContextValue>({
 interface ThemeProviderProps {
   theme?: Theme;
   reducedMotion?: boolean;
+  /**
+   * Force ASCII/no-Unicode mode for all child components.
+   * When omitted, auto-detected from `NO_UNICODE=1` env var and terminal
+   * capability detection (`supportsUnicode`).
+   */
+  noUnicode?: boolean;
   children: ReactNode;
 }
 
@@ -104,6 +113,8 @@ interface ThemeProviderProps {
  *   themes with `createTheme()`.
  * @param props.reducedMotion - Force reduced motion for all animated children.
  *   When omitted, automatically detected from `NO_MOTION` / `CI` env vars.
+ * @param props.noUnicode - Force ASCII fallbacks for all animated children.
+ *   When omitted, automatically detected from `NO_UNICODE=1` / terminal capabilities.
  * @param props.children - React child tree that will receive the theme.
  *
  * @example
@@ -124,10 +135,13 @@ interface ThemeProviderProps {
 export function ThemeProvider({
   theme = defaultTheme,
   reducedMotion,
+  noUnicode,
   children,
 }: ThemeProviderProps) {
   const [currentTheme, setCurrentTheme] = React.useState<Theme>(theme);
   const motionReduced = reducedMotion ?? isReducedMotion();
+  // unicode = false when NO_UNICODE=1 OR terminal capability says no, OR prop forces it
+  const unicodeEnabled = noUnicode !== undefined ? !noUnicode : !isNoUnicode();
 
   React.useEffect(() => {
     setCurrentTheme(theme);
@@ -135,7 +149,11 @@ export function ThemeProvider({
 
   return (
     <ThemeContext.Provider value={{ theme: currentTheme, setTheme: setCurrentTheme }}>
-      <MotionContext.Provider value={{ reduced: motionReduced }}>{children}</MotionContext.Provider>
+      <MotionContext.Provider value={{ reduced: motionReduced }}>
+        <UnicodeContext.Provider value={{ unicode: unicodeEnabled }}>
+          {children}
+        </UnicodeContext.Provider>
+      </MotionContext.Provider>
     </ThemeContext.Provider>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text } from 'ink';
-import { useTheme } from '@termui/core';
+import { useTheme, useUnicode } from '@termui/core';
 
 export type ProgressCircleSize = 'sm' | 'md' | 'lg';
 
@@ -23,7 +23,13 @@ const MD_BOT = ['▀▀▀', '▀██▀'];
 function getSmChar(value: number): string {
   const clamped = Math.max(0, Math.min(100, value));
   const step = Math.floor((clamped / 100) * 7);
-  return BRAILLE_CHARS[step];
+  return BRAILLE_CHARS[step]!;
+}
+
+/** ASCII sm: `[##  ]` — 4-char fill indicator */
+function getAsciiBar(value: number, width = 4): string {
+  const filled = Math.round((Math.max(0, Math.min(100, value)) / 100) * width);
+  return '[' + '#'.repeat(filled) + ' '.repeat(width - filled) + ']';
 }
 
 export function ProgressCircle({
@@ -34,15 +40,16 @@ export function ProgressCircle({
   showPercent = false,
 }: ProgressCircleProps) {
   const theme = useTheme();
+  const unicode = useUnicode();
   const clamped = Math.max(0, Math.min(100, value));
   const resolvedColor = color ?? theme.colors.primary;
 
   if (size === 'sm') {
-    const char = getSmChar(clamped);
+    const display = unicode ? getSmChar(clamped) : getAsciiBar(clamped);
     return (
       <Box flexDirection="column" alignItems="flex-start">
         <Box flexDirection="row" gap={1}>
-          <Text color={resolvedColor}>{char}</Text>
+          <Text color={resolvedColor}>{display}</Text>
           {showPercent && <Text color={theme.colors.muted}>{Math.round(clamped)}%</Text>}
         </Box>
         {label && <Text color={theme.colors.muted}>{label}</Text>}
@@ -51,27 +58,37 @@ export function ProgressCircle({
   }
 
   // md and lg: render percentage inside compact brackets
-  // lg adds more padding / a border ring
+  // In ASCII mode, use plain bracket notation instead of Unicode angle brackets
   const percentLabel = `${Math.round(clamped)}%`;
 
   if (size === 'md') {
+    const [open, close] = unicode ? ['⟨', '⟩'] : ['[', ']'];
     return (
       <Box flexDirection="column" alignItems="flex-start">
         <Box flexDirection="row">
-          <Text color={resolvedColor}>⟨</Text>
+          <Text color={resolvedColor}>{open}</Text>
           <Text color={resolvedColor} bold>
             {percentLabel}
           </Text>
-          <Text color={resolvedColor}>⟩</Text>
+          <Text color={resolvedColor}>{close}</Text>
         </Box>
         {label && <Text color={theme.colors.muted}>{label}</Text>}
       </Box>
     );
   }
 
-  // lg: 3-line arc representation
-  const fillLevel = clamped / 100; // 0.0 → 1.0
-  // Top arc always shown; mid row fills from bottom; bot arc always shown
+  // lg: 3-line arc representation (unicode) or `[###   ]` bar (ASCII)
+  if (!unicode) {
+    return (
+      <Box flexDirection="column" alignItems="flex-start">
+        <Text color={resolvedColor}>{getAsciiBar(clamped, 8)}</Text>
+        {showPercent && <Text color={theme.colors.muted}>{percentLabel}</Text>}
+        {label && <Text color={theme.colors.muted}>{label}</Text>}
+      </Box>
+    );
+  }
+
+  const fillLevel = clamped / 100;
   const topArc = ' ▄█▄';
   const midLeft = '█';
   const midRight = '█';

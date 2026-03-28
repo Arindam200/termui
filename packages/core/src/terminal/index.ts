@@ -26,7 +26,11 @@ export {
   style as ansiStyle,
   stripAnsi,
   visibleWidth,
+  nearestAnsi256,
+  nearestAnsi16,
+  downsampleColor,
 } from './ansi.js';
+export type { ColorDepth } from './ansi.js';
 export { getTerminalCapabilities, resetCapabilitiesCache } from './capabilities.js';
 export type { TerminalCapabilities } from './capabilities.js';
 // Legacy aliases re-exported for backwards compatibility

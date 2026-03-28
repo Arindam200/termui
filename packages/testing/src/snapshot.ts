@@ -44,6 +44,15 @@ export function normalizeAnsi(output: string): string {
 }
 
 /**
+ * Normalize Windows CRLF line endings to LF.
+ * Applied automatically in `toMatchSnapshot` / `updateSnapshot` so snapshot
+ * files produced on Windows and Unix are byte-identical.
+ */
+export function normalizeCRLF(output: string): string {
+  return output.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+}
+
+/**
  * Write or compare a snapshot file.
  *
  * @param output - current output string (stripped of ANSI)
@@ -51,7 +60,7 @@ export function normalizeAnsi(output: string): string {
  * @returns true if matches (or was written), throws if mismatch
  */
 export function toMatchSnapshot(output: string, snapshotPath: string): true {
-  const normalized = stripVolatile(normalizeAnsi(output));
+  const normalized = normalizeCRLF(stripVolatile(normalizeAnsi(output)));
 
   if (!existsSync(snapshotPath)) {
     // First run: write snapshot
@@ -60,7 +69,7 @@ export function toMatchSnapshot(output: string, snapshotPath: string): true {
     return true;
   }
 
-  const expected = readFileSync(snapshotPath, 'utf-8');
+  const expected = normalizeCRLF(readFileSync(snapshotPath, 'utf-8'));
   if (normalized !== expected) {
     const diff = buildDiff(expected, normalized);
     throw new Error(
@@ -75,7 +84,7 @@ export function toMatchSnapshot(output: string, snapshotPath: string): true {
  * Update snapshot file. Call when UPDATE_SNAPSHOTS=1 is set.
  */
 export function updateSnapshot(output: string, snapshotPath: string): void {
-  const normalized = stripVolatile(normalizeAnsi(output));
+  const normalized = normalizeCRLF(stripVolatile(normalizeAnsi(output)));
   mkdirSync(dirname(snapshotPath), { recursive: true });
   writeFileSync(snapshotPath, normalized, 'utf-8');
 }

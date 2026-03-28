@@ -168,3 +168,102 @@ export function stripAnsi(str: string): string {
 export function visibleWidth(str: string): number {
   return stripAnsi(str).length;
 }
+
+// ─── Color depth downsampling ─────────────────────────────────────────────────
+
+export type ColorDepth = 'truecolor' | '256' | '16' | 'none';
+
+/**
+ * The 16 standard ANSI terminal colors as approximate RGB values.
+ * Indices 0-7 = standard, 8-15 = bright.
+ */
+const ANSI16_PALETTE: [number, number, number][] = [
+  [  0,   0,   0], // 0  black
+  [170,   0,   0], // 1  red
+  [  0, 170,   0], // 2  green
+  [170, 170,   0], // 3  yellow
+  [  0,   0, 170], // 4  blue
+  [170,   0, 170], // 5  magenta
+  [  0, 170, 170], // 6  cyan
+  [170, 170, 170], // 7  white (light gray)
+  [ 85,  85,  85], // 8  bright black (dark gray)
+  [255,  85,  85], // 9  bright red
+  [ 85, 255,  85], // 10 bright green
+  [255, 255,  85], // 11 bright yellow
+  [ 85,  85, 255], // 12 bright blue
+  [255,  85, 255], // 13 bright magenta
+  [ 85, 255, 255], // 14 bright cyan
+  [255, 255, 255], // 15 bright white
+];
+
+/** Euclidean distance² in RGB space (no sqrt — only used for comparison). */
+function colorDist(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number): number {
+  return (r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2;
+}
+
+/**
+ * Map an RGB triplet to the nearest xterm 256-color palette index (0–255).
+ *
+ * Uses:
+ *  - Indices 0–15:  standard + bright ANSI colors
+ *  - Indices 16–231: 6×6×6 color cube  (index = 16 + 36r + 6g + b, r/g/b ∈ [0,5])
+ *  - Indices 232–255: 24-step grayscale ramp
+ */
+export function nearestAnsi256(r: number, g: number, b: number): number {
+  // Map to the 6×6×6 color cube
+  const cr = Math.round(r / 255 * 5);
+  const cg = Math.round(g / 255 * 5);
+  const cb = Math.round(b / 255 * 5);
+  const cubeIndex = 16 + 36 * cr + 6 * cg + cb;
+  // Actual RGB of the chosen cube cell
+  const cubeR = cr === 0 ? 0 : 55 + cr * 40;
+  const cubeG = cg === 0 ? 0 : 55 + cg * 40;
+  const cubeB = cb === 0 ? 0 : 55 + cb * 40;
+  const cubeDist = colorDist(r, g, b, cubeR, cubeG, cubeB);
+
+  // Map to the grayscale ramp (232–255)
+  const avg = Math.round((r + g + b) / 3);
+  const greyIndex = avg < 8 ? 232 : avg > 238 ? 255 : Math.round((avg - 8) / 247 * 23) + 232;
+  const greyLevel = (greyIndex - 232) * 10 + 8;
+  const greyDist = colorDist(r, g, b, greyLevel, greyLevel, greyLevel);
+
+  return greyDist < cubeDist ? greyIndex : cubeIndex;
+}
+
+/**
+ * Map an RGB triplet to the nearest 16-color ANSI palette index (0–15).
+ * Used when the terminal reports `TERM=ansi` or only 16-color support.
+ */
+export function nearestAnsi16(r: number, g: number, b: number): number {
+  let bestIdx = 0;
+  let bestDist = Infinity;
+  for (let i = 0; i < ANSI16_PALETTE.length; i++) {
+    const [pr, pg, pb] = ANSI16_PALETTE[i]!;
+    const d = colorDist(r, g, b, pr, pg, pb);
+    if (d < bestDist) { bestDist = d; bestIdx = i; }
+  }
+  return bestIdx;
+}
+
+/**
+ * Convert a hex color string to the appropriate ANSI foreground escape code
+ * based on the given color depth.
+ *
+ * - `'truecolor'` — `\x1b[38;2;R;G;Bm`  (24-bit, pass-through)
+ * - `'256'`       — `\x1b[38;5;Nm`       (nearest xterm-256 index)
+ * - `'16'`        — `\x1b[3Nm` / `\x1b[9Nm` (nearest 16-color ANSI)
+ * - `'none'`      — empty string (no color)
+ *
+ * @param hex   Color string in `#RRGGBB` or `#RGB` format.
+ * @param depth Target color depth.
+ */
+export function downsampleColor(hex: string, depth: ColorDepth): string {
+  if (depth === 'none') return '';
+  const { r, g, b } = parseHex(hex);
+  if (depth === 'truecolor') return fgRgb(r, g, b);
+  if (depth === '256') return fg256(nearestAnsi256(r, g, b));
+  // 16-color: indices 0-7 use \x1b[3Nm, indices 8-15 use \x1b[9(N-8)m
+  const idx = nearestAnsi16(r, g, b);
+  return idx < 8 ? `${ESC}[3${idx}m` : `${ESC}[9${idx - 8}m`;
+}
+
