@@ -30,6 +30,7 @@ export default defineConfig({
     // by TypeScript/tsup directly. They are provided as source examples only.
     'svelte/index': 'svelte/index.ts',
     'inquirer/index': 'inquirer/index.ts',
+    'voice/index': 'voice/index.ts',
   },
   format: ['esm'],
   dts: true,

@@ -127,6 +127,7 @@ export default defineConfig([
       imperative: 'src/imperative.ts',
       svelte: 'src/svelte.ts',
       vue: 'src/vue.ts',
+      voice: 'src/voice.ts',
     },
     dts: true,
   },

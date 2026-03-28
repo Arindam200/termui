@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useFocus, useTheme, getAccessibleName } from '@termui/core';
-import type { AriaProps } from '@termui/core';
+import { useInput, useFocus, useTheme, getAccessibleName, usePushToTalk } from '@termui/core';
+import type { AriaProps, VoiceCapture } from '@termui/core';
+
+/** Opt-in voice dictation configuration for TextInput. Adapter-agnostic: supply your own captureFactory and transcribe function. */
+export interface TextInputVoiceProps {
+  enabled?: boolean;
+  captureFactory: () => VoiceCapture;
+  transcribe: (audio: Buffer) => Promise<string>;
+  onError?: (error: Error) => void;
+  warmupRepeatThreshold?: number;
+  releaseDebounceMs?: number;
+  /** Hint shown while idle and the field is empty. Default: 'Hold Space to speak' */
+  hint?: string;
+}
 
 export interface TextInputProps extends AriaProps {
   value?: string;
@@ -29,6 +41,8 @@ export interface TextInputProps extends AriaProps {
   paddingX?: number;
   /** Cursor character shown when focused. Default: '█' */
   cursor?: string;
+  /** Optional push-to-talk voice dictation. Does not import any adapter at runtime. */
+  voice?: TextInputVoiceProps;
 }
 
 export function TextInput({
@@ -46,6 +60,7 @@ export function TextInput({
   borderStyle = 'round',
   paddingX = 1,
   cursor = '█',
+  voice,
   'aria-label': ariaLabel,
   'aria-description': ariaDescription,
   'aria-live': ariaLive,
@@ -57,6 +72,23 @@ export function TextInput({
 
   const value = controlledValue ?? internalValue;
   const accessibleLabel = getAccessibleName(ariaLabel, label ?? placeholder ?? 'Text input');
+
+  const ptt = usePushToTalk({
+    captureFactory: voice?.captureFactory ?? (() => { throw new Error('no captureFactory'); }),
+    transcribe: voice?.transcribe ?? (() => Promise.resolve('')),
+    enabled: !!(voice?.enabled !== false && voice),
+    warmupRepeatThreshold: voice?.warmupRepeatThreshold,
+    releaseDebounceMs: voice?.releaseDebounceMs,
+    onTranscript: (text) => {
+      const next = value + text;
+      onChange ? onChange(next) : setInternalValue(next);
+    },
+    onError: voice?.onError,
+  });
+
+  function applyValue(next: string) {
+    onChange ? onChange(next) : setInternalValue(next);
+  }
 
   useInput((input, key) => {
     if (!isFocused) return;
@@ -73,16 +105,24 @@ export function TextInput({
     }
 
     if (key.backspace || key.delete) {
-      const newVal = value.slice(0, -1);
-      onChange ? onChange(newVal) : setInternalValue(newVal);
+      applyValue(value.slice(0, -1));
       return;
     }
 
     if (key.escape) return;
     if (key.upArrow || key.downArrow || key.tab) return;
 
-    const newVal = value + input;
-    onChange ? onChange(newVal) : setInternalValue(newVal);
+    if (voice) {
+      const result = ptt.handleInput(input, key);
+      if (result.removeTrailingChars) {
+        // Activation: retract provisional warmup spaces; current space is consumed.
+        applyValue(value.slice(0, -result.removeTrailingChars));
+        return;
+      }
+      if (result.consume) return;
+    }
+
+    applyValue(value + input);
   });
 
   const displayValue = mask ? mask.repeat(value.length) : value;
@@ -120,6 +160,15 @@ export function TextInput({
         </Box>
       )}
       {error && <Text color={theme.colors.error}>{error}</Text>}
+      {!error && voice && isFocused && (() => {
+        if (ptt.status === 'idle' && !value) {
+          return <Text dimColor>{voice.hint ?? 'Hold Space to speak'}</Text>;
+        }
+        if (ptt.hint) {
+          return <Text color={ptt.isListening ? theme.colors.accent : theme.colors.mutedForeground}>{ptt.hint}</Text>;
+        }
+        return null;
+      })()}
     </Box>
   );
 }

@@ -15,6 +15,14 @@ export type Key = {
   backspace: boolean;
   delete: boolean;
   meta: boolean;
+  /** Ink 5 Kitty keyboard protocol: 'press' | 'repeat' | 'release'. Undefined on xterm-style terminals. */
+  eventType?: 'press' | 'repeat' | 'release';
+  /** Home key (Ink 5). */
+  home?: boolean;
+  /** End key (Ink 5). */
+  end?: boolean;
+  /** Function key number (Ink 5). */
+  fn?: boolean;
 };
 
 export type InputHandler = (input: string, key: Key) => void;

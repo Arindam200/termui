@@ -1900,6 +1900,69 @@ function SoloTextInput() {
     />
   );
 }
+// Cast is needed until the components dist is rebuilt with the voice prop.
+const VoiceTextInput = TextInput as React.FC<
+  React.ComponentProps<typeof TextInput> & { voice?: unknown }
+>;
+
+function SoloVoiceInput() {
+  const [v, setV] = useState('');
+  const [log, setLog] = useState<string[]>([]);
+
+  // ── Mock capture: simulates 1 s of "recording" with no real audio device ──
+  const mockCaptureFactory = () => ({
+    start: () =>
+      new Promise<void>((res) => {
+        setLog((l) => [...l.slice(-4), '🎙  capture started (mock)']);
+        setTimeout(res, 0);
+      }),
+    stop: () =>
+      new Promise<Buffer>((res) => {
+        setLog((l) => [...l.slice(-4), '⏹  capture stopped (mock)']);
+        setTimeout(() => res(Buffer.from('mock-audio')), 600);
+      }),
+    cancel: () => {
+      setLog((l) => [...l.slice(-4), '✖  capture cancelled']);
+    },
+  });
+
+  // ── Mock STT: simulates 0.8 s network latency, echoes a canned phrase ──
+  const mockTranscribe = (_audio: Buffer) =>
+    new Promise<string>((res) => {
+      setLog((l) => [...l.slice(-4), '📡  transcribing… (mock 800 ms)']);
+      setTimeout(() => res('hello from voice'), 800);
+    });
+
+  return (
+    <Box flexDirection="column" gap={1}>
+      <Text bold>Voice dictation demo (mock — no ffmpeg / STT required)</Text>
+      <Text dimColor>Hold Space to speak. Single tap still inserts a space.</Text>
+      <VoiceTextInput
+        value={v}
+        onChange={setV}
+        placeholder="Waiting for input…"
+        label="Transcript"
+        autoFocus
+        width={48}
+        voice={{
+          captureFactory: mockCaptureFactory,
+          transcribe: mockTranscribe,
+          onError: (err: Error) => setLog((l) => [...l.slice(-4), `✖  error: ${err.message}`]),
+        }}
+      />
+      {log.length > 0 && (
+        <Box flexDirection="column">
+          <Text dimColor>── mock log ─────────────────────────</Text>
+          {log.map((line, i) => (
+            <Text key={i} dimColor>
+              {line}
+            </Text>
+          ))}
+        </Box>
+      )}
+    </Box>
+  );
+}
 function SoloPasswordInput() {
   const [v, setV] = useState('');
   return (
@@ -3002,6 +3065,8 @@ const SOLO_REGISTRY: Record<string, React.ComponentType> = {
   // input
   textinput: SoloTextInput,
   text: SoloTextInput,
+  voiceinput: SoloVoiceInput,
+  voice: SoloVoiceInput,
   passwordinput: SoloPasswordInput,
   password: SoloPasswordInput,
   numberinput: SoloNumberInput,

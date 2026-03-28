@@ -1,0 +1,21 @@
+{
+  "name": "@termui-examples/with-voice",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx index.tsx"
+  },
+  "dependencies": {
+    "@termui/core": "workspace:*",
+    "@termui/components": "workspace:*",
+    "ink": "^5.0.0",
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}

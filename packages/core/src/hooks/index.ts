@@ -34,3 +34,14 @@ export type {
   NotificationVariant,
   NotificationsContextValue,
 } from './useNotifications.js';
+
+export { usePushToTalk, pttReducer, initialPttState } from './usePushToTalk.js';
+export type {
+  PushToTalkStatus,
+  PushToTalkOptions,
+  PushToTalkResult,
+  VoiceCapture,
+  HandleInputResult,
+  PttState,
+  PttAction,
+} from './usePushToTalk.js';

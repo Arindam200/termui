@@ -195,6 +195,10 @@
     "./vue": {
       "import": "./dist/vue.js",
       "types": "./dist/vue.d.ts"
+    },
+    "./voice": {
+      "import": "./dist/voice.js",
+      "types": "./dist/voice.d.ts"
     }
   },
   "dependencies": {

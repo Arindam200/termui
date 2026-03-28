@@ -81,6 +81,9 @@
       ],
       "inquirer": [
         "./dist/inquirer/index.d.ts"
+      ],
+      "voice": [
+        "./dist/voice/index.d.ts"
       ]
     }
   },
@@ -184,6 +187,10 @@
     "./inquirer": {
       "types": "./dist/inquirer/index.d.ts",
       "import": "./dist/inquirer/index.js"
+    },
+    "./voice": {
+      "types": "./dist/voice/index.d.ts",
+      "import": "./dist/voice/index.js"
     }
   },
   "files": [
