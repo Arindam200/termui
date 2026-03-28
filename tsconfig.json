@@ -49,7 +49,15 @@
       "@termui/adapters/semver-update": ["packages/adapters/semver-update/index.ts"],
       "@termui/adapters/conf": ["packages/adapters/conf/index.ts"],
       "@termui/adapters/completion": ["packages/adapters/completion/index.ts"],
-      "@termui/adapters/internal/color-env": ["packages/adapters/internal/color-env.ts"]
+      "@termui/adapters/internal/color-env": ["packages/adapters/internal/color-env.ts"],
+      "@termui/adapters/chalk": ["packages/adapters/chalk/index.ts"],
+      "@termui/adapters/commander": ["packages/adapters/commander/index.ts"],
+      "@termui/adapters/imperative": ["packages/adapters/imperative/index.ts"],
+      "@termui/adapters/inquirer": ["packages/adapters/inquirer/index.ts"],
+      "@termui/adapters/meow": ["packages/adapters/meow/index.ts"],
+      "@termui/adapters/ora": ["packages/adapters/ora/index.ts"],
+      "@termui/adapters/svelte": ["packages/adapters/svelte/index.ts"],
+      "@termui/adapters/vue": ["packages/adapters/vue/index.ts"]
     }
   },
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
