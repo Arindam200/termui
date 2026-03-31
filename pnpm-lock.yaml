@@ -75,21 +75,15 @@ importers:
 
   examples/ai-demo:
     dependencies:
-      '@termui/adapters':
-        specifier: workspace:*
-        version: link:../../packages/adapters
-      '@termui/components':
-        specifier: workspace:*
-        version: link:../../packages/components
-      '@termui/core':
-        specifier: workspace:*
-        version: link:../../packages/core
       ink:
         specifier: ^5.0.0
         version: 5.2.1(@types/react@18.3.28)(react@18.3.1)
       react:
         specifier: ^18.0.0
         version: 18.3.1
+      termui:
+        specifier: latest
+        version: 1.4.2(ink@5.2.1(@types/react@18.3.28)(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -106,18 +100,15 @@ importers:
 
   examples/demo:
     dependencies:
-      '@termui/components':
-        specifier: workspace:*
-        version: link:../../packages/components
-      '@termui/core':
-        specifier: workspace:*
-        version: link:../../packages/core
       ink:
         specifier: ^5.0.0
         version: 5.2.1(@types/react@18.3.28)(react@18.3.1)
       react:
         specifier: ^18.0.0
         version: 18.3.1
+      termui:
+        specifier: latest
+        version: 1.4.2(ink@5.2.1(@types/react@18.3.28)(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -134,21 +125,15 @@ importers:
 
   examples/with-ai:
     dependencies:
-      '@termui/adapters':
-        specifier: workspace:*
-        version: link:../../packages/adapters
-      '@termui/components':
-        specifier: workspace:*
-        version: link:../../packages/components
-      '@termui/core':
-        specifier: workspace:*
-        version: link:../../packages/core
       ink:
         specifier: ^5.0.1
         version: 5.2.1(@types/react@18.3.28)(react@18.3.1)
       react:
         specifier: ^18.2.0
         version: 18.3.1
+      termui:
+        specifier: latest
+        version: 1.4.2(ink@5.2.1(@types/react@18.3.28)(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/react':
         specifier: ^18.0.0
@@ -162,9 +147,9 @@ importers:
 
   examples/with-chalk:
     dependencies:
-      '@termui/adapters':
-        specifier: workspace:*
-        version: link:../../packages/adapters
+      termui:
+        specifier: latest
+        version: 1.4.2(ink@5.2.1(@types/react@18.3.28)(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -178,12 +163,12 @@ importers:
 
   examples/with-commander:
     dependencies:
-      '@termui/adapters':
-        specifier: workspace:*
-        version: link:../../packages/adapters
       commander:
         specifier: ^12.0.0
         version: 12.1.0
+      termui:
+        specifier: latest
+        version: 1.4.2(ink@5.2.1(@types/react@18.3.28)(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -197,9 +182,9 @@ importers:
 
   examples/with-github:
     dependencies:
-      '@termui/adapters':
-        specifier: workspace:*
-        version: link:../../packages/adapters
+      termui:
+        specifier: latest
+        version: 1.4.2(ink@5.2.1(@types/react@18.3.28)(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@octokit/rest':
         specifier: ^21.0.2
@@ -216,9 +201,9 @@ importers:
 
   examples/with-inquirer:
     dependencies:
-      '@termui/adapters':
-        specifier: workspace:*
-        version: link:../../packages/adapters
+      termui:
+        specifier: latest
+        version: 1.4.2(ink@5.2.1(@types/react@18.3.28)(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -232,9 +217,9 @@ importers:
 
   examples/with-keychain:
     dependencies:
-      '@termui/adapters':
-        specifier: workspace:*
-        version: link:../../packages/adapters
+      termui:
+        specifier: latest
+        version: 1.4.2(ink@5.2.1(@types/react@18.3.28)(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/keytar':
         specifier: ^4.4.2
@@ -254,9 +239,9 @@ importers:
 
   examples/with-ora:
     dependencies:
-      '@termui/adapters':
-        specifier: workspace:*
-        version: link:../../packages/adapters
+      termui:
+        specifier: latest
+        version: 1.4.2(ink@5.2.1(@types/react@18.3.28)(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -270,18 +255,15 @@ importers:
 
   examples/with-voice:
     dependencies:
-      '@termui/components':
-        specifier: workspace:*
-        version: link:../../packages/components
-      '@termui/core':
-        specifier: workspace:*
-        version: link:../../packages/core
       ink:
         specifier: ^5.0.0
         version: 5.2.1(@types/react@18.3.28)(react@18.3.1)
       react:
         specifier: ^18.0.0
         version: 18.3.1
+      termui:
+        specifier: latest
+        version: 1.4.2(ink@5.2.1(@types/react@18.3.28)(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -3094,6 +3076,14 @@ packages:
   term-size@2.2.1:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
     engines: {node: '>=8'}
+
+  termui@1.4.2:
+    resolution: {integrity: sha512-zyHeThbxcXbRBcuz66X8uFtJp6688DNfRtt1rI8pevRH+5xxlRGZTgI6TbhKl9FpxvERGhzirJj8eh7qKK6ARQ==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    peerDependencies:
+      ink: ^5.0.0
+      react: ^18.0.0
 
   test-exclude@6.0.0:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
@@ -5918,6 +5908,14 @@ snapshots:
       readable-stream: 3.6.2
 
   term-size@2.2.1: {}
+
+  termui@1.4.2(ink@5.2.1(@types/react@18.3.28)(react@18.3.1))(react@18.3.1):
+    dependencies:
+      ink: 5.2.1(@types/react@18.3.28)(react@18.3.1)
+      latest-version: 9.0.0
+      react: 18.3.1
+      semver: 7.7.4
+      strip-ansi: 7.2.0
 
   test-exclude@6.0.0:
     dependencies:
