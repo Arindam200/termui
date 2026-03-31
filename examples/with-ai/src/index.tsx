@@ -7,9 +7,9 @@
 
 import React, { useState } from 'react';
 import { render, Box, Text, useApp, useInput } from 'ink';
-import { Spinner, TextInput } from '@termui/components';
-import { useChat } from '@termui/adapters/ai';
-import type { Message } from '@termui/adapters/ai';
+import { Spinner, TextInput } from 'termui/components';
+import { useChat } from 'termui/ai';
+import type { Message } from 'termui/ai';
 
 async function* mockStream(messages: Message[]): AsyncIterable<string> {
   const last = messages.filter((m) => m.role === 'user').pop()?.content ?? '';

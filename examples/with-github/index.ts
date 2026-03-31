@@ -1,6 +1,6 @@
 // Run: GITHUB_TOKEN=your_token npx tsx examples/with-github/index.ts
 
-import { createOctokit } from '@termui/adapters/github';
+import { createOctokit } from 'termui/github';
 
 const token = process.env['GITHUB_TOKEN'];
 

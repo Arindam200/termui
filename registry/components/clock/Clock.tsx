@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Box, Text } from 'ink';
-import { useInterval, useTheme } from '@termui/core';
+import { useInterval, useTheme } from 'termui';
 
 export interface ClockProps {
   format?: '12h' | '24h';

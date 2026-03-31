@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Text } from 'ink';
-import { useTheme } from '@termui/core';
+import { useTheme } from 'termui';
 import * as fs from 'fs';
 import * as path from 'path';
 

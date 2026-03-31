@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useTheme, useClipboard } from '@termui/core';
+import { useInput, useTheme, useClipboard } from 'termui';
 
 export interface ClipboardProps {
   value: string;

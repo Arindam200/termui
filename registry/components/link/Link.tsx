@@ -1,7 +1,7 @@
 import React from 'react';
 import type { ReactNode } from 'react';
 import { Box, Text } from 'ink';
-import { useTheme } from '@termui/core';
+import { useTheme } from 'termui';
 
 export interface LinkProps {
   children: ReactNode;

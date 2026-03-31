@@ -7,8 +7,7 @@
     "start": "tsx index.tsx"
   },
   "dependencies": {
-    "@termui/core": "workspace:*",
-    "@termui/components": "workspace:*",
+    "termui": "latest",
     "ink": "^5.0.0",
     "react": "^18.0.0"
   },

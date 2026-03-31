@@ -14,7 +14,7 @@ function makeMockProc(opts: { exitCode?: number; errorCode?: string } = {}) {
       return proc;
     },
     emit(event: string, ...args: unknown[]) {
-      handlers[event]?.forEach(cb => cb(...args));
+      handlers[event]?.forEach((cb) => cb(...args));
     },
   };
   return proc;

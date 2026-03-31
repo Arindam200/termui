@@ -9,14 +9,14 @@
  * ```svelte
  * <!-- App.svelte (root) -->
  * <script lang="ts">
- *   import { provideTheme } from '@termui/adapters/svelte';
+ *   import { provideTheme } from 'termui/svelte';
  *   import { defaultTheme } from './theme';
  *   provideTheme(defaultTheme);
  * </script>
  *
  * <!-- Child.svelte -->
  * <script lang="ts">
- *   import { themeTokens } from '@termui/adapters/svelte';
+ *   import { themeTokens } from 'termui/svelte';
  *   const theme = themeTokens();
  * </script>
  *

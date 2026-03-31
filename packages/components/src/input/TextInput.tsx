@@ -74,7 +74,11 @@ export function TextInput({
   const accessibleLabel = getAccessibleName(ariaLabel, label ?? placeholder ?? 'Text input');
 
   const ptt = usePushToTalk({
-    captureFactory: voice?.captureFactory ?? (() => { throw new Error('no captureFactory'); }),
+    captureFactory:
+      voice?.captureFactory ??
+      (() => {
+        throw new Error('no captureFactory');
+      }),
     transcribe: voice?.transcribe ?? (() => Promise.resolve('')),
     enabled: !!(voice?.enabled !== false && voice),
     warmupRepeatThreshold: voice?.warmupRepeatThreshold,
@@ -160,15 +164,22 @@ export function TextInput({
         </Box>
       )}
       {error && <Text color={theme.colors.error}>{error}</Text>}
-      {!error && voice && isFocused && (() => {
-        if (ptt.status === 'idle' && !value) {
-          return <Text dimColor>{voice.hint ?? 'Hold Space to speak'}</Text>;
-        }
-        if (ptt.hint) {
-          return <Text color={ptt.isListening ? theme.colors.accent : theme.colors.mutedForeground}>{ptt.hint}</Text>;
-        }
-        return null;
-      })()}
+      {!error &&
+        voice &&
+        isFocused &&
+        (() => {
+          if (ptt.status === 'idle' && !value) {
+            return <Text dimColor>{voice.hint ?? 'Hold Space to speak'}</Text>;
+          }
+          if (ptt.hint) {
+            return (
+              <Text color={ptt.isListening ? theme.colors.accent : theme.colors.mutedForeground}>
+                {ptt.hint}
+              </Text>
+            );
+          }
+          return null;
+        })()}
     </Box>
   );
 }

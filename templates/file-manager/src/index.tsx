@@ -11,7 +11,7 @@ import React, { useState, useEffect } from 'react';
 import { render, Box, Text, useApp, useInput } from 'ink';
 import { readdir, stat } from 'fs/promises';
 import { join, extname, basename, dirname } from 'path';
-import { ThemeProvider, useTheme, useAsync } from '@termui/core';
+import { ThemeProvider, useTheme, useAsync } from 'termui';
 import {
   Spinner,
   Badge,
@@ -21,7 +21,7 @@ import {
   KeyValue,
   StatusMessage,
   Tabs,
-} from '@termui/components';
+} from 'termui/components';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

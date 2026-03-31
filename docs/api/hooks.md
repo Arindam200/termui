@@ -4,7 +4,7 @@ title: Core Hooks
 
 # Core Hooks
 
-All hooks are exported from `@termui/core`.
+All hooks are exported from `termui`.
 
 ## `useInput(handler, options?)`
 

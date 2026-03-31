@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useTheme } from '@termui/core';
+import { useInput, useTheme } from 'termui';
 import type { ReactNode } from 'react';
 
 export interface ModalProps {

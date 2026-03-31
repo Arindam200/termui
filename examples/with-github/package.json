@@ -7,7 +7,7 @@
     "start": "tsx index.ts"
   },
   "dependencies": {
-    "@termui/adapters": "workspace:*"
+    "termui": "latest"
   },
   "peerDependencies": {
     "@octokit/rest": "^21.0.2"

@@ -119,7 +119,7 @@ interface ThemeProviderProps {
  *
  * @example
  * ```tsx
- * import { ThemeProvider, createTheme } from '@termui/core';
+ * import { ThemeProvider, createTheme } from 'termui';
  *
  * const myTheme = createTheme({ name: 'my-theme', colors: { primary: '#ff6b6b' } });
  *

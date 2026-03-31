@@ -1,6 +1,6 @@
 // Run: npx tsx examples/with-keychain/index.ts
 
-import { loadKeytar } from '@termui/adapters/keychain';
+import { loadKeytar } from 'termui/keychain';
 
 const SERVICE = 'termui-example';
 const ACCOUNT = 'demo-api-key';

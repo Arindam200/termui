@@ -88,11 +88,7 @@ describe('pttReducer', () => {
   });
 
   it('repeated STOP_RECORDING while already recording still transitions once', () => {
-    const recording = apply(
-      initialPttState,
-      { type: 'SPACE_PRESS' },
-      { type: 'SPACE_ACTIVATE' }
-    );
+    const recording = apply(initialPttState, { type: 'SPACE_PRESS' }, { type: 'SPACE_ACTIVATE' });
     const s1 = apply(recording, { type: 'STOP_RECORDING' });
     const s2 = apply(s1, { type: 'STOP_RECORDING' });
     expect(s1.status).toBe('transcribing');
@@ -147,9 +143,9 @@ describe('pttReducer', () => {
     // there is nothing to retract (chars already exist in the field).
     const s = apply(
       initialPttState,
-      { type: 'SPACE_PRESS' },         // typedWarmupChars = 1
-      { type: 'SPACE_WARMUP_CHAR' },   // typedWarmupChars = 2
-      { type: 'WARMUP_TIMEOUT' }       // back to idle, chars = 0
+      { type: 'SPACE_PRESS' }, // typedWarmupChars = 1
+      { type: 'SPACE_WARMUP_CHAR' }, // typedWarmupChars = 2
+      { type: 'WARMUP_TIMEOUT' } // back to idle, chars = 0
     );
     expect(s.typedWarmupChars).toBe(0);
     expect(s.status).toBe('idle');

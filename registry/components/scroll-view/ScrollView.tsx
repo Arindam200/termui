@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Text } from 'ink';
-import { useInput } from '@termui/core';
+import { useInput } from 'termui';
 import type { ReactNode } from 'react';
 
 export interface ScrollViewProps {

@@ -20,7 +20,7 @@
  */
 import React, { useState } from 'react';
 import { render, Box, Text, useApp, useInput } from 'ink';
-import { ThemeProvider } from '@termui/core';
+import { ThemeProvider } from 'termui';
 import {
   // Layout / data
   Tabs,
@@ -43,9 +43,9 @@ import {
   TokenUsage,
   ContextMeter,
   FileChange,
-} from '@termui/components';
-import { useChat, useCompletion } from '@termui/adapters/ai';
-import type { Message } from '@termui/adapters/ai';
+} from 'termui/components';
+import { useChat, useCompletion } from 'termui/ai';
+import type { Message } from 'termui/ai';
 
 // ─── Mock streaming providers ─────────────────────────────────────────────────
 

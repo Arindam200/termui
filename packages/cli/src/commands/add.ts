@@ -353,7 +353,7 @@ async function installComponent(
       source = await fetchComponentFile(registryUrl, meta.name, fileName);
     } catch {
       // Registry unreachable — skip this file rather than write a broken stub.
-      // A stub re-exporting from '@termui/components' would compile but fail at
+      // A stub re-exporting from 'termui/components' would compile but fail at
       // runtime because that package is not a declared dependency.
       if (!isDryRun) {
         warn(

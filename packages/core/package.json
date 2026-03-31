@@ -1,6 +1,6 @@
 {
   "name": "@termui/core",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "TermUI core — terminal layer, rendering, styling, and hooks",
   "type": "module",
   "main": "./dist/index.js",

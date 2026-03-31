@@ -18,7 +18,7 @@ import {
   solarizedTheme,
   tokyoNightTheme,
   oneDarkTheme,
-} from '@termui/core';
+} from 'termui';
 
 import {
   // Layout
@@ -130,7 +130,7 @@ import {
   ContextMeter,
   ModelSelector,
   FileChange,
-} from '@termui/components';
+} from 'termui/components';
 
 // ─── Themes ──────────────────────────────────────────────────────────────────
 

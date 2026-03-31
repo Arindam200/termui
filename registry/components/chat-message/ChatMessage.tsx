@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Text } from 'ink';
-import { useTheme, useInput } from '@termui/core';
+import { useTheme, useInput } from 'termui';
 import type { ReactNode } from 'react';
 
 export type ChatRole = 'user' | 'assistant' | 'system' | 'error';

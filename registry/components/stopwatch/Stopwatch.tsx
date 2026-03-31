@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Box, Text } from 'ink';
-import { useInterval, useInput, useTheme } from '@termui/core';
+import { useInterval, useInput, useTheme } from 'termui';
 
 export interface StopwatchProps {
   autoStart?: boolean;

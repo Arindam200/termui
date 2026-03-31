@@ -8,7 +8,7 @@
  */
 import React, { useState } from 'react';
 import { render, Box, Text, useApp, useInput } from 'ink';
-import { ThemeProvider, useTheme, useInterval } from '@termui/core';
+import { ThemeProvider, useTheme, useInterval } from 'termui';
 import {
   Spinner,
   ProgressBar,
@@ -20,7 +20,7 @@ import {
   KeyValue,
   Tabs,
   StatusMessage,
-} from '@termui/components';
+} from 'termui/components';
 
 // ─── Fake data generators ─────────────────────────────────────────────────────
 

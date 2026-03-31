@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useTheme } from '@termui/core';
+import { useInput, useTheme } from 'termui';
 
 export interface SelectOption<T = string> {
   value: T;

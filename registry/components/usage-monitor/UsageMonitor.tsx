@@ -1,6 +1,6 @@
 import React, { useState, type ReactNode } from 'react';
 import { Box, Text } from 'ink';
-import { useInterval, useTheme } from '@termui/core';
+import { useInterval, useTheme } from 'termui';
 
 export interface UsageMonitorProps {
   refreshInterval?: number;

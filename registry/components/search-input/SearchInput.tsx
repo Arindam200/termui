@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useFocus, useTheme } from '@termui/core';
+import { useInput, useFocus, useTheme } from 'termui';
 
 export interface SearchInputProps<T = string> {
   options?: T[];

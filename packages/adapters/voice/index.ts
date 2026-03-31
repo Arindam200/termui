@@ -1,5 +1,5 @@
 /**
- * @termui/adapters/voice — ffmpeg-based microphone capture helper.
+ * termui/voice — ffmpeg-based microphone capture helper.
  *
  * Records to a temporary WAV file using `ffmpeg` found in PATH.
  * Behavior varies by platform and audio device availability; this helper
@@ -44,7 +44,7 @@ import { join } from 'node:path';
 
 /**
  * Minimal interface a capture backend must satisfy.
- * Structurally compatible with the `VoiceCapture` type from `@termui/core`.
+ * Structurally compatible with the `VoiceCapture` type from `termui`.
  */
 export interface VoiceCapture {
   start(): void | Promise<void>;
@@ -93,7 +93,10 @@ export function createFfmpegMicCapture(options: FfmpegMicCaptureOptions = {}): V
   const device = options.device ?? defaultDevice(backend);
   const sampleRate = options.sampleRate ?? 16000;
 
-  const tmpPath = join(tmpdir(), `termui-voice-${Date.now()}-${Math.random().toString(36).slice(2)}.wav`);
+  const tmpPath = join(
+    tmpdir(),
+    `termui-voice-${Date.now()}-${Math.random().toString(36).slice(2)}.wav`
+  );
 
   let proc: ChildProcess | null = null;
   let started = false;
@@ -113,11 +116,16 @@ export function createFfmpegMicCapture(options: FfmpegMicCaptureOptions = {}): V
 
       const args = [
         '-y',
-        '-f', backend,
-        '-i', device,
-        '-ar', String(sampleRate),
-        '-ac', '1',
-        '-acodec', 'pcm_s16le',
+        '-f',
+        backend,
+        '-i',
+        device,
+        '-ar',
+        String(sampleRate),
+        '-ac',
+        '1',
+        '-acodec',
+        'pcm_s16le',
         tmpPath,
       ];
 

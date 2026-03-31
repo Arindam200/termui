@@ -36,7 +36,7 @@ export function ProgressBar({
 
   // Default fill/empty chars: Unicode block if supported, ASCII '#.' otherwise.
   // Explicit props always win.
-  const resolvedFill  = fillChar  ?? (unicode ? '█' : '#');
+  const resolvedFill = fillChar ?? (unicode ? '█' : '#');
   const resolvedEmpty = emptyChar ?? (unicode ? '░' : '.');
 
   const percent =

@@ -6,7 +6,7 @@
     "start": "tsx index.ts"
   },
   "dependencies": {
-    "@termui/adapters": "workspace:*"
+    "termui": "latest"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

@@ -43,7 +43,7 @@ npx termui preview
 - [Core Hooks](./api/hooks.md)
 - [CLI Commands](./api/cli.md)
 - [Adapters](./adapters.md)
-- [@termui/testing](./api/testing.md)
+- [termui/testing](./api/testing.md)
 
 ## Theming
 

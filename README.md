@@ -34,7 +34,7 @@ TermUI fills that gap:
 - **Copy-paste distribution:** `npx termui add` drops source files into your project; no runtime dependency on the registry
 - **Themeable everything:** swap between Dracula, Nord, Catppuccin, and 6 more with a single command, or create your own
 - **React mental model:** if you know React, you already know TermUI; it's JSX, hooks, and flexbox all the way down
-- **Built-in testing:** `@termui/testing` gives you `renderToString`, `fireEvent`, and `waitFor` for headless component tests
+- **Built-in testing:** `termui/testing` gives you `renderToString`, `fireEvent`, and `waitFor` for headless component tests
 
 ---
 
@@ -78,8 +78,8 @@ npx termui create my-ai-tool --template ai-assistant
 ```tsx
 import React from 'react';
 import { render } from 'ink';
-import { ThemeProvider } from '@termui/core';
-import { Spinner, ProgressBar, Alert, Select } from '@termui/components';
+import { ThemeProvider } from 'termui';
+import { Spinner, ProgressBar, Alert, Select } from 'termui/components';
 
 function App() {
   return (
@@ -223,7 +223,7 @@ npx termui theme catppuccin
 Or use a theme programmatically:
 
 ```tsx
-import { ThemeProvider, draculaTheme } from '@termui/core';
+import { ThemeProvider, draculaTheme } from 'termui';
 
 <ThemeProvider theme={draculaTheme}>
   <App />
@@ -233,7 +233,7 @@ import { ThemeProvider, draculaTheme } from '@termui/core';
 ### Custom theme
 
 ```tsx
-import { createTheme } from '@termui/core';
+import { createTheme } from 'termui';
 
 const myTheme = createTheme({
   name: 'my-brand',
@@ -262,7 +262,7 @@ import {
   useMouse, // mouse events
   useResize, // terminal resize
   useAsync, // async data loading
-} from '@termui/core';
+} from 'termui';
 ```
 
 ---
@@ -298,10 +298,10 @@ const { completion, complete, isLoading } = useCompletion({ api: '/api/complete'
 
 ## Testing
 
-`@termui/testing` provides headless testing utilities for TermUI components:
+`termui/testing` provides headless testing utilities for TermUI components:
 
 ```ts
-import { renderToString, screen, waitFor, fireEvent } from '@termui/testing';
+import { renderToString, screen, waitFor, fireEvent } from 'termui/testing';
 
 const output = await renderToString(<Spinner style="dots" />);
 expect(screen.hasText('⠋', output)).toBe(true);

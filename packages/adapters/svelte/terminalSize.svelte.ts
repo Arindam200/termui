@@ -10,7 +10,7 @@
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { terminalSize } from '@termui/adapters/svelte';
+ *   import { terminalSize } from 'termui/svelte';
  *   const size = terminalSize();
  * </script>
  *

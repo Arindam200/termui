@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'ink';
-import { useAnimation, useTheme } from '@termui/core';
+import { useAnimation, useTheme } from 'termui';
 
 export type SpinnerStyle =
   | 'dots'

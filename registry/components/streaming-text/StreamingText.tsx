@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text } from 'ink';
-import { useTheme } from '@termui/core';
+import { useTheme } from 'termui';
 
 export interface StreamingTextProps {
   /** Current accumulated string to display (controlled mode) */

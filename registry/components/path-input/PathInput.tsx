@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useFocus, useTheme } from '@termui/core';
+import { useInput, useFocus, useTheme } from 'termui';
 import { readdirSync, statSync } from 'fs';
 import { join, dirname, basename } from 'path';
 

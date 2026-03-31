@@ -203,8 +203,7 @@ export function usePushToTalk(options: PushToTalkOptions): PushToTalkResult {
   // "Stable callback" pattern: the ref always points to the latest implementation
   // so callers get a stable function reference while still seeing current state.
   const handleInputImpl = (input: string, key: Key): HandleInputResult => {
-    const { enabled = true, warmupRepeatThreshold = 2, releaseDebounceMs = 180 } =
-      optsRef.current;
+    const { enabled = true, warmupRepeatThreshold = 2, releaseDebounceMs = 180 } = optsRef.current;
 
     if (!enabled) return { consume: false };
 

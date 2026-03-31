@@ -6,7 +6,7 @@ import {
   useNotificationsProvider,
   NotificationsContext,
   type NotificationVariant,
-} from '@termui/core';
+} from 'termui';
 
 export interface NotificationCenterProps {
   maxVisible?: number; // default 5

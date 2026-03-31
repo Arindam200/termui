@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useTheme } from '@termui/core';
+import { useInput, useTheme } from 'termui';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 

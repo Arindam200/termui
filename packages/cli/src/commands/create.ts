@@ -110,7 +110,7 @@ export async function create(args: string[]): Promise<void> {
 const TEMPLATES_MAP: Record<Template, string> = {
   minimal: `import React from 'react';
 import { render } from 'ink';
-import { ThemeProvider } from '@termui/core';
+import { ThemeProvider } from 'termui';
 import { Box } from '../components/ui/layout/Box.js';
 import { Text } from '../components/ui/typography/Text.js';
 import { Spinner } from '../components/ui/feedback/Spinner.js';
@@ -131,7 +131,7 @@ render(<App />);
 
   cli: `import React from 'react';
 import { render } from 'ink';
-import { ThemeProvider } from '@termui/core';
+import { ThemeProvider } from 'termui';
 import { Box } from '../components/ui/layout/Box.js';
 import { Text } from '../components/ui/typography/Text.js';
 import { createCLI } from 'termui/args';
@@ -175,7 +175,7 @@ if (parsed) {
 
   dashboard: `import React from 'react';
 import { render } from 'ink';
-import { ThemeProvider } from '@termui/core';
+import { ThemeProvider } from 'termui';
 import { AppShell } from '../components/ui/templates/AppShell.js';
 import { Tabs } from '../components/ui/navigation/Tabs.js';
 import { Table } from '../components/ui/data/Table.js';
@@ -270,7 +270,7 @@ main();
 `,
   'ai-assistant': `import React, { useState, useCallback } from 'react';
 import { render } from 'ink';
-import { ThemeProvider, useTheme, useInput, useInterval } from '@termui/core';
+import { ThemeProvider, useTheme, useInput, useInterval } from 'termui';
 import { Box, Text } from 'ink';
 import { createCLI } from 'termui/args';
 
@@ -673,7 +673,6 @@ function buildPackageJson(name: string, template: Template): object {
     },
     dependencies: {
       termui: 'latest',
-      '@termui/core': 'latest',
       ink: '^5.0.0',
       react: '^18.0.0',
       ...(isAI

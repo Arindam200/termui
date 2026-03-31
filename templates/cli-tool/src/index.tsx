@@ -9,7 +9,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import { render, Box, Text, useApp, useInput } from 'ink';
-import { ThemeProvider, useTheme, useInterval } from '@termui/core';
+import { ThemeProvider, useTheme, useInterval } from 'termui';
 import {
   Spinner,
   ProgressBar,
@@ -23,7 +23,7 @@ import {
   Divider,
   StatusMessage,
   KeyValue,
-} from '@termui/components';
+} from 'termui/components';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

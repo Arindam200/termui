@@ -18,7 +18,7 @@ npx termui add chat-message chat-thread tool-call thinking-block \
 The AI adapter hooks ship in a separate package:
 
 ```sh
-npm install @termui/adapters
+npm install termui
 # plus at least one provider SDK
 npm install @anthropic-ai/sdk   # for Anthropic
 npm install openai               # for OpenAI
@@ -346,7 +346,7 @@ import { FileChange } from 'termui/components';
 
 ## `useChat` hook
 
-**Package:** `@termui/adapters/ai`
+**Package:** `termui/ai`
 
 Manages a full multi-turn chat conversation with streaming. Appends user and assistant messages to a `messages` array and updates the last assistant message incrementally as chunks arrive.
 
@@ -381,7 +381,7 @@ Manages a full multi-turn chat conversation with streaming. Appends user and ass
 **Usage:**
 
 ```tsx
-import { useChat } from '@termui/adapters/ai';
+import { useChat } from 'termui/ai';
 import { ChatThread, ChatMessage } from 'termui/components';
 
 const { messages, sendMessage, isStreaming } = useChat({
@@ -407,7 +407,7 @@ await sendMessage('List the files in the current directory.');
 
 ## `useCompletion` hook
 
-**Package:** `@termui/adapters/ai`
+**Package:** `termui/ai`
 
 Single-turn text completion. Streams the result into `text`, replacing it on each new call. Useful for one-shot summarisation, code generation, or any prompt that does not require conversation history.
 
@@ -437,7 +437,7 @@ Single-turn text completion. Streams the result into `text`, replacing it on eac
 **Usage:**
 
 ```tsx
-import { useCompletion } from '@termui/adapters/ai';
+import { useCompletion } from 'termui/ai';
 import { StreamingText } from 'termui/components';
 
 const { text, complete, isStreaming } = useCompletion({
@@ -462,7 +462,7 @@ A minimal interactive chat UI combining `ChatThread`, `TextInput`, and `useChat`
 ```tsx
 import React, { useState } from 'react';
 import { render } from 'ink';
-import { useChat } from '@termui/adapters/ai';
+import { useChat } from 'termui/ai';
 import { ChatThread, ChatMessage, TokenUsage, TextInput } from 'termui/components';
 
 function ChatApp() {

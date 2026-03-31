@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { Box as InkBox, type BoxProps as InkBoxProps } from 'ink';
-import { useTheme } from '@termui/core';
+import { useTheme } from 'termui';
 
 export type BorderVariant = 'default' | 'muted' | 'focus' | 'success' | 'error' | 'warning';
 

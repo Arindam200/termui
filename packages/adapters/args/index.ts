@@ -32,7 +32,12 @@
  */
 export function onProcessExit(handler: () => void): () => void {
   let called = false;
-  const once = () => { if (!called) { called = true; handler(); } };
+  const once = () => {
+    if (!called) {
+      called = true;
+      handler();
+    }
+  };
 
   process.on('exit', once);
   process.on('SIGINT', once);

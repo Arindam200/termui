@@ -178,21 +178,21 @@ export type ColorDepth = 'truecolor' | '256' | '16' | 'none';
  * Indices 0-7 = standard, 8-15 = bright.
  */
 const ANSI16_PALETTE: [number, number, number][] = [
-  [  0,   0,   0], // 0  black
-  [170,   0,   0], // 1  red
-  [  0, 170,   0], // 2  green
-  [170, 170,   0], // 3  yellow
-  [  0,   0, 170], // 4  blue
-  [170,   0, 170], // 5  magenta
-  [  0, 170, 170], // 6  cyan
+  [0, 0, 0], // 0  black
+  [170, 0, 0], // 1  red
+  [0, 170, 0], // 2  green
+  [170, 170, 0], // 3  yellow
+  [0, 0, 170], // 4  blue
+  [170, 0, 170], // 5  magenta
+  [0, 170, 170], // 6  cyan
   [170, 170, 170], // 7  white (light gray)
-  [ 85,  85,  85], // 8  bright black (dark gray)
-  [255,  85,  85], // 9  bright red
-  [ 85, 255,  85], // 10 bright green
-  [255, 255,  85], // 11 bright yellow
-  [ 85,  85, 255], // 12 bright blue
-  [255,  85, 255], // 13 bright magenta
-  [ 85, 255, 255], // 14 bright cyan
+  [85, 85, 85], // 8  bright black (dark gray)
+  [255, 85, 85], // 9  bright red
+  [85, 255, 85], // 10 bright green
+  [255, 255, 85], // 11 bright yellow
+  [85, 85, 255], // 12 bright blue
+  [255, 85, 255], // 13 bright magenta
+  [85, 255, 255], // 14 bright cyan
   [255, 255, 255], // 15 bright white
 ];
 
@@ -211,9 +211,9 @@ function colorDist(r1: number, g1: number, b1: number, r2: number, g2: number, b
  */
 export function nearestAnsi256(r: number, g: number, b: number): number {
   // Map to the 6×6×6 color cube
-  const cr = Math.round(r / 255 * 5);
-  const cg = Math.round(g / 255 * 5);
-  const cb = Math.round(b / 255 * 5);
+  const cr = Math.round((r / 255) * 5);
+  const cg = Math.round((g / 255) * 5);
+  const cb = Math.round((b / 255) * 5);
   const cubeIndex = 16 + 36 * cr + 6 * cg + cb;
   // Actual RGB of the chosen cube cell
   const cubeR = cr === 0 ? 0 : 55 + cr * 40;
@@ -223,7 +223,7 @@ export function nearestAnsi256(r: number, g: number, b: number): number {
 
   // Map to the grayscale ramp (232–255)
   const avg = Math.round((r + g + b) / 3);
-  const greyIndex = avg < 8 ? 232 : avg > 238 ? 255 : Math.round((avg - 8) / 247 * 23) + 232;
+  const greyIndex = avg < 8 ? 232 : avg > 238 ? 255 : Math.round(((avg - 8) / 247) * 23) + 232;
   const greyLevel = (greyIndex - 232) * 10 + 8;
   const greyDist = colorDist(r, g, b, greyLevel, greyLevel, greyLevel);
 
@@ -240,7 +240,10 @@ export function nearestAnsi16(r: number, g: number, b: number): number {
   for (let i = 0; i < ANSI16_PALETTE.length; i++) {
     const [pr, pg, pb] = ANSI16_PALETTE[i]!;
     const d = colorDist(r, g, b, pr, pg, pb);
-    if (d < bestDist) { bestDist = d; bestIdx = i; }
+    if (d < bestDist) {
+      bestDist = d;
+      bestIdx = i;
+    }
   }
   return bestIdx;
 }
@@ -266,4 +269,3 @@ export function downsampleColor(hex: string, depth: ColorDepth): string {
   const idx = nearestAnsi16(r, g, b);
   return idx < 8 ? `${ESC}[3${idx}m` : `${ESC}[9${idx - 8}m`;
 }
-

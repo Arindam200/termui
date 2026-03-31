@@ -1,6 +1,6 @@
 import React, { useState, type ReactNode } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useAnimation, useTheme } from '@termui/core';
+import { useInput, useAnimation, useTheme } from 'termui';
 import { BigText, type BigTextFont } from 'termui/components';
 
 export interface SetupFlowProps {

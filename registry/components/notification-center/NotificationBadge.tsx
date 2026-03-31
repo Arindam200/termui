@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'ink';
-import { useTheme } from '@termui/core';
+import { useTheme } from 'termui';
 
 export interface NotificationBadgeProps {
   count: number;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text } from 'ink';
-import { useTheme, useAnimation } from '@termui/core';
+import { useTheme, useAnimation } from 'termui';
 
 export interface SkeletonProps {
   width?: number;

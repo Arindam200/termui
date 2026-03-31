@@ -4,7 +4,7 @@ title: Adapters Reference
 
 # Adapters Reference
 
-TermUI ships an `@termui/adapters` package that provides drop-in replacements and bridges for popular CLI ecosystem libraries. All adapters are exported as **subpath imports** from `termui/<name>` and are tree-shakable. Peer dependencies are optional — the adapter gracefully falls back or throws a descriptive error when a peer is absent.
+TermUI provides drop-in replacements and bridges for popular CLI ecosystem libraries. All adapters are exported as **subpath imports** from `termui/<name>` and are tree-shakable. Peer dependencies are optional — the adapter gracefully falls back or throws a descriptive error when a peer is absent.
 
 ---
 
@@ -161,7 +161,7 @@ outro('Deployment complete');
 
 ## `termui/clack-ink`
 
-Ink-rendered variants of the clack prompts. Uses React + Ink + TermUI components to render interactive `Select` and `Confirm` prompts inside an Ink app. Requires `@termui/core`, `@termui/components`, `ink`, and `react`.
+Ink-rendered variants of the clack prompts. Uses React + Ink + TermUI components to render interactive `Select` and `Confirm` prompts inside an Ink app. Requires `termui`, `ink`, and `react`.
 
 ```ts
 import { selectInk, confirmInk } from 'termui/clack-ink';
@@ -469,7 +469,7 @@ import type { SpinnerProps, Theme } from 'termui/svelte';
 ```svelte
 <script lang="ts">
   import type { SelectProps } from 'termui/svelte';
-  import { terminalSize } from '@termui/adapters/svelte/terminalSize.svelte.ts';
+  import { terminalSize } from 'termui/svelte';
 
   const size = terminalSize();
   // size.columns and size.rows are reactive via Svelte 5 $state runes

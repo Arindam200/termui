@@ -314,7 +314,7 @@ const history = await store.load(id);
 ## Testing
 
 ```tsx
-import { renderToString, fireEvent, waitFor } from '@termui/testing';
+import { renderToString, fireEvent, waitFor } from 'termui/testing';
 
 const out = await renderToString(<Spinner label="Loading" />);
 expect(out).toContain('Loading');

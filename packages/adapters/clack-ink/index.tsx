@@ -1,5 +1,5 @@
 /**
- * termui/clack-ink — Ink + TermUI themed prompts (optional @termui/core + @termui/components).
+ * termui/clack-ink — Ink + TermUI themed prompts (requires termui peer dep).
  */
 
 import React from 'react';

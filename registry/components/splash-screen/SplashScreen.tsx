@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { Box, Text } from 'ink';
-import { useTheme } from '@termui/core';
+import { useTheme } from 'termui';
 import { BigText } from 'termui/components';
 
 export type FigletFont = 'block' | 'simple';

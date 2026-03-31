@@ -2,10 +2,10 @@
  * termui/svelte — type bridge and composables for Svelte 5 users.
  *
  * TermUI components are React/Ink components, but their prop interfaces
- * are available via @termui/types for type-safe Svelte component wrappers.
+ * are available via termui for type-safe Svelte component wrappers.
  *
  * Usage:
- *   import type { SpinnerProps, Theme } from '@termui/adapters/svelte';
+ *   import type { SpinnerProps, Theme } from 'termui/svelte';
  *
  * The composables below (terminalSize, themeTokens) are provided as
  * Svelte 5 rune-based examples in the sibling .svelte.ts files.

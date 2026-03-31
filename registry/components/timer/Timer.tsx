@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Box, Text } from 'ink';
-import { useInterval, useInput, useTheme } from '@termui/core';
+import { useInterval, useInput, useTheme } from 'termui';
 
 export interface TimerProps {
   duration: number; // seconds

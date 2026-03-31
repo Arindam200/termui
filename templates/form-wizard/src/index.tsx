@@ -8,7 +8,7 @@
  */
 import React, { useState } from 'react';
 import { render, Box, Text, useApp, useInput } from 'ink';
-import { ThemeProvider, useTheme } from '@termui/core';
+import { ThemeProvider, useTheme } from 'termui';
 import {
   TextInput,
   PasswordInput,
@@ -26,7 +26,7 @@ import {
   KeyValue,
   ProgressBar,
   StatusMessage,
-} from '@termui/components';
+} from 'termui/components';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

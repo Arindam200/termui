@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Text, useInput } from 'ink';
-import { useTheme } from '@termui/core';
+import { useTheme } from 'termui';
 import type { ReactNode } from 'react';
 
 export type BannerVariant = 'info' | 'warning' | 'error' | 'success' | 'neutral';

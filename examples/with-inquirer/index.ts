@@ -1,6 +1,6 @@
 // Run: npx tsx examples/with-inquirer/index.ts
 
-import { prompt } from '@termui/adapters/inquirer';
+import { prompt } from 'termui/inquirer';
 
 const answers = await prompt([
   {

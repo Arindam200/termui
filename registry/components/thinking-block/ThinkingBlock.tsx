@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Text } from 'ink';
-import { useTheme, useInput } from '@termui/core';
+import { useTheme, useInput } from 'termui';
 
 export interface ThinkingBlockProps {
   content: string;

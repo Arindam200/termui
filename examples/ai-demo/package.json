@@ -8,9 +8,7 @@
     "shell": "tsx src/agent-shell.tsx"
   },
   "dependencies": {
-    "@termui/core": "workspace:*",
-    "@termui/components": "workspace:*",
-    "@termui/adapters": "workspace:*",
+    "termui": "latest",
     "ink": "^5.0.0",
     "react": "^18.0.0"
   },

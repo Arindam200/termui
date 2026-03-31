@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Text, useStdout } from 'ink';
-import { useInput, useTheme } from '@termui/core';
+import { useInput, useTheme } from 'termui';
 import type { ReactNode } from 'react';
 
 export interface Tab {

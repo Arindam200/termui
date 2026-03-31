@@ -19,7 +19,7 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { render, Box, Text, useApp } from 'ink';
-import { ThemeProvider, useTheme, useInput } from '@termui/core';
+import { ThemeProvider, useTheme, useInput } from 'termui';
 import {
   ChatThread,
   ChatMessage,
@@ -28,16 +28,16 @@ import {
   TokenUsage,
   ContextMeter,
   TextInput,
-} from '@termui/components';
-import type { ModelOption, RiskLevel } from '@termui/components';
-import { useChat } from '@termui/adapters/ai';
-import type { Message } from '@termui/adapters/ai';
+} from 'termui/components';
+import type { ModelOption, RiskLevel } from 'termui/components';
+import { useChat } from 'termui/ai';
+import type { Message } from 'termui/ai';
 import {
   createConversationStore,
   createConversation,
   generateConversationId,
-} from '@termui/adapters/conversation-store';
-import type { ConversationRecord } from '@termui/adapters/conversation-store';
+} from 'termui/conversation-store';
+import type { ConversationRecord } from 'termui/conversation-store';
 import os from 'os';
 import path from 'path';
 
@@ -46,12 +46,17 @@ import path from 'path';
 const CONTEXT_LIMIT = 200_000; // default context window size (tokens)
 
 const MODELS: ModelOption[] = [
-  { id: 'claude-sonnet-4-20250514', name: 'Claude Sonnet 4',   provider: 'Anthropic', context: 200_000 },
-  { id: 'claude-opus-4-5',         name: 'Claude Opus 4.5',   provider: 'Anthropic', context: 200_000 },
-  { id: 'claude-haiku-4-5',        name: 'Claude Haiku 4.5',  provider: 'Anthropic', context: 200_000 },
-  { id: 'gpt-4o',                  name: 'GPT-4o',             provider: 'OpenAI',    context: 128_000 },
-  { id: 'gpt-4o-mini',             name: 'GPT-4o Mini',        provider: 'OpenAI',    context: 128_000 },
-  { id: 'llama3.2',                name: 'Llama 3.2',          provider: 'Ollama',    context:  32_000 },
+  {
+    id: 'claude-sonnet-4-20250514',
+    name: 'Claude Sonnet 4',
+    provider: 'Anthropic',
+    context: 200_000,
+  },
+  { id: 'claude-opus-4-5', name: 'Claude Opus 4.5', provider: 'Anthropic', context: 200_000 },
+  { id: 'claude-haiku-4-5', name: 'Claude Haiku 4.5', provider: 'Anthropic', context: 200_000 },
+  { id: 'gpt-4o', name: 'GPT-4o', provider: 'OpenAI', context: 128_000 },
+  { id: 'gpt-4o-mini', name: 'GPT-4o Mini', provider: 'OpenAI', context: 128_000 },
+  { id: 'llama3.2', name: 'Llama 3.2', provider: 'Ollama', context: 32_000 },
 ];
 
 // ─── Conversation store (persists to ~/.local/share/ai-assistant) ─────────────
@@ -108,7 +113,9 @@ function ChatApp() {
     createConversation({ id: generateConversationId(), model: selectedModel })
   );
   const conversationRef = useRef(conversation);
-  useEffect(() => { conversationRef.current = conversation; }, [conversation]);
+  useEffect(() => {
+    conversationRef.current = conversation;
+  }, [conversation]);
 
   // Chat hook — swap provider + apiKey for real completions
   const { messages, sendMessage, isStreaming, abort, error, tokenUsage } = useChat({
@@ -185,7 +192,10 @@ function ChatApp() {
 
   // ── Keybindings ─────────────────────────────────────────────────────────────
   useInput((char, key) => {
-    if (key.ctrl && char === 'c') { exit(); return; }
+    if (key.ctrl && char === 'c') {
+      exit();
+      return;
+    }
 
     if (mode === 'model-select') {
       if (key.escape) setMode('chat');
@@ -197,10 +207,17 @@ function ChatApp() {
         setMode('model-select');
         return;
       }
-      if (key.ctrl && char === 'a') { abort(); return; }
+      if (key.ctrl && char === 'a') {
+        abort();
+        return;
+      }
       if (key.ctrl && char === 's') {
-        store.save({ ...conversationRef.current, updatedAt: new Date().toISOString() })
-          .then(() => { setStatusMsg('Saved.'); setTimeout(() => setStatusMsg(''), 2000); })
+        store
+          .save({ ...conversationRef.current, updatedAt: new Date().toISOString() })
+          .then(() => {
+            setStatusMsg('Saved.');
+            setTimeout(() => setStatusMsg(''), 2000);
+          })
           .catch(() => {});
         return;
       }
@@ -213,7 +230,6 @@ function ChatApp() {
 
   return (
     <Box flexDirection="column" height={process.stdout.rows ?? 24}>
-
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <Box
         borderStyle="single"
@@ -221,11 +237,13 @@ function ChatApp() {
         paddingX={1}
         justifyContent="space-between"
       >
-        <Text bold color={theme.colors.primary}>AI Assistant</Text>
+        <Text bold color={theme.colors.primary}>
+          AI Assistant
+        </Text>
         <Box gap={2}>
           <Text color={theme.colors.accent}>{selectedModelOption.name}</Text>
           <Text color={theme.colors.mutedForeground} dimColor>
-            [m] model  [^A] abort  [^S] save  [^C] quit
+            [m] model [^A] abort [^S] save [^C] quit
           </Text>
         </Box>
       </Box>
@@ -242,7 +260,7 @@ function ChatApp() {
             paddingY={1}
           >
             <Text bold color={theme.colors.primary} dimColor={false}>
-              Select Model  <Text dimColor>[↑↓ navigate · Enter select · Esc cancel]</Text>
+              Select Model <Text dimColor>[↑↓ navigate · Enter select · Esc cancel]</Text>
             </Text>
             <Box marginTop={1}>
               <ModelSelector
@@ -265,9 +283,18 @@ function ChatApp() {
             args={pendingTool.args}
             risk={pendingTool.risk}
             timeout={30}
-            onApprove={() => { pendingTool.resolve(true);  setPendingTool(null); }}
-            onDeny={()    => { pendingTool.resolve(false); setPendingTool(null); }}
-            onAlwaysAllow={() => { pendingTool.resolve(true); setPendingTool(null); }}
+            onApprove={() => {
+              pendingTool.resolve(true);
+              setPendingTool(null);
+            }}
+            onDeny={() => {
+              pendingTool.resolve(false);
+              setPendingTool(null);
+            }}
+            onAlwaysAllow={() => {
+              pendingTool.resolve(true);
+              setPendingTool(null);
+            }}
           />
         ) : (
           /* ── Conversation thread ────────────────────────────────────────── */
@@ -354,7 +381,6 @@ function ChatApp() {
           />
         )}
       </Box>
-
     </Box>
   );
 }

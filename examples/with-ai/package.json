@@ -6,9 +6,7 @@
     "start": "tsx src/index.tsx"
   },
   "dependencies": {
-    "@termui/adapters": "workspace:*",
-    "@termui/components": "workspace:*",
-    "@termui/core": "workspace:*",
+    "termui": "latest",
     "ink": "^5.0.1",
     "react": "^18.2.0"
   },

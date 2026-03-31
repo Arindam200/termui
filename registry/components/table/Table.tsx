@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useTheme } from '@termui/core';
+import { useInput, useTheme } from 'termui';
 
 export interface Column<T = Record<string, unknown>> {
   key: keyof T & string;

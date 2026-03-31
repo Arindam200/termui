@@ -12,8 +12,8 @@
  */
 import React, { useState, useRef, useCallback } from 'react';
 import { render, Box, Text, useApp, useInput, Static } from 'ink';
-import { ThemeProvider, useAnimation } from '@termui/core';
-import { TextInput, Divider } from '@termui/components';
+import { ThemeProvider, useAnimation } from 'termui';
+import { TextInput, Divider } from 'termui/components';
 
 // ─── Colors ───────────────────────────────────────────────────────────────────
 const ORANGE = '#CE9262';

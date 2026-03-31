@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { Box, Text } from 'ink';
-import { useTheme } from '@termui/core';
+import { useTheme } from 'termui';
 import { BigText, type BigTextFont } from 'termui/components';
 
 export interface HelpScreenProps {

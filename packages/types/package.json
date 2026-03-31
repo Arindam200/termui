@@ -1,6 +1,6 @@
 {
   "name": "@termui/types",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Framework-agnostic TypeScript type definitions for TermUI components",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,15 +1,15 @@
 ---
-title: '@termui/testing'
+title: 'termui/testing'
 ---
 
-# @termui/testing
+# termui/testing
 
 Headless testing utilities for TermUI components. Captures Ink render output as plain text for use with Vitest, Jest, or any assertion library.
 
 ## Installation
 
 ```sh
-pnpm add -D @termui/testing
+pnpm add -D termui
 ```
 
 ---
@@ -29,8 +29,8 @@ renderToString(element: ReactElement, options?: {
 **Example:**
 
 ```tsx
-import { renderToString } from '@termui/testing';
-import { Spinner } from '@termui/components';
+import { renderToString } from 'termui/testing';
+import { Spinner } from 'termui/components';
 
 const output = await renderToString(<Spinner style="dots" />);
 expect(output).toContain('⠋');
@@ -118,7 +118,7 @@ await waitFor(() => {
 import { describe, it, expect, afterEach } from 'vitest';
 import React, { useState } from 'react';
 import { Text } from 'ink';
-import { createTestRenderer, screen, fireEvent, waitFor } from '@termui/testing';
+import { createTestRenderer, screen, fireEvent, waitFor } from 'termui/testing';
 
 describe('Counter', () => {
   const { render, cleanup } = createTestRenderer();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Text } from 'ink';
-import { useTheme, useInput, useAnimation } from '@termui/core';
+import { useTheme, useInput, useAnimation } from 'termui';
 
 export type ToolCallStatus = 'pending' | 'running' | 'success' | 'error';
 

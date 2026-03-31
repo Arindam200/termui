@@ -1,6 +1,6 @@
 import React, { useState, type ReactNode } from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useTheme } from '@termui/core';
+import { useInput, useTheme } from 'termui';
 import { BigText, type BigTextFont } from 'termui/components';
 
 export interface LoginFlowProps {

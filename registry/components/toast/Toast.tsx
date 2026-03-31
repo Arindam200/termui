@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Text } from 'ink';
-import { useTheme, useInterval } from '@termui/core';
+import { useTheme, useInterval } from 'termui';
 
 export type ToastVariant = 'success' | 'error' | 'warning' | 'info';
 

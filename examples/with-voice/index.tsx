@@ -76,9 +76,7 @@ function VoiceDemo() {
         <Text bold color={theme.colors.primary}>
           TermUI — Voice dictation demo
         </Text>
-        <Text dimColor>
-          Hold Space to speak · single tap inserts a space · Esc to quit
-        </Text>
+        <Text dimColor>Hold Space to speak · single tap inserts a space · Esc to quit</Text>
       </Box>
 
       <TextInput
