@@ -148,7 +148,7 @@ import { useGit } from 'termui/git';
 // Styled --help generation
 import { createCLI } from 'termui/args';
 
-// AI provider hooks (streaming)
+// AI provider hooks (streaming) — Anthropic, OpenAI, Ollama, custom
 import { useChat, useCompletion } from 'termui/ai';
 
 // chalk-compatible color API with TermUI theme integration
@@ -165,6 +165,9 @@ import { program } from 'termui/commander';
 
 // inquirer-compatible interactive prompts
 import { input, confirm, select } from 'termui/inquirer';
+
+// ffmpeg-based voice capture for push-to-talk dictation in TextInput
+import { createFfmpegMicCapture } from 'termui/voice';
 ```
 
 ### Framework Type Bridges
@@ -277,10 +280,11 @@ TermUI ships a dedicated set of AI/LLM UI components for building chat interface
 | `ChatThread`    | Scrollable thread of `ChatMessage` components                    |
 | `ToolCall`      | Displays a tool/function call with name and arguments            |
 | `ThinkingBlock` | Collapsible reasoning/thinking block for chain-of-thought output |
-| `TokenUsage`    | Shows prompt/completion/total token counts                       |
-| `ModelSelector` | Interactive picker for AI model selection                        |
+| `TokenUsage`    | Shows prompt/completion/total token counts with optional cost    |
+| `ContextMeter`  | Progress bar showing context window usage with warn/critical zones |
+| `ModelSelector` | Interactive picker for AI model selection, grouped by provider   |
 | `FileChange`    | Diff-style display of file modifications from an agent           |
-| `ToolApproval`  | Confirmation prompt before executing a tool call                 |
+| `ToolApproval`  | Confirmation prompt before executing a tool call (risk-gated)    |
 
 The `termui/ai` adapter provides streaming React hooks:
 
@@ -288,11 +292,17 @@ The `termui/ai` adapter provides streaming React hooks:
 import { useChat, useCompletion } from 'termui/ai';
 
 // useChat — multi-turn conversation with streaming
-const { messages, input, handleSubmit, isLoading } = useChat({ api: '/api/chat' });
+const { messages, sendMessage, isStreaming, abort, tokenUsage } = useChat({
+  provider: 'anthropic',
+  model: 'claude-sonnet-4-20250514',
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
 
 // useCompletion — single-turn streaming text completion
 const { completion, complete, isLoading } = useCompletion({ api: '/api/complete' });
 ```
+
+The `ai-assistant` template (`npx termui create my-tool --template ai-assistant`) is a fully-wired chat app including ChatThread, ToolApproval, ModelSelector, TokenUsage, ContextMeter, and ConversationStore — ready to run with Anthropic, OpenAI, or Ollama.
 
 ---
 
@@ -314,6 +324,36 @@ expect(screen.hasText('⠋', output)).toBe(true);
 | `screen`             | Query helpers: `getByText`, `hasText`, `getLines`, etc. |
 | `fireEvent`          | Simulate keyboard input: `key`, `type`, `press`         |
 | `waitFor`            | Poll an assertion until it passes or times out          |
+
+---
+
+## Voice Dictation
+
+`TextInput` supports push-to-talk voice dictation via the `voice` prop. Provide a capture factory and a transcription function — the component handles the rest:
+
+```ts
+import { createFfmpegMicCapture } from 'termui/voice';
+import OpenAI from 'openai';
+
+const openai = new OpenAI();
+
+<TextInput
+  value={value}
+  onChange={setValue}
+  voice={{
+    captureFactory: () => createFfmpegMicCapture(),
+    transcribe: async (wav) => {
+      const res = await openai.audio.transcriptions.create({
+        file: new File([wav], 'audio.wav', { type: 'audio/wav' }),
+        model: 'whisper-1',
+      });
+      return res.text;
+    },
+  }}
+/>
+```
+
+`createFfmpegMicCapture` requires `ffmpeg` in `PATH`. Platform backends default automatically: `avfoundation` (macOS), `dshow` (Windows), `pulse` (Linux).
 
 ---
 
@@ -360,7 +400,7 @@ termui/
 │   └── ai-demo/       # AI chat interface demo
 └── .github/
     ├── assets/        # README images and media
-    └── workflows/     # CI (Node 18, 20, 22)
+    └── workflows/     # CI (Node 18, 20, 22 × macOS, Linux, Windows + registry check)
 ```
 
 ---
@@ -435,13 +475,13 @@ pnpm --filter @termui/cli dev
 
 ## Roadmap
 
-| Phase       | Status         | Description                                                                                                        |
-| ----------- | -------------- | ------------------------------------------------------------------------------------------------------------------ |
-| **Phase 1** | ✅ **Done**    | 19 components, CLI (init/add/list), 3 themes, 12 hooks                                                             |
-| **Phase 2** | ✅ **Done**    | 75 components, 9 themes, adapters, diff/update/theme commands                                                      |
-| **Phase 3** | ✅ **Done**    | 101 components, charts, dev tools, templates, testing package                                                      |
-| **Phase 4** | 🚧 In Progress | AI components, streaming hooks, chalk/ora/meow/commander/inquirer/Vue/Svelte adapters, `@termui/types`, 600+ tests |
-| **Phase 5** | 🔜 Planned     | Plugin system, community registry                                                                                  |
+| Phase       | Status         | Description                                                                                                              |
+| ----------- | -------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| **Phase 1** | ✅ **Done**    | 19 components, CLI (init/add/list), 3 themes, 12 hooks                                                                   |
+| **Phase 2** | ✅ **Done**    | 75 components, 9 themes, adapters, diff/update/theme commands                                                            |
+| **Phase 3** | ✅ **Done**    | 101 components, charts, dev tools, templates, testing package                                                            |
+| **Phase 4** | 🚧 In Progress | AI components + streaming hooks, chalk/ora/meow/commander/inquirer/Vue/Svelte adapters, voice dictation, Windows CI, NO_UNICODE compat, `termui/testing` subpath, 600+ tests |
+| **Phase 5** | 🔜 Planned     | Plugin system, community registry                                                                                        |
 
 ---
 
