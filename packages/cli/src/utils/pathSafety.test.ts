@@ -1,10 +1,13 @@
+import { resolve, join } from 'path';
 import { describe, expect, it } from 'vitest';
 import { resolveWithin } from './pathSafety.js';
+
+const base = resolve('/workspace/app');
 
 describe('resolveWithin', () => {
   it('allows nested paths within the base directory', () => {
     expect(resolveWithin('/workspace/app', 'components/ui', 'feedback', 'Spinner.tsx')).toBe(
-      '/workspace/app/components/ui/feedback/Spinner.tsx'
+      join(base, 'components/ui', 'feedback', 'Spinner.tsx')
     );
   });
 
