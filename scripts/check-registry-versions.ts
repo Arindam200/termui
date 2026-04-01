@@ -40,7 +40,13 @@ for (const [name, entry] of Object.entries(schema.components)) {
     warnings++;
   }
 
-  for (const file of meta.files ?? entry.files ?? []) {
+  if (!meta.files || meta.files.length === 0) {
+    console.error(`MISSING files field: registry/components/${name}/meta.json`);
+    errors++;
+    continue;
+  }
+
+  for (const file of meta.files) {
     const src = join(compDir, file);
     if (!existsSync(src)) {
       console.error(`MISSING SOURCE: registry/components/${name}/${file}`);

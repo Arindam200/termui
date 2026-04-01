@@ -77,6 +77,7 @@ const sharedOptions = {
         'packages/components/src/templates/index.ts'
       ),
       '@termui/components/ai': path.resolve(__dirname, 'packages/components/src/ai/index.ts'),
+      '@termui/testing': path.resolve(__dirname, 'packages/testing/src/index.ts'),
     };
   },
 };
@@ -128,6 +129,7 @@ export default defineConfig([
       svelte: 'src/svelte.ts',
       vue: 'src/vue.ts',
       voice: 'src/voice.ts',
+      testing: 'src/testing.ts',
     },
     dts: true,
   },

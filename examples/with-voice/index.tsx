@@ -15,8 +15,8 @@ import React, { useState } from 'react';
 import { render, Box, Text, useApp } from 'ink';
 
 // Import directly from source so the example works without a build step.
-import { ThemeProvider, useTheme } from '../../packages/core/src/index.js';
-import { TextInput } from '../../packages/components/src/input/TextInput.js';
+import { ThemeProvider, useTheme } from 'termui';
+import { TextInput } from 'termui/components';
 
 // ── Mock capture ──────────────────────────────────────────────────────────────
 // Simulates recording with a 1.5 s delay. No mic or ffmpeg needed.

@@ -2,6 +2,31 @@
 
 All notable changes to TermUI are documented here.
 
+## [1.4.2] - 2026-04-02
+
+### Fixed
+
+- **`termui/testing` export missing** -- added `./testing` subpath export to the root package; `import { renderToString } from 'termui/testing'` now works as documented
+- **Short flag validation in `termui/args`** -- unknown short flags (e.g. `-x`) are now rejected with an error message, consistent with how unknown long flags (`--x`) are handled
+- **`registry:check` silent fallback** -- the script no longer silently falls back to `schema.json` file list when `meta.json` is missing a `files` field; a missing `files` field is now a hard error
+- **Stale `@termui/*` path mappings in example tsconfigs** -- `examples/ai-demo`, `examples/demo`, and `examples/with-ai` tsconfigs no longer redefine dead `@termui/core` and `@termui/components` path aliases; they now cleanly inherit root config paths
+- **`examples/with-voice` raw source imports** -- replaced `../../packages/core/src/index.js` and `../../packages/components/src/input/TextInput.js` with `termui` and `termui/components`
+- **CI registry validation** -- `pnpm run registry:check` now runs as a dedicated CI job on every push and pull request
+
+### Internal
+
+- Deleted stale `.tmp/` and `__tmp_wizard_test/` test artifact directories
+
+## [1.4.1] - 2026-03-31
+
+### Fixed
+
+- **404 on `npm install`** -- `@termui/core`, `@termui/components`, and `@termui/adapters` are internal workspace packages not published to npm; all user-facing files (templates, registry components, examples, docs, CLI scaffolder) now correctly import from the published `termui` package and its subpath exports
+- **Scaffolded `package.json` listed unpublishable deps** -- `termui create` no longer adds `@termui/core: latest` to generated project dependencies
+- **Registry components used internal import paths** -- all 95+ `registry/components/` files updated from `from '@termui/core'` to `from 'termui'`; adapter imports updated to corresponding `termui/*` subpaths
+- **Documentation examples** -- `README.md`, `COMPATIBILITY.md`, `docs/ai.md`, `docs/adapters.md`, `docs/api/hooks.md`, `docs/api/testing.md` all updated to use public import paths
+- **Misleading JSDoc comments** -- example imports in `@termui/core`, `@termui/adapters/svelte`, `@termui/adapters/voice`, and `@termui/adapters/clack-ink` package files corrected to use public-facing import paths
+
 ## [1.4.0] - 2026-03-28
 
 ### Added

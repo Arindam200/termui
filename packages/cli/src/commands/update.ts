@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { relative } from 'path';
 import { getConfig } from '../utils/config.js';
 import {
   fetchManifest,
@@ -7,6 +7,7 @@ import {
   getLocalRegistry,
   type ComponentMeta,
 } from '../registry/client.js';
+import { resolveWithin } from '../utils/pathSafety.js';
 
 // ANSI color helpers
 const c = {
@@ -58,7 +59,12 @@ async function updateComponent(
   }
 
   const categoryDir = CATEGORY_DIR[meta.category] ?? meta.category;
-  const outDir = join(cwd, componentsDir, categoryDir);
+  let outDir: string;
+  try {
+    outDir = resolveWithin(cwd, componentsDir, categoryDir);
+  } catch {
+    throw new Error(`Unsafe output directory for component '${meta.name}'`);
+  }
 
   if (!existsSync(outDir)) {
     mkdirSync(outDir, { recursive: true });
@@ -67,7 +73,12 @@ async function updateComponent(
   let writtenCount = 0;
 
   for (const fileName of meta.files) {
-    const outPath = join(outDir, fileName);
+    let outPath: string;
+    try {
+      outPath = resolveWithin(outDir, fileName);
+    } catch {
+      throw new Error(`Unsafe file path '${fileName}' for component '${meta.name}'`);
+    }
     const existed = existsSync(outPath);
 
     // Fetch actual source from registry
@@ -87,7 +98,7 @@ async function updateComponent(
 
     const action = existed ? c.yellow('↺') : c.green('✓');
     const verb = existed ? 'Updated' : 'Created';
-    console.log(`  ${action} ${verb} ${outPath.replace(cwd + '/', '')}`);
+    console.log(`  ${action} ${verb} ${relative(cwd, outPath)}`);
   }
 
   if (writtenCount > 0) {

@@ -2,11 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist",
-    "paths": {
-      "@termui/core": ["../../packages/core/src/index.ts"],
-      "@termui/components": ["../../packages/components/src/index.ts"]
-    }
+    "outDir": "dist"
   },
   "include": ["src/**/*"]
 }

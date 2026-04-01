@@ -4,7 +4,7 @@
  */
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, unlinkSync } from 'fs';
-import { join } from 'path';
+import { join, resolve, sep } from 'path';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -45,6 +45,7 @@ export interface ConversationStore {
 
 export function createConversationStore(options: ConversationStoreOptions): ConversationStore {
   const { dir, format = 'json' } = options;
+  const resolvedDir = resolve(dir);
 
   // Ensure directory exists
   if (!existsSync(dir)) {
@@ -52,7 +53,19 @@ export function createConversationStore(options: ConversationStoreOptions): Conv
   }
 
   function filePath(id: string): string {
-    return join(dir, `${id}.${format === 'jsonl' ? 'jsonl' : 'json'}`);
+    if (!id || id.includes('/') || id.includes('\\')) {
+      throw new Error('Invalid conversation id');
+    }
+
+    const ext = format === 'jsonl' ? 'jsonl' : 'json';
+    const target = resolve(resolvedDir, `${id}.${ext}`);
+    const dirPrefix = resolvedDir.endsWith(sep) ? resolvedDir : `${resolvedDir}${sep}`;
+
+    if (target !== resolvedDir && !target.startsWith(dirPrefix)) {
+      throw new Error('Conversation id resolves outside the storage directory');
+    }
+
+    return target;
   }
 
   function serializeJson(conversation: ConversationRecord): string {
@@ -98,7 +111,12 @@ export function createConversationStore(options: ConversationStoreOptions): Conv
   }
 
   async function load(id: string): Promise<ConversationRecord | null> {
-    const path = filePath(id);
+    let path: string;
+    try {
+      path = filePath(id);
+    } catch {
+      return null;
+    }
     if (!existsSync(path)) return null;
     try {
       const content = readFileSync(path, 'utf-8');
@@ -131,7 +149,12 @@ export function createConversationStore(options: ConversationStoreOptions): Conv
   }
 
   async function deleteConversation(id: string): Promise<boolean> {
-    const path = filePath(id);
+    let path: string;
+    try {
+      path = filePath(id);
+    } catch {
+      return false;
+    }
     if (!existsSync(path)) return false;
     try {
       unlinkSync(path);

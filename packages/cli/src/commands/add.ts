@@ -1,8 +1,9 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join, dirname, resolve } from 'path';
+import { dirname, relative, resolve } from 'path';
 import { pathToFileURL } from 'url';
 import { getConfig } from '../utils/config.js';
 import { fetchManifest, fetchComponentFile, type ComponentMeta } from '../registry/client.js';
+import { resolveWithin } from '../utils/pathSafety.js';
 import {
   printLogo,
   intro,
@@ -94,6 +95,10 @@ async function formatWithPrettier(source: string, filePath: string, cwd: string)
   return source;
 }
 
+function resolveProjectPath(cwd: string, ...segments: string[]): string {
+  return resolveWithin(cwd, ...segments);
+}
+
 export async function add(args: string[], opts?: { isNested?: boolean }): Promise<void> {
   const isDryRun = args.includes('--dry-run');
   const filteredArgs = args.filter((a) => a !== '--dry-run');
@@ -140,7 +145,7 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
       description?: string;
     };
     try {
-      const url = `${registryUrl}/recipes/${recipeName}.json`;
+      const url = `${registryUrl}/recipes/${encodeURIComponent(recipeName)}.json`;
       const res = await fetch(url);
       if (!res.ok) {
         fail(`Recipe '${recipeName}' not found in registry.`);
@@ -173,7 +178,13 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
     }
 
     // Write wiring file
-    const wiringPath = join(cwd, config.componentsDir, recipe.wiringFile);
+    let wiringPath: string;
+    try {
+      wiringPath = resolveProjectPath(cwd, config.componentsDir, recipe.wiringFile);
+    } catch {
+      fail(`Recipe '${recipeName}' returned an unsafe wiring path.`);
+      process.exit(2);
+    }
     if (!isDryRun) {
       if (!existsSync(dirname(wiringPath))) mkdirSync(dirname(wiringPath), { recursive: true });
       writeFileSync(wiringPath, recipe.wiringContent, 'utf-8');
@@ -334,13 +345,25 @@ async function installComponent(
   }
 
   const categoryDir = CATEGORY_DIR[meta.category] ?? meta.category;
-  const outDir = join(cwd, componentsDir, categoryDir);
+  let outDir: string;
+  try {
+    outDir = resolveProjectPath(cwd, componentsDir, categoryDir);
+  } catch {
+    fail(`Registry metadata for '${meta.name}' resolved outside the project directory.`);
+    process.exit(2);
+  }
 
   if (!isDryRun && !existsSync(outDir)) mkdirSync(outDir, { recursive: true });
 
   for (const fileName of meta.files) {
-    const outPath = join(outDir, fileName);
-    const relPath = outPath.replace(cwd + '/', '');
+    let outPath: string;
+    try {
+      outPath = resolveProjectPath(outDir, fileName);
+    } catch {
+      fail(`Registry file path '${fileName}' for '${meta.name}' is unsafe.`);
+      process.exit(2);
+    }
+    const relPath = relative(cwd, outPath);
 
     if (!isDryRun && existsSync(outPath)) {
       warn(`${dim(relPath)} already exists — skipping`);

@@ -188,6 +188,11 @@ ${c.bold('Options:')}
         }
       } else if (arg.startsWith('-') && arg.length === 2) {
         const key = arg.slice(1);
+        const knownKeys = commandDef.args ? Object.keys(commandDef.args) : [];
+        if (knownKeys.length > 0 && !knownKeys.includes(key)) {
+          console.error(`${c.red('Error:')} Unknown flag: ${c.bold(`-${key}`)}`);
+          process.exit(1);
+        }
         const nextArg = rest[i + 1];
         if (nextArg && !nextArg.startsWith('-')) {
           parsedArgs[key] = coerce(nextArg);

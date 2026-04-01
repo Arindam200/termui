@@ -38,7 +38,7 @@
 
 import { spawn } from 'node:child_process';
 import type { ChildProcess } from 'node:child_process';
-import { readFile, unlink } from 'node:fs/promises';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -93,19 +93,20 @@ export function createFfmpegMicCapture(options: FfmpegMicCaptureOptions = {}): V
   const device = options.device ?? defaultDevice(backend);
   const sampleRate = options.sampleRate ?? 16000;
 
-  const tmpPath = join(
-    tmpdir(),
-    `termui-voice-${Date.now()}-${Math.random().toString(36).slice(2)}.wav`
-  );
-
   let proc: ChildProcess | null = null;
   let started = false;
+  let tmpPath: string | null = null;
+  let tmpRoot: string | null = null;
 
   async function cleanup() {
+    if (!tmpRoot) return;
     try {
-      await unlink(tmpPath);
+      await rm(tmpRoot, { recursive: true, force: true });
     } catch {
-      // ignore — file may not exist yet
+      // ignore — temp directory may already be gone
+    } finally {
+      tmpRoot = null;
+      tmpPath = null;
     }
   }
 
@@ -113,6 +114,8 @@ export function createFfmpegMicCapture(options: FfmpegMicCaptureOptions = {}): V
     async start() {
       // Verify ffmpeg is accessible before spawning.
       await verifyFfmpeg();
+      tmpRoot = await mkdtemp(join(tmpdir(), 'termui-voice-'));
+      tmpPath = join(tmpRoot, 'audio.wav');
 
       const args = [
         '-y',
@@ -141,7 +144,7 @@ export function createFfmpegMicCapture(options: FfmpegMicCaptureOptions = {}): V
     },
 
     async stop(): Promise<Buffer> {
-      if (!proc || !started) {
+      if (!proc || !started || !tmpPath) {
         throw new Error('termui/voice: stop() called before start()');
       }
 

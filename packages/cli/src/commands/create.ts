@@ -634,7 +634,7 @@ async function main() {
   // 4 — Write .env file
   const writeEnv = await confirm({
     message: 'Write provider settings to .env.local?',
-    initialValue: true,
+    initialValue: false,
   });
 
   if (writeEnv) {
@@ -644,8 +644,9 @@ async function main() {
       \`AI_MODEL=\${model}\`,
       ...(apiKey ? [\`\${provider === 'anthropic' ? 'ANTHROPIC' : 'OPENAI'}_API_KEY=\${apiKey}\`] : []),
     ];
-    writeFileSync('.env.local', lines.join('\\n') + '\\n', 'utf-8');
+    writeFileSync('.env.local', lines.join('\\n') + '\\n', { encoding: 'utf-8', mode: 0o600 });
     log.success('Written .env.local');
+    log.warn('Keep .env.local out of version control and prefer the OS keychain when possible');
   }
 
   outro(\`Setup complete — run \\\`npm start\\\` to launch the assistant\`);
