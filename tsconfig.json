@@ -58,7 +58,8 @@
       "@termui/adapters/ora": ["packages/adapters/ora/index.ts"],
       "@termui/adapters/svelte": ["packages/adapters/svelte/index.ts"],
       "@termui/adapters/vue": ["packages/adapters/vue/index.ts"],
-      "@termui/adapters/voice": ["packages/adapters/voice/index.ts"]
+      "@termui/adapters/voice": ["packages/adapters/voice/index.ts"],
+      "@termui/testing": ["packages/testing/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
