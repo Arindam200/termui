@@ -1,7 +1,7 @@
 {
   "name": "termui",
   "private": false,
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "A TypeScript/React terminal UI framework with 100+ components, 8 themes, and a shadcn-style CLI",
   "keywords": [
     "terminal",
@@ -221,7 +221,7 @@
   ],
   "scripts": {
     "build": "turbo run build && tsup",
-    "build:root": "tsup && chmod +x dist/cli.js",
+    "build:root": "tsup && node -e \"require('fs').chmodSync('dist/cli.js', '755')\"",
     "dev": "turbo run dev --parallel",
     "test": "turbo run test",
     "lint": "turbo run lint",

@@ -49,8 +49,8 @@ const cli = createCLI({
     publish: { name: 'publish', description: 'Submit a component to the community registry' },
     completion: {
       name: 'completion',
-      description: 'Print shell completion script (bash/zsh/fish)',
-      args: { shell: { description: 'Shell: bash | zsh | fish', required: true } },
+      description: 'Print shell completion script (bash/zsh/fish/powershell)',
+      args: { shell: { description: 'Shell: bash | zsh | fish | powershell', required: true } },
     },
   },
 });
@@ -134,11 +134,11 @@ async function main() {
 
     case 'completion': {
       const shell = cmdArgs[0];
-      if (!shell || !['bash', 'zsh', 'fish'].includes(shell)) {
-        console.error(`\x1b[31mError:\x1b[0m Usage: npx termui completion <bash|zsh|fish>`);
+      if (!shell || !['bash', 'zsh', 'fish', 'powershell'].includes(shell)) {
+        console.error(`\x1b[31mError:\x1b[0m Usage: npx termui completion <bash|zsh|fish|powershell>`);
         process.exit(1);
       }
-      await runCompletion(shell as 'bash' | 'zsh' | 'fish');
+      await runCompletion(shell as 'bash' | 'zsh' | 'fish' | 'powershell');
       break;
     }
 
@@ -252,7 +252,7 @@ async function interactiveMenu(): Promise<void> {
   }
 }
 
-async function runCompletion(shell: 'bash' | 'zsh' | 'fish'): Promise<void> {
+async function runCompletion(shell: 'bash' | 'zsh' | 'fish' | 'powershell'): Promise<void> {
   const { getLocalRegistry } = await import('./registry/client.js');
   const registry = getLocalRegistry();
   const comps = Object.keys(registry.components).join(' ');
@@ -261,7 +261,43 @@ async function runCompletion(shell: 'bash' | 'zsh' | 'fish'): Promise<void> {
   const CMDS =
     'init add list diff update theme preview dev docs create publish completion help --help --version';
 
-  if (shell === 'bash') {
+  if (shell === 'powershell') {
+    const cmdList = CMDS.split(' ').map((c) => `'${c}'`).join(', ');
+    const compList = comps.split(' ').filter(Boolean).map((c) => `'${c}'`).join(', ');
+    const themeList = THEMES.split(' ').map((t) => `'${t}'`).join(', ');
+    process.stdout.write(`# TermUI PowerShell completion
+# Add the following to your PowerShell profile ($PROFILE):
+#   npx termui completion powershell | Out-String | Invoke-Expression
+
+Register-ArgumentCompleter -Native -CommandName @('termui', 'npx') -ScriptBlock {
+  param($wordToComplete, $commandAst, $cursorPosition)
+  $cmds = @(${cmdList})
+  $comps = @(${compList})
+  $themes = @(${themeList})
+  $words = $commandAst.CommandElements
+  if ($words.Count -le 2) {
+    $cmds | Where-Object { $_ -like "$wordToComplete*" } |
+      ForEach-Object { [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_) }
+    return
+  }
+  $prev = $words[$words.Count - 2].ToString()
+  switch ($prev) {
+    { $_ -in 'add','update','diff' } {
+      $comps | Where-Object { $_ -like "$wordToComplete*" } |
+        ForEach-Object { [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_) }
+    }
+    'theme' {
+      $themes | Where-Object { $_ -like "$wordToComplete*" } |
+        ForEach-Object { [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_) }
+    }
+    'completion' {
+      @('bash','zsh','fish','powershell') | Where-Object { $_ -like "$wordToComplete*" } |
+        ForEach-Object { [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_) }
+    }
+  }
+}
+`);
+  } else if (shell === 'bash') {
     process.stdout.write(`# TermUI bash completion — source <(npx termui completion bash)
 _termui_completions() {
   local cur=\${COMP_WORDS[COMP_CWORD]}
@@ -273,7 +309,7 @@ _termui_completions() {
   case "\${prev}" in
     add|update|diff) COMPREPLY=( $(compgen -W "${comps}" -- "\${cur}") ); return ;;
     theme)           COMPREPLY=( $(compgen -W "${THEMES}" -- "\${cur}") ); return ;;
-    completion)      COMPREPLY=( $(compgen -W "bash zsh fish" -- "\${cur}") ); return ;;
+    completion)      COMPREPLY=( $(compgen -W "bash zsh fish powershell" -- "\${cur}") ); return ;;
   esac
 }
 complete -F _termui_completions termui npx
@@ -290,7 +326,7 @@ _termui() {
       case $words[1] in
         add|update|diff) _arguments '*: :(${comps})' ;;
         theme)           _arguments '*: :(${THEMES})' ;;
-        completion)      _arguments '*: :(bash zsh fish)' ;;
+        completion)      _arguments '*: :(bash zsh fish powershell)' ;;
       esac
     ;;
   esac

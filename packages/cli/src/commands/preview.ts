@@ -47,7 +47,12 @@ export async function preview(_args: string[]): Promise<void> {
 
   process.stdout.write(ansi.hideCursor);
   readline.emitKeypressEvents(process.stdin);
-  process.stdin.setRawMode(true);
+  try {
+    process.stdin.setRawMode(true);
+  } catch {
+    console.error('termui preview requires a terminal that supports raw mode (e.g. Windows Terminal).');
+    process.exit(1);
+  }
   process.stdin.resume();
 
   const cleanup = () => {
@@ -58,7 +63,9 @@ export async function preview(_args: string[]): Promise<void> {
   };
 
   process.on('SIGINT', cleanup);
-  process.on('SIGTERM', cleanup);
+  if (process.platform !== 'win32') {
+    process.on('SIGTERM', cleanup);
+  }
 
   render(state);
 

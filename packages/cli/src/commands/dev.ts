@@ -48,11 +48,11 @@ export async function dev(args: string[]): Promise<void> {
       const c = child;
       child = null;
       c.once('exit', () => resolve());
-      c.kill('SIGTERM');
-      // Force-kill after 2s if SIGTERM not enough
+      c.kill(); // SIGTERM on Unix, TerminateProcess on Windows
+      // Force-kill after 2s if graceful kill wasn't enough
       setTimeout(() => {
         try {
-          c.kill('SIGKILL');
+          c.kill('SIGKILL'); // no-op on Windows (process already gone or will error)
         } catch {
           /* already dead */
         }
@@ -80,8 +80,8 @@ export async function dev(args: string[]): Promise<void> {
       env: { ...process.env, FORCE_COLOR: '1' },
     });
 
-    child.on('exit', (code, signal) => {
-      if (!isExiting && signal !== 'SIGTERM' && signal !== 'SIGKILL') {
+    child.on('exit', (_code, _signal) => {
+      if (!isExiting) {
         // Preview exited on its own (user pressed q) — keep watching
         console.log(`\n${ansi.dim}[dev] preview closed — waiting for file changes…${ansi.reset}`);
       }
@@ -121,11 +121,18 @@ export async function dev(args: string[]): Promise<void> {
   }
 
   process.on('SIGINT', cleanup);
-  process.on('SIGTERM', cleanup);
+  // SIGTERM is not raised by the OS on Windows; guard to avoid misleading listener
+  if (process.platform !== 'win32') {
+    process.on('SIGTERM', cleanup);
+  }
 
   // Allow 'q' to quit (raw mode)
   if (process.stdin.isTTY) {
-    process.stdin.setRawMode(true);
+    try {
+      process.stdin.setRawMode(true);
+    } catch {
+      // Raw mode not supported (some Windows terminals) — q-to-quit disabled, Ctrl+C still works
+    }
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
     process.stdin.on('data', (key: string) => {

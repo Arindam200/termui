@@ -152,7 +152,14 @@ export async function text(opts: {
       return;
     }
 
-    process.stdin.setRawMode(true);
+    try {
+      process.stdin.setRawMode(true);
+    } catch {
+      // Windows terminals that report isTTY but don't support raw mode
+      console.log('');
+      resolve(placeholder);
+      return;
+    }
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
 
@@ -209,7 +216,12 @@ export async function confirm(opts: { message: string; initialValue?: boolean })
       return;
     }
 
-    process.stdin.setRawMode(true);
+    try {
+      process.stdin.setRawMode(true);
+    } catch {
+      resolve(defaultValue);
+      return;
+    }
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
 
@@ -279,7 +291,12 @@ export async function select<T>(opts: {
       return;
     }
 
-    process.stdin.setRawMode(true);
+    try {
+      process.stdin.setRawMode(true);
+    } catch {
+      resolve(options[0]!.value);
+      return;
+    }
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
 
@@ -354,7 +371,12 @@ export async function multiselect<T>(opts: {
       return;
     }
 
-    process.stdin.setRawMode(true);
+    try {
+      process.stdin.setRawMode(true);
+    } catch {
+      resolve([...selected]);
+      return;
+    }
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
 

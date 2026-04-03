@@ -279,7 +279,12 @@ export async function select<T extends string>(
       return;
     }
 
-    process.stdin.setRawMode(true);
+    try {
+      process.stdin.setRawMode(true);
+    } catch {
+      resolve(options[0]!.value);
+      return;
+    }
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
 
@@ -324,7 +329,12 @@ export async function confirm(prompt: string, defaultValue = true): Promise<bool
       return;
     }
 
-    process.stdin.setRawMode(true);
+    try {
+      process.stdin.setRawMode(true);
+    } catch {
+      resolve(defaultValue);
+      return;
+    }
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
 
@@ -391,7 +401,13 @@ export async function text(
       return;
     }
 
-    process.stdin.setRawMode(true);
+    try {
+      process.stdin.setRawMode(true);
+    } catch {
+      console.log('');
+      resolve(defaultValue);
+      return;
+    }
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
 
@@ -477,7 +493,12 @@ export async function multiselect<T extends string>(
       return;
     }
 
-    process.stdin.setRawMode(true);
+    try {
+      process.stdin.setRawMode(true);
+    } catch {
+      resolve([...selected]);
+      return;
+    }
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
 
