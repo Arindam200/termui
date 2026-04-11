@@ -20,3 +20,5 @@ export type {
   MultiProgressProps,
   MultiProgressStatus,
 } from './MultiProgress.js';
+export { NotificationCenter } from './NotificationCenter.js';
+export type { NotificationCenterProps } from './NotificationCenter.js';

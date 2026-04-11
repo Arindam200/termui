@@ -13,7 +13,5 @@ export type { TooltipProps } from './Tooltip.js';
 export { Popover } from './Popover.js';
 export type { PopoverProps } from './Popover.js';
 
-export { NotificationCenter } from './NotificationCenter.js';
 export { NotificationBadge } from './NotificationBadge.js';
-export type { NotificationCenterProps } from './NotificationCenter.js';
 export type { NotificationBadgeProps } from './NotificationBadge.js';
