@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { useKeyboardNavigation } from './useKeyboardNavigation.js';
 
 /**
  * Tests for the navigation index arithmetic used by useKeyboardNavigation.
@@ -30,9 +31,8 @@ function pageDown(index: number, itemCount: number, pageSize: number): number {
 // ── Smoke test: module exports ────────────────────────────────────────────────
 
 describe('useKeyboardNavigation — exports', () => {
-  it('exports useKeyboardNavigation as a function', async () => {
-    const mod = await import('./useKeyboardNavigation.js');
-    expect(typeof mod.useKeyboardNavigation).toBe('function');
+  it('exports useKeyboardNavigation as a function', () => {
+    expect(typeof useKeyboardNavigation).toBe('function');
   });
 });
 

@@ -63,7 +63,7 @@ jobs:
         env:
           NODE_OPTIONS: --max-old-space-size=4096
       - name: Test with coverage
-        run: pnpm run test --coverage
+        run: pnpm run test -- --coverage
         env:
           CI: true
           NO_MOTION: 1
