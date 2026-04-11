@@ -47,6 +47,50 @@ jobs:
           CI: true
           NO_MOTION: 1
 
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build
+        run: pnpm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+      - name: Test with coverage
+        run: pnpm run test --coverage
+        env:
+          CI: true
+          NO_MOTION: 1
+
+  bundle-size:
+    name: Bundle size
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build
+        run: pnpm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+      - name: Report bundle size
+        run: |
+          echo "## Bundle sizes" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          du -sh dist/* 2>/dev/null | sort -h >> $GITHUB_STEP_SUMMARY || echo "No dist/ at root" >> $GITHUB_STEP_SUMMARY
+          du -sh packages/*/dist 2>/dev/null | sort -h >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
   registry:
     name: Registry check
     runs-on: ubuntu-latest

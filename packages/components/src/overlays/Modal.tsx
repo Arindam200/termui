@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text } from 'ink';
-import { useInput, useTheme, getAccessibleName } from '@termui/core';
+import { useInput, useTheme, getAccessibleName, useFocusTrap } from '@termui/core';
 import type { AriaProps } from '@termui/core';
 import type { ReactNode } from 'react';
 
@@ -36,6 +36,13 @@ export interface ModalProps extends AriaProps {
     | 'classic';
   /** Close hint text. Set to false to hide, or a string to customize. Default: 'Press Esc to close' */
   closeHint?: string | false;
+  /**
+   * Ordered Ink focus IDs to trap within the modal.
+   * When provided, Tab/Shift+Tab cycles through them and focus is
+   * moved to the first ID when the modal opens.
+   * Each ID must match `useFocus({ id: '...' })` on a child element.
+   */
+  focusableIds?: string[];
 }
 
 export function Modal({
@@ -50,6 +57,7 @@ export function Modal({
   paddingY = 0,
   titleBorderStyle = 'single',
   closeHint = 'Press Esc to close',
+  focusableIds = [],
   'aria-label': ariaLabel,
   'aria-description': ariaDescription,
   'aria-live': ariaLive,
@@ -65,6 +73,7 @@ export function Modal({
     },
     { isActive: open }
   );
+  useFocusTrap({ focusableIds, isActive: open && focusableIds.length > 0 });
 
   if (!open) return null;
 

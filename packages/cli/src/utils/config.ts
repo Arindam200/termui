@@ -4,7 +4,14 @@ import { join } from 'path';
 export interface TermUIConfig {
   version: string;
   componentsDir: string;
+  /** Primary registry URL. Kept for backwards compatibility. */
   registry: string;
+  /**
+   * Additional registry URLs resolved in order after the primary registry.
+   * Components are installed from the first registry that contains them.
+   * Example: ["https://my-company.github.io/termui-registry"]
+   */
+  registries?: string[];
   theme: string;
 }
 
@@ -41,7 +48,9 @@ export function readConfig(cwd = process.cwd()): TermUIConfig | null {
     try {
       const src = readFileSync(configPath, 'utf-8');
       const config: Partial<TermUIConfig> = {};
-      const pairs: [keyof TermUIConfig, RegExp][] = [
+      // Only string-valued fields can be extracted with a regex.
+      // `registries` (string[]) is array-valued and only supported in .json configs.
+      const pairs: [keyof Pick<TermUIConfig, 'version' | 'componentsDir' | 'registry' | 'theme'>, RegExp][] = [
         ['version', /\bversion\s*:\s*['"]([^'"]+)['"]/],
         ['componentsDir', /\bcomponentsDir\s*:\s*['"]([^'"]+)['"]/],
         ['registry', /\bregistry\s*:\s*['"]([^'"]+)['"]/],

@@ -21,3 +21,12 @@ export type { ModelSelectorProps, ModelOption } from './ModelSelector.js';
 
 export { FileChange } from './FileChange.js';
 export type { FileChangeProps, FileChangeItem, FileChangeType } from './FileChange.js';
+
+export { StreamOutput } from './StreamOutput.js';
+export type { StreamOutputProps } from './StreamOutput.js';
+
+export { ConversationHistory } from './ConversationHistory.js';
+export type { ConversationHistoryProps } from './ConversationHistory.js';
+
+export { ErrorRetry } from './ErrorRetry.js';
+export type { ErrorRetryProps } from './ErrorRetry.js';

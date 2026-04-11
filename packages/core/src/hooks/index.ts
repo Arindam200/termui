@@ -1,6 +1,10 @@
 export { useInput } from './useInput.js';
 export { useFocus } from './useFocus.js';
 export { useFocusManager } from './useFocusManager.js';
+export { useKeyboardNavigation } from './useKeyboardNavigation.js';
+export { useFocusTrap } from './useFocusTrap.js';
+export type { KeyboardNavigationOptions, KeyboardNavigationResult } from './useKeyboardNavigation.js';
+export type { FocusTrapOptions } from './useFocusTrap.js';
 export { useTheme } from './useTheme.js';
 export { useTerminal } from './useTerminal.js';
 export { useAnimation } from './useAnimation.js';

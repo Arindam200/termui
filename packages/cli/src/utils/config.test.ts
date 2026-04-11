@@ -37,4 +37,32 @@ describe('config utils', () => {
     expect(config.theme).toBe('default');
     expect(config.componentsDir).toBe('./components/ui');
   });
+
+  it('round-trips registries array', () => {
+    const config = {
+      version: '1.0.0',
+      componentsDir: './components/ui',
+      registry: 'https://arindam200.github.io/termui',
+      registries: [
+        'https://company.github.io/termui-registry',
+        'https://cdn.example.com/termui',
+      ],
+      theme: 'dracula',
+    };
+    writeConfig(config, tmpDir);
+    const read = readConfig(tmpDir);
+    expect(read?.registries).toEqual(config.registries);
+  });
+
+  it('registries defaults to undefined when not set', () => {
+    const config = {
+      version: '1.0.0',
+      componentsDir: './components/ui',
+      registry: 'https://arindam200.github.io/termui',
+      theme: 'default',
+    };
+    writeConfig(config, tmpDir);
+    const read = readConfig(tmpDir);
+    expect(read?.registries).toBeUndefined();
+  });
 });

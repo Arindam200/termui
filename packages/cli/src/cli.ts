@@ -14,6 +14,7 @@ import { preview, previewHelp } from './commands/preview.js';
 import { dev } from './commands/dev.js';
 import { docs } from './commands/docs.js';
 import { publish } from './commands/publish.js';
+import { mcp, mcpHelp } from './commands/mcp.js';
 import { checkForUpdates } from './utils/updates.js';
 import { printLogo, intro, step, outro, hi, dim, select, multiselect } from './utils/ui.js';
 import { createCLI } from './utils/createCLI.js';
@@ -47,6 +48,10 @@ const cli = createCLI({
     dev: { name: 'dev', description: 'Watch mode — hot-reload on file change' },
     docs: { name: 'docs', description: 'Show inline docs for a component' },
     publish: { name: 'publish', description: 'Submit a component to the community registry' },
+    mcp: {
+      name: 'mcp',
+      description: 'Start the TermUI MCP server (stdio) for AI assistant integration',
+    },
     completion: {
       name: 'completion',
       description: 'Print shell completion script (bash/zsh/fish/powershell)',
@@ -141,6 +146,14 @@ async function main() {
       await runCompletion(shell as 'bash' | 'zsh' | 'fish' | 'powershell');
       break;
     }
+
+    case 'mcp':
+      if (cmdArgs.includes('--help') || cmdArgs.includes('-h')) {
+        mcpHelp();
+      } else {
+        await mcp(cmdArgs);
+      }
+      break;
 
     case 'publish':
       await publish(cmdArgs, {});

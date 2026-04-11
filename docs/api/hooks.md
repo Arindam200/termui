@@ -44,6 +44,81 @@ useFocus(options?: { isActive?: boolean; autoFocus?: boolean; id?: string })
 
 ---
 
+## `useKeyboardNavigation(options)`
+
+Standard keyboard navigation for list-style interactive components. Handles ↑↓ arrows, Home/End, Page Up/Down, Enter/Space to select, and Escape to dismiss. All interactive list components (Select, Menu, Tabs, CommandPalette, etc.) should use this hook for consistent behaviour.
+
+```ts
+useKeyboardNavigation(options: {
+  itemCount: number;
+  defaultIndex?: number;  // default: 0
+  loop?: boolean;          // default: true
+  pageSize?: number;       // items to jump on Page Up/Down, default: 10
+  onSelect?: (index: number) => void;
+  onDismiss?: () => void;
+  isActive?: boolean;      // default: true
+}): { activeIndex: number; setActiveIndex: (index: number) => void }
+```
+
+**Example:**
+
+```tsx
+function MyMenu({ items }: { items: string[] }) {
+  const { activeIndex } = useKeyboardNavigation({
+    itemCount: items.length,
+    onSelect: (i) => console.log('selected:', items[i]),
+    onDismiss: () => setOpen(false),
+  });
+
+  return (
+    <Box flexDirection="column">
+      {items.map((item, i) => (
+        <Text key={item} color={i === activeIndex ? 'cyan' : undefined}>{item}</Text>
+      ))}
+    </Box>
+  );
+}
+```
+
+---
+
+## `useFocusTrap(options)`
+
+Traps Tab / Shift+Tab focus within a set of focusable components. Use in Modal, Dialog, Drawer, CommandPalette, and any other overlay that should prevent focus from escaping.
+
+```ts
+useFocusTrap(options: {
+  focusableIds: string[];   // ordered list of IDs matching useFocus({ id })
+  isActive?: boolean;       // default: true — set false when overlay closes
+}): void
+```
+
+**Example:**
+
+```tsx
+function Modal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  useFocusTrap({
+    focusableIds: ['modal-confirm', 'modal-cancel'],
+    isActive: isOpen,
+  });
+
+  const { isFocused: confirmFocused } = useFocus({ id: 'modal-confirm' });
+  const { isFocused: cancelFocused } = useFocus({ id: 'modal-cancel' });
+
+  useInput((_, key) => { if (key.escape) onClose(); }, { isActive: isOpen });
+
+  return (
+    <Box flexDirection="column">
+      <Text>Confirm this action?</Text>
+      <Text color={confirmFocused ? 'cyan' : 'gray'}>[Yes]</Text>
+      <Text color={cancelFocused ? 'cyan' : 'gray'}>[No]</Text>
+    </Box>
+  );
+}
+```
+
+---
+
 ## `useFocusManager()`
 
 Programmatic focus control.

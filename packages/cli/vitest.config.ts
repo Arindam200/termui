@@ -6,5 +6,12 @@ export default defineConfig({
     globals: true,
     pool: 'forks',
     setupFiles: ['./src/test-setup.ts'],
+    coverage: {
+      provider: 'v8',
+      thresholds: {
+        branches: 70,
+        lines: 80,
+      },
+    },
   },
 });

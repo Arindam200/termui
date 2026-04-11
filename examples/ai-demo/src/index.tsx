@@ -43,6 +43,9 @@ import {
   TokenUsage,
   ContextMeter,
   FileChange,
+  StreamOutput,
+  ConversationHistory,
+  ErrorRetry,
 } from 'termui/components';
 import { useChat, useCompletion } from 'termui/ai';
 import type { Message } from 'termui/ai';
@@ -508,6 +511,96 @@ function LiveChatTab() {
   );
 }
 
+// ─── Tab 7: New Components ────────────────────────────────────────────────────
+
+async function* slowStream(text: string, delayMs = 20): AsyncIterable<string> {
+  for (const char of text) {
+    await new Promise<void>((r) => setTimeout(r, delayMs));
+    yield char;
+  }
+}
+
+const STREAM_TEXT =
+  'StreamOutput wraps StreamingText with an optional label. ' +
+  'It accepts either a pre-buffered string (animated char-by-char) ' +
+  'or a real AsyncIterable<string> from an LLM SDK.';
+
+const HISTORY_MESSAGES = [
+  { role: 'user' as const, content: 'What is TermUI?' },
+  { role: 'assistant' as const, content: 'TermUI is a TypeScript terminal UI framework built on React/Ink. It provides 100+ components, 12 hooks, 8 themes, and a shadcn-style CLI for adding components to any Node.js project.' },
+  { role: 'user' as const, content: 'Does it support streaming?' },
+  { role: 'assistant' as const, content: 'Yes — ChatMessage accepts a stream prop (AsyncIterable<string>) or streamText for animated playback. The new StreamOutput component is a standalone alternative that wraps StreamingText directly.' },
+  { role: 'user' as const, content: 'How do I install a component?' },
+  { role: 'assistant' as const, content: 'Run: npx termui add <component-name>\nTermUI copies the source file into ./components/ui/ so you own the code.' },
+];
+
+function NewComponentsTab() {
+  const [retryCount, setRetryCount] = useState(0);
+  const [showError, setShowError] = useState(true);
+  const [streamKey, setStreamKey] = useState(0);
+
+  return (
+    <Stack direction="vertical" gap={1}>
+      {/* StreamOutput */}
+      <Panel title="StreamOutput — standalone streaming display  [r] restart">
+        <Stack direction="vertical" gap={1}>
+          <StreamOutput
+            key={`text-${streamKey}`}
+            text={STREAM_TEXT}
+            label="Response"
+            speed={18}
+            cursor
+          />
+          <StreamOutput
+            key={`stream-${streamKey}`}
+            stream={slowStream('Streaming from AsyncIterable<string> — each chunk arrives asynchronously, just like a real LLM SDK response.', 22)}
+            label="Live stream"
+            cursor
+          />
+        </Stack>
+      </Panel>
+
+      {/* ConversationHistory */}
+      <Panel title="ConversationHistory — scrollable ↑↓ (maxHeight=6 rows shown)">
+        <ConversationHistory maxHeight={6} showScrollHint isActive>
+          {HISTORY_MESSAGES.map((msg, i) => (
+            <ChatMessage key={i} role={msg.role} showSeparator={i > 0}>
+              <Text wrap="wrap">{msg.content}</Text>
+            </ChatMessage>
+          ))}
+        </ConversationHistory>
+      </Panel>
+
+      {/* ErrorRetry */}
+      <Panel title={`ErrorRetry — retry affordance  (retryCount: ${retryCount}/3)`}>
+        {showError ? (
+          <ErrorRetry
+            error={new Error('Connection refused: Ollama is not running on localhost:11434')}
+            retryCount={retryCount}
+            maxRetries={3}
+            onRetry={() => {
+              if (retryCount < 3) setRetryCount((c) => c + 1);
+            }}
+            onDismiss={() => setShowError(false)}
+          />
+        ) : (
+          <Box gap={2}>
+            <Text dimColor>Dismissed.</Text>
+            <Text
+              color="#7C3AED"
+              onPress={() => { setShowError(true); setRetryCount(0); }}
+            >
+              [reset]
+            </Text>
+          </Box>
+        )}
+      </Panel>
+
+      <Text dimColor> [r] restart streams</Text>
+    </Stack>
+  );
+}
+
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 function Demo() {
@@ -525,6 +618,7 @@ function Demo() {
     { key: 'tokens', label: 'Tokens', content: <TokensTab /> },
     { key: 'files', label: 'Files', content: <FilesTab /> },
     { key: 'live', label: 'Live', content: <LiveChatTab /> },
+    { key: 'new', label: 'New ✦', content: <NewComponentsTab /> },
   ];
 
   return (

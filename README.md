@@ -199,6 +199,8 @@ import type { AlertProps, SelectProps } from 'termui/svelte';
 | `npx termui theme [name]`       | List or apply a theme                     |
 | `npx termui preview`            | Interactive component gallery             |
 | `npx termui dev`                | Watch mode: hot-reload on file change     |
+| `npx termui mcp`                | Start the TermUI MCP server (stdio)       |
+| `npx termui add mcp`            | Install MCP server config (local/global)  |
 
 ---
 
@@ -256,6 +258,8 @@ import {
   useInput, // keyboard input
   useFocus, // component focus state
   useFocusManager, // programmatic focus
+  useKeyboardNavigation, // arrow/Home/End/PgUp/PgDn/Enter/Esc for list components
+  useFocusTrap, // trap Tab focus within overlays (Modal, Drawer, Dialog)
   useTheme, // access theme tokens
   useTerminal, // cols, rows, color depth
   useAnimation, // frame-based animation
@@ -284,7 +288,10 @@ TermUI ships a dedicated set of AI/LLM UI components for building chat interface
 | `ContextMeter`  | Progress bar showing context window usage with warn/critical zones |
 | `ModelSelector` | Interactive picker for AI model selection, grouped by provider   |
 | `FileChange`    | Diff-style display of file modifications from an agent           |
-| `ToolApproval`  | Confirmation prompt before executing a tool call (risk-gated)    |
+| `ToolApproval`        | Confirmation prompt before executing a tool call (risk-gated)    |
+| `StreamOutput`        | Standalone streaming display — animates text or AsyncIterable    |
+| `ConversationHistory` | Scrollable wrapper for ChatMessage history with ↑↓ navigation    |
+| `ErrorRetry`          | Error state with keyboard retry/dismiss affordance               |
 
 The `termui/ai` adapter provides streaming React hooks:
 
@@ -303,6 +310,38 @@ const { completion, complete, isLoading } = useCompletion({ api: '/api/complete'
 ```
 
 The `ai-assistant` template (`npx termui create my-tool --template ai-assistant`) is a fully-wired chat app including ChatThread, ToolApproval, ModelSelector, TokenUsage, ContextMeter, and ConversationStore — ready to run with Anthropic, OpenAI, or Ollama.
+
+---
+
+## MCP Integration
+
+TermUI ships a built-in [Model Context Protocol](https://modelcontextprotocol.io) server so AI assistants (Claude Code, Cursor, GitHub Copilot) can browse and install components on your behalf.
+
+```bash
+# Start the server directly (stdio transport)
+npx termui mcp
+
+# Or install the config for your AI tool
+npx termui add mcp
+```
+
+`npx termui add mcp` prompts you to choose one of three installation targets:
+
+| Scope | Config file written |
+| --- | --- |
+| **Local project** | `.mcp.json` (Claude Code project scope) |
+| **Global — Claude Code** | `~/.claude/settings.json` |
+| **Global — Claude Desktop** | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+
+Once installed, your AI assistant gets five tools:
+
+| Tool | Description |
+| --- | --- |
+| `list_components` | Browse all components grouped by category |
+| `add_component` | Install component(s) into the current project |
+| `get_component_docs` | Full props + usage for a specific component |
+| `search_components` | Keyword search over the registry |
+| `get_theme_tokens` | List available themes and their token structure |
 
 ---
 
@@ -361,12 +400,13 @@ const openai = new OpenAI();
 
 In-repo docs live under [`docs/`](./docs). Start at **[docs/index.md](./docs/index.md)** for the overview and category guides (layout, typography, feedback, charts, and more). API-focused pages:
 
-| Doc                                          | Contents          |
-| -------------------------------------------- | ----------------- |
-| [docs/api/cli.md](./docs/api/cli.md)         | CLI reference     |
-| [docs/api/hooks.md](./docs/api/hooks.md)     | Hooks API         |
-| [docs/api/testing.md](./docs/api/testing.md) | Testing utilities |
-| [docs/adapters.md](./docs/adapters.md)       | Adapters overview |
+| Doc                                                  | Contents                              |
+| ---------------------------------------------------- | ------------------------------------- |
+| [docs/api/cli.md](./docs/api/cli.md)                 | CLI reference                         |
+| [docs/api/hooks.md](./docs/api/hooks.md)             | Hooks API                             |
+| [docs/api/testing.md](./docs/api/testing.md)         | Testing utilities                     |
+| [docs/adapters.md](./docs/adapters.md)               | Adapters overview                     |
+| [docs/accessibility.md](./docs/accessibility.md)     | Keyboard nav, focus traps, ARIA, env vars |
 
 ---
 
@@ -480,7 +520,7 @@ pnpm --filter @termui/cli dev
 | **Phase 1** | ✅ **Done**    | 19 components, CLI (init/add/list), 3 themes, 12 hooks                                                                   |
 | **Phase 2** | ✅ **Done**    | 75 components, 9 themes, adapters, diff/update/theme commands                                                            |
 | **Phase 3** | ✅ **Done**    | 101 components, charts, dev tools, templates, testing package                                                            |
-| **Phase 4** | 🚧 In Progress | AI components + streaming hooks, chalk/ora/meow/commander/inquirer/Vue/Svelte adapters, voice dictation, Windows CI, NO_UNICODE compat, `termui/testing` subpath, 600+ tests |
+| **Phase 4** | ✅ Complete    | AI components + streaming hooks, chalk/ora/meow/commander/inquirer/Vue/Svelte adapters, voice dictation, Windows CI, NO_UNICODE compat, `termui/testing` subpath, MCP server, accessibility hooks (`useKeyboardNavigation`, `useFocusTrap`), `StreamOutput`, `ConversationHistory`, `ErrorRetry`, `Modal`/`Drawer` focus trapping, 1,300+ tests |
 | **Phase 5** | 🔜 Planned     | Plugin system, community registry                                                                                        |
 
 ---

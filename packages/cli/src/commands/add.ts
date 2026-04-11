@@ -196,6 +196,13 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
     return;
   }
 
+  // Special case: `termui add mcp` → install MCP server config
+  if (filteredArgs.length === 1 && filteredArgs[0] === 'mcp') {
+    const { installMcp } = await import('./mcp.js');
+    await installMcp();
+    return;
+  }
+
   if (filteredArgs.length === 0) {
     console.error(`\x1b[31mError:\x1b[0m Please specify a component name.`);
     console.error(`  Example: \x1b[36mnpx termui add spinner\x1b[0m\n`);
@@ -204,22 +211,55 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
 
   const cwd = process.cwd();
   const config = getConfig(cwd);
-  const registryUrl = config.registry ?? 'https://arindam200.github.io/termui';
+
+  // Build ordered registry URL list: primary first, then any extras from config.registries
+  const primaryUrl = config.registry ?? 'https://arindam200.github.io/termui';
+  const extraRegistries = (config.registries ?? []).filter((r) => r !== primaryUrl);
+  const allRegistryUrls = [primaryUrl, ...extraRegistries];
 
   if (!opts?.isNested) {
     printLogo();
     intro('termui');
   }
 
-  // Resolve registry manifest
+  // Fetch and merge manifests from all configured registries.
+  // Later registries can override components from earlier ones (community overrides core).
   active('Connecting to registry…');
   let registry: Awaited<ReturnType<typeof fetchManifest>>;
   try {
-    registry = await fetchManifest(registryUrl);
+    registry = await fetchManifest(primaryUrl);
   } catch {
-    fail(`Failed to fetch registry from ${bold(registryUrl)}`);
+    fail(`Failed to fetch registry from ${bold(primaryUrl)}`);
     process.exit(2);
   }
+
+  // Merge in extra registries — components from extra registries shadow the primary
+  for (const extraUrl of extraRegistries) {
+    try {
+      const extra = await fetchManifest(extraUrl);
+      registry = { ...registry, components: { ...registry.components, ...extra.components } };
+    } catch {
+      warn(`Could not reach registry ${bold(extraUrl)} — skipping`);
+    }
+  }
+
+  // Track which registry URL each component came from for correct file fetching
+  const componentRegistryUrl = new Map<string, string>();
+  for (const name of Object.keys(registry.components)) {
+    componentRegistryUrl.set(name, primaryUrl);
+  }
+  for (const extraUrl of extraRegistries) {
+    try {
+      const extra = await fetchManifest(extraUrl);
+      for (const name of Object.keys(extra.components)) {
+        componentRegistryUrl.set(name, extraUrl);
+      }
+    } catch {
+      // already warned above
+    }
+  }
+
+  const registryUrl = primaryUrl;
 
   const installAll = filteredArgs.includes('--all');
   const targets = installAll
@@ -229,7 +269,11 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
   if (installAll) {
     step(`Found ${hi(String(targets.length))} components`);
   } else {
-    step(`Source: ${hi(registryUrl)}`);
+    if (extraRegistries.length > 0) {
+      step(`Sources: ${hi([primaryUrl, ...extraRegistries].join(', '))}`);
+    } else {
+      step(`Source: ${hi(primaryUrl)}`);
+    }
     step(`Installing ${hi(targets.join(', '))}`);
   }
 
@@ -281,7 +325,7 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
       config.componentsDir,
       cwd,
       registry,
-      registryUrl,
+      componentRegistryUrl.get(componentName) ?? registryUrl,
       installed,
       isDryRun
     );
