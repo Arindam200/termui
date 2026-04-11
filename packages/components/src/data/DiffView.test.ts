@@ -4,8 +4,10 @@ import { DiffView } from './DiffView.js';
 // ── Export smoke test ──────────────────────────────────────────────────────
 
 describe('DiffView export', () => {
-  it('is exported as a function', () => {
-    expect(typeof DiffView).toBe('function');
+  it('is exported as a renderable component', () => {
+    // React.memo wraps components in an object — check it's defined and callable
+    expect(DiffView).toBeDefined();
+    expect(typeof DiffView === 'function' || (typeof DiffView === 'object' && DiffView !== null)).toBe(true);
   });
 });
 

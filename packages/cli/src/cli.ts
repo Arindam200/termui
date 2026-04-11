@@ -4,17 +4,6 @@
  * Command routing uses createCLI from termui/args (@termui/adapters) — dogfooding the product.
  */
 
-import { init } from './commands/init.js';
-import { add } from './commands/add.js';
-import { list } from './commands/list.js';
-import { diff } from './commands/diff.js';
-import { update } from './commands/update.js';
-import { theme } from './commands/theme.js';
-import { preview, previewHelp } from './commands/preview.js';
-import { dev } from './commands/dev.js';
-import { docs } from './commands/docs.js';
-import { publish } from './commands/publish.js';
-import { mcp, mcpHelp } from './commands/mcp.js';
 import { checkForUpdates } from './utils/updates.js';
 import { printLogo, intro, step, outro, hi, dim, select, multiselect } from './utils/ui.js';
 import { createCLI } from './utils/createCLI.js';
@@ -97,45 +86,63 @@ async function main() {
   const cmdArgs = rawArgs.slice(1);
 
   switch (command) {
-    case 'init':
+    case 'init': {
+      const { init } = await import('./commands/init.js');
       await init(cmdArgs);
       break;
+    }
 
-    case 'add':
+    case 'add': {
+      const { add } = await import('./commands/add.js');
       await add(cmdArgs);
       break;
+    }
 
-    case 'list':
+    case 'list': {
+      const { list } = await import('./commands/list.js');
       await list(cmdArgs);
       break;
+    }
 
-    case 'diff':
+    case 'diff': {
+      const { diff } = await import('./commands/diff.js');
       await diff(cmdArgs);
       break;
+    }
 
-    case 'update':
+    case 'update': {
+      const { update } = await import('./commands/update.js');
       await update(cmdArgs);
       break;
+    }
 
-    case 'theme':
+    case 'theme': {
+      const { theme } = await import('./commands/theme.js');
       await theme(cmdArgs);
       break;
+    }
 
-    case 'preview':
+    case 'preview': {
+      const { preview, previewHelp } = await import('./commands/preview.js');
       if (cmdArgs.includes('--help') || cmdArgs.includes('-h')) {
         previewHelp();
       } else {
         await preview(cmdArgs);
       }
       break;
+    }
 
-    case 'dev':
+    case 'dev': {
+      const { dev } = await import('./commands/dev.js');
       await dev(cmdArgs);
       break;
+    }
 
-    case 'docs':
+    case 'docs': {
+      const { docs } = await import('./commands/docs.js');
       await docs(cmdArgs);
       break;
+    }
 
     case 'completion': {
       const shell = cmdArgs[0];
@@ -147,17 +154,21 @@ async function main() {
       break;
     }
 
-    case 'mcp':
+    case 'mcp': {
+      const { mcp, mcpHelp } = await import('./commands/mcp.js');
       if (cmdArgs.includes('--help') || cmdArgs.includes('-h')) {
         mcpHelp();
       } else {
         await mcp(cmdArgs);
       }
       break;
+    }
 
-    case 'publish':
+    case 'publish': {
+      const { publish } = await import('./commands/publish.js');
       await publish(cmdArgs, {});
       break;
+    }
 
     case 'create': {
       const { create } = await import('./commands/create.js');
@@ -226,6 +237,7 @@ async function interactiveMenu(): Promise<void> {
       return;
     }
 
+    const { add } = await import('./commands/add.js');
     await add(chosen, { isNested: true });
   } else if (action === 'add-template') {
     const { getLocalRegistry } = await import('./registry/client.js');
@@ -249,16 +261,22 @@ async function interactiveMenu(): Promise<void> {
       return;
     }
 
-    await add(chosen, { isNested: true });
+    const { add: addCmd } = await import('./commands/add.js');
+    await addCmd(chosen, { isNested: true });
   } else if (action === 'init') {
+    const { init } = await import('./commands/init.js');
     await init([], { isNested: true });
   } else if (action === 'theme') {
+    const { theme } = await import('./commands/theme.js');
     await theme([]);
   } else if (action === 'preview') {
+    const { preview } = await import('./commands/preview.js');
     await preview([]);
   } else if (action === 'list') {
+    const { list } = await import('./commands/list.js');
     await list([], { isNested: true });
   } else if (action === 'dev') {
+    const { dev } = await import('./commands/dev.js');
     await dev([]);
   } else {
     cli.help();

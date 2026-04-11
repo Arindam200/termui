@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box, Text } from 'ink';
 import { useTheme } from '@termui/core';
 
@@ -109,7 +109,7 @@ function buildHunks(ops: DiffOp[], context: number): Hunk[] {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function DiffView({
+export const DiffView = React.memo(function DiffView({
   oldText,
   newText,
   filename,
@@ -119,11 +119,14 @@ export function DiffView({
 }: DiffViewProps) {
   const theme = useTheme();
 
-  const oldLines = oldText.split('\n');
-  const newLines = newText.split('\n');
-  const ops = computeDiff(oldLines, newLines);
-  const hunks = buildHunks(ops, context);
-  const hasChanges = ops.some((op) => op.type !== 'equal');
+  const { ops, hunks, hasChanges } = useMemo(() => {
+    const oldLines = oldText.split('\n');
+    const newLines = newText.split('\n');
+    const ops = computeDiff(oldLines, newLines);
+    const hunks = buildHunks(ops, context);
+    const hasChanges = ops.some((op) => op.type !== 'equal');
+    return { ops, hunks, hasChanges };
+  }, [oldText, newText, context]);
 
   if (!hasChanges) {
     return (
@@ -156,7 +159,7 @@ export function DiffView({
       )}
     </Box>
   );
-}
+});
 
 // ─── Unified view ─────────────────────────────────────────────────────────────
 

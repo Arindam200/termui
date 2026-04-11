@@ -1,5 +1,6 @@
+import { execSync } from 'child_process';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { dirname, relative, resolve } from 'path';
+import { dirname, join, relative, resolve } from 'path';
 import { pathToFileURL } from 'url';
 import { getConfig } from '../utils/config.js';
 import { fetchManifest, fetchComponentFile, type ComponentMeta } from '../registry/client.js';
@@ -69,6 +70,58 @@ function findClosestMatch(
   return best;
 }
 
+// ─── Package manager detection + auto-install ────────────────────────────────
+
+function detectPackageManager(cwd: string): string {
+  if (existsSync(join(cwd, 'pnpm-lock.yaml'))) return 'pnpm';
+  if (existsSync(join(cwd, 'yarn.lock'))) return 'yarn';
+  if (existsSync(join(cwd, 'bun.lockb'))) return 'bun';
+  return 'npm';
+}
+
+function getMissingDeps(deps: string[], cwd: string): string[] {
+  return deps.filter((dep) => !existsSync(join(cwd, 'node_modules', dep)));
+}
+
+function installDeps(deps: string[], cwd: string): void {
+  const missing = getMissingDeps(deps, cwd);
+  if (missing.length === 0) return;
+  const pm = detectPackageManager(cwd);
+  const cmd = pm === 'npm' ? `npm install ${missing.join(' ')}` : `${pm} add ${missing.join(' ')}`;
+  try {
+    execSync(cmd, { stdio: 'inherit', cwd });
+  } catch {
+    warn(`Auto-install failed. Run manually: ${hi(cmd)}`);
+  }
+}
+
+/** Core packages every component needs — installed once before any component is written. */
+const CORE_DEPS = ['termui', 'react', 'ink'];
+
+/**
+ * Adapters are already bundled inside `termui` as subpath exports (e.g. `termui/commander`).
+ * The user doesn't download any files — they just need the underlying npm package installed.
+ * Map: adapter name the user types → npm package(s) to install.
+ */
+const ADAPTER_DEPS: Record<string, string[]> = {
+  commander:          ['commander'],
+  chalk:              ['chalk'],
+  ora:                ['ora'],
+  meow:               ['meow'],
+  inquirer:           ['inquirer'],
+  yargs:              ['yargs'],
+  vue:                ['vue'],
+  svelte:             ['svelte'],
+  conf:               ['conf'],
+  execa:              ['execa'],
+  'node-pty':         ['node-pty'],
+  pty:                ['node-pty'],
+  keychain:           ['keytar'],
+  git:                ['simple-git'],
+  github:             ['@octokit/rest'],
+  ai:                 ['@anthropic-ai/sdk'],
+};
+
 // ─── Prettier formatting (optional) ──────────────────────────────────────────
 
 async function formatWithPrettier(source: string, filePath: string, cwd: string): Promise<string> {
@@ -110,7 +163,7 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
 
     const cwd = process.cwd();
     const config = getConfig(cwd);
-    const registryUrl = config.registry ?? 'https://arindam200.github.io/termui';
+    const registryUrl = process.env['TERMUI_REGISTRY'] ?? config.registry;
 
     if (!opts?.isNested) {
       printLogo();
@@ -213,7 +266,7 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
   const config = getConfig(cwd);
 
   // Build ordered registry URL list: primary first, then any extras from config.registries
-  const primaryUrl = config.registry ?? 'https://arindam200.github.io/termui';
+  const primaryUrl = process.env['TERMUI_REGISTRY'] ?? config.registry;
   const extraRegistries = (config.registries ?? []).filter((r) => r !== primaryUrl);
   const allRegistryUrls = [primaryUrl, ...extraRegistries];
 
@@ -281,6 +334,15 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
     step(`${c.yellow}[dry-run]${c.reset} No files will be written`);
   }
 
+  // Ensure core deps are installed for every component
+  if (!isDryRun) {
+    const missingCore = getMissingDeps(CORE_DEPS, cwd);
+    if (missingCore.length > 0) {
+      step(`Installing core deps: ${hi(missingCore.join(', '))}`);
+      installDeps(missingCore, cwd);
+    }
+  }
+
   const allComponentNames = Object.keys(registry.components);
   const installed = new Set<string>();
   let addedCount = 0;
@@ -288,6 +350,20 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
   let failedCount = 0;
 
   for (const componentName of targets) {
+    // Handle adapter installs — no files to copy, just install the underlying npm package
+    const adapterDeps = ADAPTER_DEPS[componentName];
+    if (adapterDeps) {
+      if (!isDryRun) {
+        step(`Adapter ${hi(componentName)} → installing ${hi(adapterDeps.join(', '))}`);
+        installDeps(adapterDeps, cwd);
+        step(`${hi('◇')} termui/${componentName} ready  ${dim(`import from 'termui/${componentName}'`)}`);
+      } else {
+        step(`${c.yellow}[dry-run]${c.reset} Would install: ${adapterDeps.join(', ')}`);
+      }
+      addedCount++;
+      continue;
+    }
+
     const meta = registry.components[componentName];
     if (!meta) {
       fail(`No component ${bold(`'${componentName}'`)} found.`);
@@ -450,8 +526,9 @@ async function installComponent(
     added++;
   }
 
-  if (meta.deps && meta.deps.length > 0) {
-    step(`Peer deps: ${hi(meta.deps.join(', '))}  ${dim(`npm install ${meta.deps.join(' ')}`)}`);
+  if (meta.deps && meta.deps.length > 0 && !isDryRun) {
+    step(`Installing peer deps: ${hi(meta.deps.join(', '))}`);
+    installDeps(meta.deps, cwd);
   }
 
   return { added, existed, failed };

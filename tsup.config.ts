@@ -6,6 +6,7 @@ const sharedOptions = {
   clean: true,
   sourcemap: false,
   minify: true,
+  splitting: true,
   tsconfig: 'tsconfig.build.json',
   external: [
     'react',

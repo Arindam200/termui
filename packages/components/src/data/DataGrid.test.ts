@@ -4,8 +4,10 @@ import { DataGrid } from './DataGrid.js';
 // ── Export smoke test ──────────────────────────────────────────────────────
 
 describe('DataGrid export', () => {
-  it('is exported as a function', () => {
-    expect(typeof DataGrid).toBe('function');
+  it('is exported as a renderable component', () => {
+    // React.memo wraps components in an object — check it's defined and callable
+    expect(DataGrid).toBeDefined();
+    expect(typeof DataGrid === 'function' || (typeof DataGrid === 'object' && DataGrid !== null)).toBe(true);
   });
 });
 

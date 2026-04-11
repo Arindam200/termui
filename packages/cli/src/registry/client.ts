@@ -34,14 +34,27 @@ async function tryFetch(url: string, timeout = 5000): Promise<Response> {
   return response;
 }
 
+async function tryFetchText(url: string, timeout = 5000): Promise<string> {
+  if (url.startsWith('file://')) {
+    const { readFileSync } = await import('fs');
+    return readFileSync(new URL(url), 'utf-8');
+  }
+  const res = await tryFetch(url, timeout);
+  return res.text();
+}
+
 /** Fetch the registry manifest — tries primary, then jsDelivr, then embedded fallback */
 export async function fetchManifest(registryUrl: string): Promise<RegistryManifest> {
-  const urls = [`${registryUrl}/schema.json`, `${FALLBACK_REGISTRY}/schema.json`];
+  // For custom/file registries, only try the provided URL (no CDN fallback)
+  const isCustomRegistry = registryUrl !== PRIMARY_REGISTRY;
+  const urls = isCustomRegistry
+    ? [`${registryUrl}/schema.json`]
+    : [`${registryUrl}/schema.json`, `${FALLBACK_REGISTRY}/schema.json`];
 
   for (const url of urls) {
     try {
-      const res = await tryFetch(url);
-      return (await res.json()) as RegistryManifest;
+      const text = await tryFetchText(url);
+      return JSON.parse(text) as RegistryManifest;
     } catch {
       // try next
     }
@@ -57,15 +70,17 @@ export async function fetchComponentFile(
   componentName: string,
   fileName: string
 ): Promise<string> {
-  const urls = [
-    `${registryUrl}/components/${componentName}/${fileName}`,
-    `${FALLBACK_REGISTRY}/components/${componentName}/${fileName}`,
-  ];
+  const isCustomRegistry = registryUrl !== PRIMARY_REGISTRY;
+  const urls = isCustomRegistry
+    ? [`${registryUrl}/components/${componentName}/${fileName}`]
+    : [
+        `${registryUrl}/components/${componentName}/${fileName}`,
+        `${FALLBACK_REGISTRY}/components/${componentName}/${fileName}`,
+      ];
 
   for (const url of urls) {
     try {
-      const res = await tryFetch(url, 10000);
-      return res.text();
+      return await tryFetchText(url, 10000);
     } catch {
       // try next
     }

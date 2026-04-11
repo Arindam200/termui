@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Box, Text } from 'ink';
 import { useInput, useTheme } from '@termui/core';
 
@@ -46,7 +46,7 @@ function pad(str: string, width: number, align: 'left' | 'right' | 'center' = 'l
   return s + ' '.repeat(diff);
 }
 
-export function DataGrid<T extends Record<string, unknown> = Record<string, unknown>>({
+function DataGridComponent<T extends Record<string, unknown> = Record<string, unknown>>({
   data,
   columns,
   pageSize = 10,
@@ -153,27 +153,27 @@ export function DataGrid<T extends Record<string, unknown> = Record<string, unkn
   const pageData = sorted.slice(page * pageSize, (page + 1) * pageSize);
 
   // ── Helpers ───────────────────────────────────────────────────────────────
-  function cycleSort(colKey: string, isSortable: boolean) {
+  const cycleSort = useCallback((colKey: string, isSortable: boolean) => {
     if (!isSortable) return;
 
-    let next: { column: string | null; direction: 'asc' | 'desc' | null };
+    setSortState((prev) => {
+      let next: { column: string | null; direction: 'asc' | 'desc' | null };
 
-    if (sortState.column !== colKey) {
-      // New column — start ascending
-      next = { column: colKey, direction: 'asc' };
-    } else if (sortState.direction === 'asc') {
-      next = { column: colKey, direction: 'desc' };
-    } else {
-      // desc → clear
-      next = { column: null, direction: null };
-    }
+      if (prev.column !== colKey) {
+        next = { column: colKey, direction: 'asc' };
+      } else if (prev.direction === 'asc') {
+        next = { column: colKey, direction: 'desc' };
+      } else {
+        next = { column: null, direction: null };
+      }
 
-    setSortState(next);
+      if (onSort) {
+        onSort(next.column ?? colKey, next.direction);
+      }
 
-    if (onSort) {
-      onSort(next.column ?? colKey, next.direction);
-    }
-  }
+      return next;
+    });
+  }, [onSort]);
 
   // ── Keyboard ──────────────────────────────────────────────────────────────
   useInput((input, key) => {
@@ -279,7 +279,7 @@ export function DataGrid<T extends Record<string, unknown> = Record<string, unkn
 
   const rowNumHeader = showRowNumbers ? '    ' : '';
 
-  const renderRow = (row: T, rowIdx: number, isSelected: boolean) => {
+  function renderRow(row: T, rowIdx: number, isSelected: boolean) {
     const cells = buildCells((col, ci) => {
       const raw = col.render ? col.render(row[col.key], row) : String(row[col.key] ?? '');
       return pad(raw, colWidths[ci], col.align);
@@ -298,7 +298,7 @@ export function DataGrid<T extends Record<string, unknown> = Record<string, unkn
         </Text>
       </Box>
     );
-  };
+  }
 
   // ── Hints ─────────────────────────────────────────────────────────────────
   const hasSortable = orderedColumns.some((c) => c.sortable);
@@ -362,3 +362,9 @@ export function DataGrid<T extends Record<string, unknown> = Record<string, unkn
     </Box>
   );
 }
+
+export const DataGrid = React.memo(DataGridComponent) as <
+  T extends Record<string, unknown> = Record<string, unknown>,
+>(
+  props: DataGridProps<T>
+) => React.ReactElement;

@@ -73,8 +73,7 @@ function detectTypeScript(cwd: string): boolean {
   return existsSync(join(cwd, 'tsconfig.json'));
 }
 
-function buildInstallCommand(pm: PackageManager): string {
-  const deps = 'react ink @termui/core';
+function buildInstallCommand(pm: PackageManager, deps = 'react ink termui'): string {
   switch (pm) {
     case 'pnpm':
       return `pnpm add ${deps}`;
@@ -101,7 +100,7 @@ function buildStarterApp(useTypeScript: boolean, componentsDir: string): string 
 
   return `import React from 'react';
 import { render } from 'ink';
-import { ThemeProvider } from '@termui/core';
+import { ThemeProvider } from 'termui';
 import { Box } from '${importBase}/layout/Box.js';
 import { Text } from '${importBase}/typography/Text.js';
 import { Spinner } from '${importBase}/feedback/Spinner.js';
