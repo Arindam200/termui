@@ -507,6 +507,9 @@ importers:
       '@types/react':
         specifier: ^18.0.0
         version: 18.3.28
+      '@vitest/coverage-v8':
+        specifier: ^1.0.0
+        version: 1.6.1(vitest@1.6.1(@types/node@20.19.37))
       typescript:
         specifier: ^5.4.0
         version: 5.9.3
