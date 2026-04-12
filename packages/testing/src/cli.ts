@@ -116,10 +116,13 @@ export interface MockRegistryHandle {
  *   { name: 'spinner', category: 'feedback', files: ['Spinner.tsx'],
  *     source: { 'Spinner.tsx': 'export function Spinner() { return null; }' } }
  * ]);
- * const result = await testCLI(`node dist/cli.js add spinner`, {
- *   env: { TERMUI_REGISTRY: registry.url }
+ * const fs = mockFS({
+ *   'package.json': JSON.stringify({ name: 'my-app', type: 'module' }),
+ *   'termui.config.json': JSON.stringify({ componentsDir: './components/ui', registry: registry.url }),
  * });
+ * const result = await testCLI(`node dist/cli.js add spinner`, { cwd: fs.root });
  * registry.cleanup();
+ * fs.cleanup();
  * ```
  */
 export function mockRegistry(components: MockRegistryComponent[]): MockRegistryHandle {

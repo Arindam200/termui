@@ -104,22 +104,22 @@ const CORE_DEPS = ['termui', 'react', 'ink'];
  * Map: adapter name the user types → npm package(s) to install.
  */
 const ADAPTER_DEPS: Record<string, string[]> = {
-  commander:          ['commander'],
-  chalk:              ['chalk'],
-  ora:                ['ora'],
-  meow:               ['meow'],
-  inquirer:           ['inquirer'],
-  yargs:              ['yargs'],
-  vue:                ['vue'],
-  svelte:             ['svelte'],
-  conf:               ['conf'],
-  execa:              ['execa'],
-  'node-pty':         ['node-pty'],
-  pty:                ['node-pty'],
-  keychain:           ['keytar'],
-  git:                ['simple-git'],
-  github:             ['@octokit/rest'],
-  ai:                 ['@anthropic-ai/sdk'],
+  commander: ['commander'],
+  chalk: ['chalk'],
+  ora: ['ora'],
+  meow: ['meow'],
+  inquirer: ['inquirer'],
+  yargs: ['yargs'],
+  vue: ['vue'],
+  svelte: ['svelte'],
+  conf: ['conf'],
+  execa: ['execa'],
+  'node-pty': ['node-pty'],
+  pty: ['node-pty'],
+  keychain: ['keytar'],
+  git: ['simple-git'],
+  github: ['@octokit/rest'],
+  ai: ['@anthropic-ai/sdk'],
 };
 
 // ─── Prettier formatting (optional) ──────────────────────────────────────────
@@ -163,7 +163,7 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
 
     const cwd = process.cwd();
     const config = getConfig(cwd);
-    const registryUrl = process.env['TERMUI_REGISTRY'] ?? config.registry;
+    const registryUrl = config.registry;
 
     if (!opts?.isNested) {
       printLogo();
@@ -266,7 +266,7 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
   const config = getConfig(cwd);
 
   // Build ordered registry URL list: primary first, then any extras from config.registries
-  const primaryUrl = process.env['TERMUI_REGISTRY'] ?? config.registry;
+  const primaryUrl = config.registry;
   const extraRegistries = (config.registries ?? []).filter((r) => r !== primaryUrl);
   const allRegistryUrls = [primaryUrl, ...extraRegistries];
 
@@ -334,6 +334,42 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
     step(`${c.yellow}[dry-run]${c.reset} No files will be written`);
   }
 
+  const allComponentNames = Object.keys(registry.components);
+
+  // Validate all requested components exist before installing anything
+  if (!installAll) {
+    for (const componentName of targets) {
+      if (ADAPTER_DEPS[componentName]) continue; // adapters are always valid
+      if (!registry.components[componentName]) {
+        fail(`No component ${bold(`'${componentName}'`)} found.`);
+
+        const closest = findClosestMatch(componentName, allComponentNames);
+        if (closest && closest.distance <= 3) {
+          console.log(`${c.yellow}  Did you mean ${closest.name}?${c.reset}`);
+          const closestMeta = registry.components[closest.name];
+          if (closestMeta) {
+            const sameCategory = allComponentNames.filter(
+              (n) => registry.components[n]?.category === closestMeta.category
+            );
+            console.log(`  Available in ${closestMeta.category}: ${sameCategory.join(', ')}`);
+          }
+        } else {
+          const byCategory: Record<string, string[]> = {};
+          for (const name of allComponentNames) {
+            const cat = registry.components[name]?.category ?? 'other';
+            if (!byCategory[cat]) byCategory[cat] = [];
+            byCategory[cat]!.push(name);
+          }
+          for (const [cat, names] of Object.entries(byCategory)) {
+            console.log(`  Available in ${cat}: ${names.join(', ')}`);
+          }
+        }
+
+        process.exit(1);
+      }
+    }
+  }
+
   // Ensure core deps are installed for every component
   if (!isDryRun) {
     const missingCore = getMissingDeps(CORE_DEPS, cwd);
@@ -342,8 +378,6 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
       installDeps(missingCore, cwd);
     }
   }
-
-  const allComponentNames = Object.keys(registry.components);
   const installed = new Set<string>();
   let addedCount = 0;
   let existedCount = 0;
@@ -356,7 +390,9 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
       if (!isDryRun) {
         step(`Adapter ${hi(componentName)} → installing ${hi(adapterDeps.join(', '))}`);
         installDeps(adapterDeps, cwd);
-        step(`${hi('◇')} termui/${componentName} ready  ${dim(`import from 'termui/${componentName}'`)}`);
+        step(
+          `${hi('◇')} termui/${componentName} ready  ${dim(`import from 'termui/${componentName}'`)}`
+        );
       } else {
         step(`${c.yellow}[dry-run]${c.reset} Would install: ${adapterDeps.join(', ')}`);
       }
@@ -365,36 +401,7 @@ export async function add(args: string[], opts?: { isNested?: boolean }): Promis
     }
 
     const meta = registry.components[componentName];
-    if (!meta) {
-      fail(`No component ${bold(`'${componentName}'`)} found.`);
-
-      // Fuzzy match: find closest candidate
-      const closest = findClosestMatch(componentName, allComponentNames);
-      if (closest && closest.distance <= 3) {
-        console.log(`${c.yellow}  Did you mean ${closest.name}?${c.reset}`);
-        // Show all components in the same category as the closest match
-        const closestMeta = registry.components[closest.name];
-        if (closestMeta) {
-          const sameCategory = allComponentNames.filter(
-            (n) => registry.components[n]?.category === closestMeta.category
-          );
-          console.log(`  Available in ${closestMeta.category}: ${sameCategory.join(', ')}`);
-        }
-      } else {
-        // No close match — show all categories
-        const byCategory: Record<string, string[]> = {};
-        for (const name of allComponentNames) {
-          const cat = registry.components[name]?.category ?? 'other';
-          if (!byCategory[cat]) byCategory[cat] = [];
-          byCategory[cat]!.push(name);
-        }
-        for (const [cat, names] of Object.entries(byCategory)) {
-          console.log(`  Available in ${cat}: ${names.join(', ')}`);
-        }
-      }
-
-      process.exit(1);
-    }
+    if (!meta) continue; // pre-flight check already caught unknown components
 
     const result = await installComponent(
       meta,

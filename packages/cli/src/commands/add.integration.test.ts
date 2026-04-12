@@ -35,13 +35,15 @@ describe.skipIf(!built)('termui add (integration)', () => {
 
     const fs = mockFS({
       'package.json': JSON.stringify({ name: 'test-app', type: 'module' }),
-      'termui.config.json': JSON.stringify({ componentsDir: './components/ui' }),
+      'termui.config.json': JSON.stringify({
+        componentsDir: './components/ui',
+        registry: registry.url,
+      }),
     });
 
     try {
       const { output, exitCode } = await testCLI(`${CLI_CMD} add --dry-run spinner`, {
         cwd: fs.root,
-        env: { TERMUI_REGISTRY: registry.url },
       });
       expect(exitCode).toBe(0);
       expect(output.toLowerCase()).toContain('dry-run');
@@ -58,13 +60,15 @@ describe.skipIf(!built)('termui add (integration)', () => {
 
     const fs = mockFS({
       'package.json': JSON.stringify({ name: 'test-app', type: 'module' }),
-      'termui.config.json': JSON.stringify({ componentsDir: './components/ui' }),
+      'termui.config.json': JSON.stringify({
+        componentsDir: './components/ui',
+        registry: registry.url,
+      }),
     });
 
     try {
       const { exitCode } = await testCLI(`${CLI_CMD} add nonexistent-component`, {
         cwd: fs.root,
-        env: { TERMUI_REGISTRY: registry.url },
       });
       expect(exitCode).toBe(1);
     } finally {
@@ -78,13 +82,15 @@ describe.skipIf(!built)('termui add (integration)', () => {
 
     const fs = mockFS({
       'package.json': JSON.stringify({ name: 'test-app', type: 'module' }),
-      'termui.config.json': JSON.stringify({ componentsDir: './components/ui' }),
+      'termui.config.json': JSON.stringify({
+        componentsDir: './components/ui',
+        registry: registry.url,
+      }),
     });
 
     try {
       const { exitCode, output } = await testCLI(`${CLI_CMD} add --recipe`, {
         cwd: fs.root,
-        env: { TERMUI_REGISTRY: registry.url },
       });
       expect(exitCode).toBe(1);
       expect(output).toContain('recipe');
@@ -106,13 +112,15 @@ describe.skipIf(!built)('termui add (integration)', () => {
 
     const fs = mockFS({
       'package.json': JSON.stringify({ name: 'test-app', type: 'module' }),
-      'termui.config.json': JSON.stringify({ componentsDir: './components/ui' }),
+      'termui.config.json': JSON.stringify({
+        componentsDir: './components/ui',
+        registry: registry.url,
+      }),
     });
 
     try {
       await testCLI(`${CLI_CMD} add --dry-run spinner`, {
         cwd: fs.root,
-        env: { TERMUI_REGISTRY: registry.url },
       });
       // In a dry run no component file should be written
       expect(fs.exists('components/ui/feedback/Spinner.tsx')).toBe(false);
