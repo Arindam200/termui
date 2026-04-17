@@ -74,9 +74,7 @@ export function useKeyboardNavigation(
       if (key.upArrow) {
         setActiveIndexRaw((i) => (loop ? (i - 1 + itemCount) % itemCount : Math.max(0, i - 1)));
       } else if (key.downArrow) {
-        setActiveIndexRaw((i) =>
-          loop ? (i + 1) % itemCount : Math.min(itemCount - 1, i + 1)
-        );
+        setActiveIndexRaw((i) => (loop ? (i + 1) % itemCount : Math.min(itemCount - 1, i + 1)));
       } else if (key.home) {
         setActiveIndexRaw(0);
       } else if (key.end) {

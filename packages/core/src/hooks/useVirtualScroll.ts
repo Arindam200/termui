@@ -162,8 +162,7 @@ export function useVirtualScroll(options: VirtualScrollOptions): VirtualScrollRe
 
   const pageItems = Math.max(1, Math.floor(viewportSize / itemSize));
 
-  const clampedDefault =
-    itemCount > 0 ? Math.max(0, Math.min(defaultIndex, itemCount - 1)) : 0;
+  const clampedDefault = itemCount > 0 ? Math.max(0, Math.min(defaultIndex, itemCount - 1)) : 0;
 
   const [focusedIndex, setFocusedIndexRaw] = useState(clampedDefault);
   const [scrollOffset, setScrollOffset] = useState(() =>

@@ -527,11 +527,23 @@ const STREAM_TEXT =
 
 const HISTORY_MESSAGES = [
   { role: 'user' as const, content: 'What is TermUI?' },
-  { role: 'assistant' as const, content: 'TermUI is a TypeScript terminal UI framework built on React/Ink. It provides 100+ components, 12 hooks, 8 themes, and a shadcn-style CLI for adding components to any Node.js project.' },
+  {
+    role: 'assistant' as const,
+    content:
+      'TermUI is a TypeScript terminal UI framework built on React/Ink. It provides 100+ components, 12 hooks, 8 themes, and a shadcn-style CLI for adding components to any Node.js project.',
+  },
   { role: 'user' as const, content: 'Does it support streaming?' },
-  { role: 'assistant' as const, content: 'Yes — ChatMessage accepts a stream prop (AsyncIterable<string>) or streamText for animated playback. The new StreamOutput component is a standalone alternative that wraps StreamingText directly.' },
+  {
+    role: 'assistant' as const,
+    content:
+      'Yes — ChatMessage accepts a stream prop (AsyncIterable<string>) or streamText for animated playback. The new StreamOutput component is a standalone alternative that wraps StreamingText directly.',
+  },
   { role: 'user' as const, content: 'How do I install a component?' },
-  { role: 'assistant' as const, content: 'Run: npx termui add <component-name>\nTermUI copies the source file into ./components/ui/ so you own the code.' },
+  {
+    role: 'assistant' as const,
+    content:
+      'Run: npx termui add <component-name>\nTermUI copies the source file into ./components/ui/ so you own the code.',
+  },
 ];
 
 function NewComponentsTab() {
@@ -553,7 +565,10 @@ function NewComponentsTab() {
           />
           <StreamOutput
             key={`stream-${streamKey}`}
-            stream={slowStream('Streaming from AsyncIterable<string> — each chunk arrives asynchronously, just like a real LLM SDK response.', 22)}
+            stream={slowStream(
+              'Streaming from AsyncIterable<string> — each chunk arrives asynchronously, just like a real LLM SDK response.',
+              22
+            )}
             label="Live stream"
             cursor
           />
@@ -588,7 +603,10 @@ function NewComponentsTab() {
             <Text dimColor>Dismissed.</Text>
             <Text
               color="#7C3AED"
-              onPress={() => { setShowError(true); setRetryCount(0); }}
+              onPress={() => {
+                setShowError(true);
+                setRetryCount(0);
+              }}
             >
               [reset]
             </Text>

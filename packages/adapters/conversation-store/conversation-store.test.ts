@@ -7,7 +7,10 @@ import { createConversationStore } from './index.js';
 const tempRoots: string[] = [];
 
 function makeStoreDir(): string {
-  const dir = join(tmpdir(), `termui-conversation-store-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  const dir = join(
+    tmpdir(),
+    `termui-conversation-store-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  );
   mkdirSync(dir, { recursive: true });
   tempRoots.push(dir);
   return dir;

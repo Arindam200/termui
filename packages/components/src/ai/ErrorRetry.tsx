@@ -34,7 +34,7 @@ export function ErrorRetry({
         onDismiss?.();
       }
     },
-    { isActive },
+    { isActive }
   );
 
   return (
@@ -67,7 +67,7 @@ export function ErrorRetry({
         </Text>
       ) : (
         <Text dimColor color={theme.colors.mutedForeground}>
-          Enter / r — retry  ·  Esc — dismiss
+          Enter / r — retry · Esc — dismiss
         </Text>
       )}
     </Box>

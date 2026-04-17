@@ -12,7 +12,6 @@ const sharedOptions = {
     'react',
     'ink',
     'strip-ansi',
-    /^@termui\/adapters(\/.*)?$/,
     'yargs',
     'yargs/helpers',
     'commander',
@@ -79,6 +78,59 @@ const sharedOptions = {
       ),
       '@termui/components/ai': path.resolve(__dirname, 'packages/components/src/ai/index.ts'),
       '@termui/testing': path.resolve(__dirname, 'packages/testing/src/index.ts'),
+      // @termui/adapters/* — alias each subpath to its source so tsup inlines
+      // them into the published `termui` package instead of emitting bare
+      // imports that consumers can't resolve (no @termui/adapters on npm).
+      '@termui/adapters/ai': path.resolve(__dirname, 'packages/adapters/ai/index.ts'),
+      '@termui/adapters/args': path.resolve(__dirname, 'packages/adapters/args/index.ts'),
+      '@termui/adapters/chalk': path.resolve(__dirname, 'packages/adapters/chalk/index.ts'),
+      '@termui/adapters/clack': path.resolve(__dirname, 'packages/adapters/clack/index.ts'),
+      '@termui/adapters/clack-ink': path.resolve(
+        __dirname,
+        'packages/adapters/clack-ink/index.tsx'
+      ),
+      '@termui/adapters/commander': path.resolve(__dirname, 'packages/adapters/commander/index.ts'),
+      '@termui/adapters/completion': path.resolve(
+        __dirname,
+        'packages/adapters/completion/index.ts'
+      ),
+      '@termui/adapters/conf': path.resolve(__dirname, 'packages/adapters/conf/index.ts'),
+      '@termui/adapters/conversation-store': path.resolve(
+        __dirname,
+        'packages/adapters/conversation-store/index.ts'
+      ),
+      '@termui/adapters/execa': path.resolve(__dirname, 'packages/adapters/execa/index.ts'),
+      '@termui/adapters/git': path.resolve(__dirname, 'packages/adapters/git/index.ts'),
+      '@termui/adapters/github': path.resolve(__dirname, 'packages/adapters/github/index.ts'),
+      '@termui/adapters/gray-matter': path.resolve(
+        __dirname,
+        'packages/adapters/gray-matter/index.ts'
+      ),
+      '@termui/adapters/imperative': path.resolve(
+        __dirname,
+        'packages/adapters/imperative/index.ts'
+      ),
+      '@termui/adapters/inquirer': path.resolve(__dirname, 'packages/adapters/inquirer/index.ts'),
+      '@termui/adapters/internal/color-env': path.resolve(
+        __dirname,
+        'packages/adapters/internal/color-env.ts'
+      ),
+      '@termui/adapters/keychain': path.resolve(__dirname, 'packages/adapters/keychain/index.ts'),
+      '@termui/adapters/link': path.resolve(__dirname, 'packages/adapters/link/index.ts'),
+      '@termui/adapters/meow': path.resolve(__dirname, 'packages/adapters/meow/index.ts'),
+      '@termui/adapters/ora': path.resolve(__dirname, 'packages/adapters/ora/index.ts'),
+      '@termui/adapters/picocolors': path.resolve(
+        __dirname,
+        'packages/adapters/picocolors/index.ts'
+      ),
+      '@termui/adapters/pty': path.resolve(__dirname, 'packages/adapters/pty/index.ts'),
+      '@termui/adapters/semver-update': path.resolve(
+        __dirname,
+        'packages/adapters/semver-update/index.ts'
+      ),
+      '@termui/adapters/svelte': path.resolve(__dirname, 'packages/adapters/svelte/index.ts'),
+      '@termui/adapters/voice': path.resolve(__dirname, 'packages/adapters/voice/index.ts'),
+      '@termui/adapters/vue': path.resolve(__dirname, 'packages/adapters/vue/index.ts'),
     };
   },
 };

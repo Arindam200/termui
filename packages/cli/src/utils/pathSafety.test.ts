@@ -18,8 +18,6 @@ describe('resolveWithin', () => {
   });
 
   it('rejects absolute paths that bypass the base directory', () => {
-    expect(() => resolveWithin('/workspace/app', '/etc/passwd')).toThrow(
-      /escapes base directory/i
-    );
+    expect(() => resolveWithin('/workspace/app', '/etc/passwd')).toThrow(/escapes base directory/i);
   });
 });

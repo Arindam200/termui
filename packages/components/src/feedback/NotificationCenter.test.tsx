@@ -142,9 +142,7 @@ describe('NotificationCenter', () => {
       makeNotification({ id: 'n1', title: 'Older' }),
       makeNotification({ id: 'n2', title: 'Newer' }),
     ];
-    const output = await renderToString(
-      wrap(<NotificationCenter position="bottom" />, notifs)
-    );
+    const output = await renderToString(wrap(<NotificationCenter position="bottom" />, notifs));
     const olderIdx = output.indexOf('Older');
     const newerIdx = output.indexOf('Newer');
     expect(olderIdx).toBeLessThan(newerIdx);
@@ -155,9 +153,7 @@ describe('NotificationCenter', () => {
       makeNotification({ id: 'n1', title: 'Older' }),
       makeNotification({ id: 'n2', title: 'Newer' }),
     ];
-    const output = await renderToString(
-      wrap(<NotificationCenter position="top" />, notifs)
-    );
+    const output = await renderToString(wrap(<NotificationCenter position="top" />, notifs));
     const newerIdx = output.indexOf('Newer');
     const olderIdx = output.indexOf('Older');
     expect(newerIdx).toBeLessThan(olderIdx);

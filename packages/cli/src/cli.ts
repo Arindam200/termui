@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * TermUI CLI — npx termui
  *
@@ -88,6 +89,7 @@ async function main() {
   switch (command) {
     case 'init': {
       const { init } = await import('./commands/init.js');
+      // `init` handles --help / -h internally.
       await init(cmdArgs);
       break;
     }
@@ -147,7 +149,9 @@ async function main() {
     case 'completion': {
       const shell = cmdArgs[0];
       if (!shell || !['bash', 'zsh', 'fish', 'powershell'].includes(shell)) {
-        console.error(`\x1b[31mError:\x1b[0m Usage: npx termui completion <bash|zsh|fish|powershell>`);
+        console.error(
+          `\x1b[31mError:\x1b[0m Usage: npx termui completion <bash|zsh|fish|powershell>`
+        );
         process.exit(1);
       }
       await runCompletion(shell as 'bash' | 'zsh' | 'fish' | 'powershell');
@@ -293,9 +297,17 @@ async function runCompletion(shell: 'bash' | 'zsh' | 'fish' | 'powershell'): Pro
     'init add list diff update theme preview dev docs create publish completion help --help --version';
 
   if (shell === 'powershell') {
-    const cmdList = CMDS.split(' ').map((c) => `'${c}'`).join(', ');
-    const compList = comps.split(' ').filter(Boolean).map((c) => `'${c}'`).join(', ');
-    const themeList = THEMES.split(' ').map((t) => `'${t}'`).join(', ');
+    const cmdList = CMDS.split(' ')
+      .map((c) => `'${c}'`)
+      .join(', ');
+    const compList = comps
+      .split(' ')
+      .filter(Boolean)
+      .map((c) => `'${c}'`)
+      .join(', ');
+    const themeList = THEMES.split(' ')
+      .map((t) => `'${t}'`)
+      .join(', ');
     process.stdout.write(`# TermUI PowerShell completion
 # Add the following to your PowerShell profile ($PROFILE):
 #   npx termui completion powershell | Out-String | Invoke-Expression

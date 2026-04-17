@@ -4,7 +4,10 @@ export { useFocusManager } from './useFocusManager.js';
 export { useKeyboardNavigation } from './useKeyboardNavigation.js';
 export { useFocusTrap } from './useFocusTrap.js';
 export { useVirtualScroll } from './useVirtualScroll.js';
-export type { KeyboardNavigationOptions, KeyboardNavigationResult } from './useKeyboardNavigation.js';
+export type {
+  KeyboardNavigationOptions,
+  KeyboardNavigationResult,
+} from './useKeyboardNavigation.js';
 export type { FocusTrapOptions } from './useFocusTrap.js';
 export type { VirtualScrollOptions, VirtualScrollResult } from './useVirtualScroll.js';
 export { useTheme } from './useTheme.js';

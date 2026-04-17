@@ -10,12 +10,12 @@ TermUI is built for keyboard-only environments. Every interactive component is n
 
 ## Overview
 
-| Concern | Mechanism |
-|---------|-----------|
-| Focus management | Ink `useFocus` / `useFocusManager` + `useFocusTrap` |
-| List navigation | `useKeyboardNavigation` |
+| Concern             | Mechanism                                                   |
+| ------------------- | ----------------------------------------------------------- |
+| Focus management    | Ink `useFocus` / `useFocusManager` + `useFocusTrap`         |
+| List navigation     | `useKeyboardNavigation`                                     |
 | Screen reader hints | `AriaProps` (`aria-label`, `aria-description`, `aria-live`) |
-| Reduced motion | `useMotion()` / `NO_MOTION=1` env var |
+| Reduced motion      | `useMotion()` / `NO_MOTION=1` env var                       |
 
 ---
 
@@ -36,21 +36,21 @@ focus('my-button');
 
 **`useFocus` options:**
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `id` | `string` | — | Unique ID used to target this element programmatically |
-| `isActive` | `boolean` | `true` | Whether this element can receive focus |
-| `autoFocus` | `boolean` | `false` | Focus this element on mount |
+| Option      | Type      | Default | Description                                            |
+| ----------- | --------- | ------- | ------------------------------------------------------ |
+| `id`        | `string`  | —       | Unique ID used to target this element programmatically |
+| `isActive`  | `boolean` | `true`  | Whether this element can receive focus                 |
+| `autoFocus` | `boolean` | `false` | Focus this element on mount                            |
 
 **`useFocusManager` returns:**
 
-| Method | Description |
-|--------|-------------|
-| `focus(id)` | Move focus to the element with the given ID |
-| `focusNext()` | Move focus to the next registered element |
+| Method            | Description                                   |
+| ----------------- | --------------------------------------------- |
+| `focus(id)`       | Move focus to the element with the given ID   |
+| `focusNext()`     | Move focus to the next registered element     |
 | `focusPrevious()` | Move focus to the previous registered element |
-| `enableFocus()` | Re-enable the focus system |
-| `disableFocus()` | Disable the focus system |
+| `enableFocus()`   | Re-enable the focus system                    |
+| `disableFocus()`  | Disable the focus system                      |
 
 ---
 
@@ -67,10 +67,10 @@ useFocusTrap(options: {
 
 **Options:**
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
+| Option         | Type       | Default  | Description                                   |
+| -------------- | ---------- | -------- | --------------------------------------------- |
 | `focusableIds` | `string[]` | required | Ordered list of focusable IDs within the trap |
-| `isActive` | `boolean` | `true` | Whether the trap is currently active |
+| `isActive`     | `boolean`  | `true`   | Whether the trap is currently active          |
 
 When `isActive` becomes `true`, focus jumps to `focusableIds[0]` automatically. Set `isActive: false` when the container unmounts or hides to release focus.
 
@@ -89,9 +89,12 @@ function ConfirmModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
   const { isFocused: confirmFocused } = useFocus({ id: 'modal-confirm' });
   const { isFocused: cancelFocused } = useFocus({ id: 'modal-cancel' });
 
-  useInput((_, key) => {
-    if (key.escape) onClose();
-  }, { isActive: isOpen });
+  useInput(
+    (_, key) => {
+      if (key.escape) onClose();
+    },
+    { isActive: isOpen }
+  );
 
   if (!isOpen) return null;
 
@@ -125,21 +128,21 @@ useKeyboardNavigation(options: {
 
 **Options:**
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `itemCount` | `number` | required | Total number of items in the list |
-| `defaultIndex` | `number` | `0` | Initial active index |
-| `loop` | `boolean` | `true` | Wrap around at the ends |
-| `pageSize` | `number` | `10` | Items to jump on Page Up / Page Down |
-| `onSelect` | `(index: number) => void` | — | Called on Enter or Space |
-| `onDismiss` | `() => void` | — | Called on Escape |
-| `isActive` | `boolean` | `true` | Whether keyboard handling is active |
+| Option         | Type                      | Default  | Description                          |
+| -------------- | ------------------------- | -------- | ------------------------------------ |
+| `itemCount`    | `number`                  | required | Total number of items in the list    |
+| `defaultIndex` | `number`                  | `0`      | Initial active index                 |
+| `loop`         | `boolean`                 | `true`   | Wrap around at the ends              |
+| `pageSize`     | `number`                  | `10`     | Items to jump on Page Up / Page Down |
+| `onSelect`     | `(index: number) => void` | —        | Called on Enter or Space             |
+| `onDismiss`    | `() => void`              | —        | Called on Escape                     |
+| `isActive`     | `boolean`                 | `true`   | Whether keyboard handling is active  |
 
 **Return value:**
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `activeIndex` | `number` | Currently highlighted index |
+| Field            | Type                      | Description                                                |
+| ---------------- | ------------------------- | ---------------------------------------------------------- |
+| `activeIndex`    | `number`                  | Currently highlighted index                                |
 | `setActiveIndex` | `(index: number) => void` | Programmatically move to an index (clamped to valid range) |
 
 **Example — custom list component:**
@@ -159,7 +162,8 @@ function FileList({ files }: { files: string[] }) {
     <Box flexDirection="column">
       {files.map((file, i) => (
         <Text key={file} color={i === activeIndex ? 'cyan' : undefined}>
-          {i === activeIndex ? '> ' : '  '}{file}
+          {i === activeIndex ? '> ' : '  '}
+          {file}
         </Text>
       ))}
     </Box>
@@ -174,11 +178,7 @@ function FileList({ files }: { files: string[] }) {
 `Modal` and `Drawer` accept a `focusableIds` prop that activates `useFocusTrap` automatically — no need to call the hook manually when using these components.
 
 ```tsx
-<Modal
-  isOpen={open}
-  onClose={() => setOpen(false)}
-  focusableIds={['ok-btn', 'cancel-btn']}
->
+<Modal isOpen={open} onClose={() => setOpen(false)} focusableIds={['ok-btn', 'cancel-btn']}>
   <Button id="ok-btn">OK</Button>
   <Button id="cancel-btn">Cancel</Button>
 </Modal>
@@ -233,11 +233,11 @@ const { reduced } = useMotion();
 
 **Triggers for `reduced: true`:**
 
-| Trigger | Description |
-|---------|-------------|
-| `NO_MOTION=1` | Environment variable |
-| `CI=true` | CI environment (detected automatically) |
-| `<ThemeProvider reducedMotion>` | Prop on the root provider |
+| Trigger                         | Description                             |
+| ------------------------------- | --------------------------------------- |
+| `NO_MOTION=1`                   | Environment variable                    |
+| `CI=true`                       | CI environment (detected automatically) |
+| `<ThemeProvider reducedMotion>` | Prop on the root provider               |
 
 **Example:**
 
@@ -259,17 +259,17 @@ function LoadingIndicator() {
 
 Standard key bindings used consistently across all TermUI components:
 
-| Key | Action |
-|-----|--------|
-| `Tab` | Move focus to next focusable element |
-| `Shift+Tab` | Move focus to previous focusable element |
-| `↑` / `↓` | Navigate list items |
-| `Home` | Jump to first item |
-| `End` | Jump to last item |
-| `Page Up` | Jump up by `pageSize` items (default 10) |
+| Key         | Action                                     |
+| ----------- | ------------------------------------------ |
+| `Tab`       | Move focus to next focusable element       |
+| `Shift+Tab` | Move focus to previous focusable element   |
+| `↑` / `↓`   | Navigate list items                        |
+| `Home`      | Jump to first item                         |
+| `End`       | Jump to last item                          |
+| `Page Up`   | Jump up by `pageSize` items (default 10)   |
 | `Page Down` | Jump down by `pageSize` items (default 10) |
-| `Enter` | Select / confirm focused item |
-| `Space` | Toggle or select focused item |
-| `Esc` | Close overlay / dismiss / cancel |
+| `Enter`     | Select / confirm focused item              |
+| `Space`     | Toggle or select focused item              |
+| `Esc`       | Close overlay / dismiss / cancel           |
 
 All interactive components in TermUI follow these conventions. When building custom components, use `useKeyboardNavigation` and `useFocusTrap` to stay consistent with this contract.

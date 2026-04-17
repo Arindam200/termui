@@ -153,27 +153,30 @@ function DataGridComponent<T extends Record<string, unknown> = Record<string, un
   const pageData = sorted.slice(page * pageSize, (page + 1) * pageSize);
 
   // ── Helpers ───────────────────────────────────────────────────────────────
-  const cycleSort = useCallback((colKey: string, isSortable: boolean) => {
-    if (!isSortable) return;
+  const cycleSort = useCallback(
+    (colKey: string, isSortable: boolean) => {
+      if (!isSortable) return;
 
-    setSortState((prev) => {
-      let next: { column: string | null; direction: 'asc' | 'desc' | null };
+      setSortState((prev) => {
+        let next: { column: string | null; direction: 'asc' | 'desc' | null };
 
-      if (prev.column !== colKey) {
-        next = { column: colKey, direction: 'asc' };
-      } else if (prev.direction === 'asc') {
-        next = { column: colKey, direction: 'desc' };
-      } else {
-        next = { column: null, direction: null };
-      }
+        if (prev.column !== colKey) {
+          next = { column: colKey, direction: 'asc' };
+        } else if (prev.direction === 'asc') {
+          next = { column: colKey, direction: 'desc' };
+        } else {
+          next = { column: null, direction: null };
+        }
 
-      if (onSort) {
-        onSort(next.column ?? colKey, next.direction);
-      }
+        if (onSort) {
+          onSort(next.column ?? colKey, next.direction);
+        }
 
-      return next;
-    });
-  }, [onSort]);
+        return next;
+      });
+    },
+    [onSort]
+  );
 
   // ── Keyboard ──────────────────────────────────────────────────────────────
   useInput((input, key) => {

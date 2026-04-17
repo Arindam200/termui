@@ -1,8 +1,15 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join } from 'path';
-import { printLogo, intro, step, done, outro, hi, dim, select, confirm } from '../utils/ui.js';
+import { execSync } from 'child_process';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { dirname, join, relative, resolve } from 'path';
+import { printLogo, intro, step, done, outro, hi, select, confirm } from '../utils/ui.js';
 
-type Template = 'minimal' | 'cli' | 'dashboard' | 'wizard' | 'ai-assistant';
+type Template =
+  | 'minimal'
+  | 'cli'
+  | 'dashboard'
+  | 'wizard'
+  | 'ai-assistant'
+  | 'coding-agent';
 
 const TEMPLATES: Array<{ value: Template; label: string; hint: string }> = [
   { value: 'minimal', label: 'Minimal', hint: 'Hello World with Text + Spinner' },
@@ -10,6 +17,11 @@ const TEMPLATES: Array<{ value: Template; label: string; hint: string }> = [
   { value: 'dashboard', label: 'Dashboard', hint: 'Tabs + Table + ProgressBar layout' },
   { value: 'wizard', label: 'Wizard', hint: 'multi-step prompt flow with clack' },
   { value: 'ai-assistant', label: 'AI Assistant', hint: 'streaming AI chat CLI with termui/ai' },
+  {
+    value: 'coding-agent',
+    label: 'Coding Agent',
+    hint: 'Claude-Code-style terminal agent UI powered by the OpenAI SDK',
+  },
 ];
 
 export async function create(args: string[]): Promise<void> {
@@ -51,10 +63,12 @@ export async function create(args: string[]): Promise<void> {
   mkdirSync(join(projectDir, 'src'), { recursive: true });
   mkdirSync(join(projectDir, 'components', 'ui'), { recursive: true });
 
+  const termuiSpecifier = await resolveTermuiDependency(projectDir);
+
   // Write package.json
   writeFileSync(
     join(projectDir, 'package.json'),
-    JSON.stringify(buildPackageJson(projectName, template), null, 2) + '\n',
+    JSON.stringify(buildPackageJson(projectName, template, termuiSpecifier), null, 2) + '\n',
     'utf-8'
   );
   step(`Created ${hi('package.json')}`);
@@ -81,25 +95,54 @@ export async function create(args: string[]): Promise<void> {
     step(`Created ${hi('src/setup.ts')}`);
   }
 
+  // coding-agent: write the OpenAI setup script + env file
+  if (template === 'coding-agent') {
+    writeFileSync(join(projectDir, 'src', 'setup.ts'), CODING_AGENT_SETUP, 'utf-8');
+    step(`Created ${hi('src/setup.ts')}`);
+    writeFileSync(join(projectDir, '.env.example'), CODING_AGENT_ENV_EXAMPLE, 'utf-8');
+    step(`Created ${hi('.env.example')}`);
+  }
+
   // Write README
   writeFileSync(join(projectDir, 'README.md'), buildReadme(projectName, template), 'utf-8');
 
-  // wizard uses termui/clack's spinner — no local components needed
-  const STARTER_COMPONENTS: Record<Template, string | null> = {
-    minimal: 'box text spinner',
-    cli: 'box text',
-    dashboard: 'app-shell tabs table progress-bar text',
+  // wizard / ai-assistant / coding-agent ship self-contained entry files that
+  // rely on `ink` + `termui` directly — no local components required.
+  const STARTER_COMPONENTS: Record<Template, string[] | null> = {
+    minimal: ['box', 'text', 'spinner'],
+    cli: ['box', 'text'],
+    dashboard: ['app-shell', 'tabs', 'table', 'progress-bar', 'text'],
     wizard: null,
     'ai-assistant': null,
+    'coding-agent': null,
   };
   const starterComponents = STARTER_COMPONENTS[template];
-  const addCmd = starterComponents ? `npx termui add ${starterComponents}` : null;
+
+  // Auto-install starter components into the scaffolded project so the entry
+  // file's imports resolve on first `npm start`. Skip if the template doesn't
+  // need any (wizard, ai-assistant).
+  if (starterComponents && starterComponents.length > 0) {
+    step(`Adding starter components: ${starterComponents.map((c) => hi(c)).join(', ')}`);
+    const prevCwd = process.cwd();
+    try {
+      process.chdir(projectDir);
+      const { add } = await import('./add.js');
+      await add(starterComponents, { isNested: true });
+    } catch (err) {
+      // Don't fail the whole scaffold — just surface the error and tell the
+      // user to add manually.
+      console.error(`\x1b[33mWarning:\x1b[0m starter components failed to install:`);
+      console.error(`  ${(err as Error).message}`);
+      console.error(`  Run: \x1b[36mcd ${projectName} && npx termui add ${starterComponents.join(' ')}\x1b[0m`);
+    } finally {
+      process.chdir(prevCwd);
+    }
+  }
 
   done(`Created ${hi(projectName)}`);
   const outroLines = [
     `  cd ${projectName}`,
     `  npm install`,
-    ...(addCmd ? [`  ${addCmd}  ${dim('# install starter components')}`] : []),
     `  npm start`,
   ];
   outro(outroLines.join('\n'));
@@ -553,6 +596,326 @@ render(
   </ThemeProvider>
 );
 `,
+
+  'coding-agent': `import React, { useState, useCallback, useRef } from 'react';
+import { render } from 'ink';
+import { Box, Text } from 'ink';
+import { ThemeProvider, useTheme, useInput, useInterval } from 'termui';
+import os from 'os';
+import OpenAI from 'openai';
+
+// ─── Config ──────────────────────────────────────────────────────────────────
+
+const MODEL = process.env.OPENAI_MODEL ?? 'gpt-4o-mini';
+const VERSION = '0.1.0';
+
+const SYSTEM_PROMPT = [
+  'You are a helpful coding agent running inside a terminal UI.',
+  'Be concise and accurate. Prefer runnable code with short explanations.',
+  'When editing code, show unified diffs or full file contents.',
+].join(' ');
+
+// ─── Types & chat hook ───────────────────────────────────────────────────────
+
+interface Message {
+  id: string;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  streaming?: boolean;
+}
+
+function useCodingAgent() {
+  const [messages, setMessages] = useState<Message[]>([
+    { id: 'sys', role: 'system', content: SYSTEM_PROMPT },
+  ]);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
+  const clientRef = useRef<OpenAI | null>(null);
+
+  function getClient(): OpenAI | null {
+    if (clientRef.current) return clientRef.current;
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) return null;
+    const baseURL = process.env.OPENAI_BASE_URL;
+    clientRef.current = new OpenAI({ apiKey, baseURL });
+    return clientRef.current;
+  }
+
+  const sendMessage = useCallback(async (content: string) => {
+    const userMsg: Message = { id: 'u-' + Date.now(), role: 'user', content };
+    const asstId = 'a-' + Date.now();
+    const asstMsg: Message = { id: asstId, role: 'assistant', content: '', streaming: true };
+
+    // Capture the current history snapshot for the API call via a functional
+    // setState (avoids racing with subsequent sends).
+    let history: Array<{ role: Message['role']; content: string }> = [];
+    setMessages((prev) => {
+      history = [...prev, userMsg].map((m) => ({ role: m.role, content: m.content }));
+      return [...prev, userMsg, asstMsg];
+    });
+    setIsStreaming(true);
+
+    const client = getClient();
+    if (!client) {
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === asstId
+            ? {
+                ...m,
+                streaming: false,
+                content:
+                  'OPENAI_API_KEY is not set.\\n\\n' +
+                  'Run:  npm run setup\\n' +
+                  'Or:   export OPENAI_API_KEY=sk-...',
+              }
+            : m,
+        ),
+      );
+      setIsStreaming(false);
+      return;
+    }
+
+    try {
+      abortRef.current = new AbortController();
+      const stream = await client.chat.completions.create(
+        { model: MODEL, messages: history, stream: true },
+        { signal: abortRef.current.signal },
+      );
+      let acc = '';
+      for await (const chunk of stream) {
+        const delta = chunk.choices[0]?.delta?.content ?? '';
+        if (!delta) continue;
+        acc += delta;
+        setMessages((prev) =>
+          prev.map((m) => (m.id === asstId ? { ...m, content: acc } : m)),
+        );
+      }
+      setMessages((prev) =>
+        prev.map((m) => (m.id === asstId ? { ...m, streaming: false } : m)),
+      );
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === asstId
+            ? { ...m, streaming: false, content: 'Error: ' + msg }
+            : m,
+        ),
+      );
+    } finally {
+      setIsStreaming(false);
+      abortRef.current = null;
+    }
+  }, []);
+
+  const abort = useCallback(() => {
+    abortRef.current?.abort();
+    setIsStreaming(false);
+  }, []);
+
+  const clear = useCallback(() => {
+    setMessages([{ id: 'sys', role: 'system', content: SYSTEM_PROMPT }]);
+  }, []);
+
+  return { messages, sendMessage, isStreaming, abort, clear };
+}
+
+// ─── Welcome card (shown before the first message) ──────────────────────────
+
+const TERMUI_MARK = [
+  '╭────────╮',
+  '│● ● ●   │',
+  '│  $ _   │',
+  '╰────────╯',
+];
+
+function WelcomeCard() {
+  const theme = useTheme();
+  const user = os.userInfo().username || 'there';
+  const home = os.homedir();
+  const cwd = process.cwd().startsWith(home)
+    ? '~' + process.cwd().slice(home.length)
+    : process.cwd();
+
+  return (
+    <Box
+      borderStyle="round"
+      borderColor={theme.colors.primary}
+      paddingX={2}
+      paddingY={1}
+      width="100%"
+    >
+      {/* Left — centered welcome + mark */}
+      <Box
+        flexDirection="column"
+        flexBasis={0}
+        flexGrow={1}
+        alignItems="center"
+      >
+        <Text bold>Welcome back {user}!</Text>
+        <Box marginTop={1} flexDirection="column" alignItems="center">
+          {TERMUI_MARK.map((line, i) => (
+            <Text key={i} color={theme.colors.primary}>{line}</Text>
+          ))}
+        </Box>
+        <Box marginTop={1} flexDirection="column" alignItems="center">
+          <Text dimColor>{MODEL} · OpenAI · Coding Agent</Text>
+          <Text dimColor>{cwd}</Text>
+        </Box>
+      </Box>
+
+      {/* Vertical divider between columns */}
+      <Box
+        borderStyle="single"
+        borderColor={theme.colors.primary}
+        borderTop={false}
+        borderBottom={false}
+        borderRight={false}
+        marginX={2}
+      />
+
+      {/* Right — tips + activity */}
+      <Box flexDirection="column" flexBasis={0} flexGrow={1}>
+        <Text bold color={theme.colors.primary}>Tips for getting started</Text>
+        <Text>Ask the agent to edit files, run commands, or explain code.</Text>
+        <Text dimColor>Type <Text bold>/help</Text> for slash commands.</Text>
+        <Box marginY={1}>
+          <Text dimColor>{'─'.repeat(48)}</Text>
+        </Box>
+        <Text bold color={theme.colors.primary}>Recent activity</Text>
+        <Text dimColor>No recent activity</Text>
+      </Box>
+    </Box>
+  );
+}
+
+// ─── Chat message rendering ─────────────────────────────────────────────────
+
+function ChatMessage({ message }: { message: Message }) {
+  const theme = useTheme();
+  const [cursorVisible, setCursorVisible] = useState(true);
+
+  useInterval(() => {
+    if (message.streaming) setCursorVisible((v) => !v);
+  }, 500);
+
+  if (message.role === 'system') return null;
+
+  if (message.role === 'user') {
+    return (
+      <Box paddingX={1} marginTop={1}>
+        <Text color={theme.colors.mutedForeground}>{'› '}</Text>
+        <Text bold>{message.content}</Text>
+      </Box>
+    );
+  }
+
+  return (
+    <Box paddingX={1} marginTop={1}>
+      <Text color={theme.colors.primary}>● </Text>
+      <Text>
+        {message.content}
+        {message.streaming && cursorVisible && (
+          <Text color={theme.colors.primary}>▌</Text>
+        )}
+      </Text>
+    </Box>
+  );
+}
+
+// ─── App ────────────────────────────────────────────────────────────────────
+
+function App() {
+  const theme = useTheme();
+  const { messages, sendMessage, isStreaming, abort, clear } = useCodingAgent();
+  const [input, setInput] = useState('');
+  const visible = messages.filter((m) => m.role !== 'system');
+
+  const handleSubmit = (raw: string): void => {
+    const text = raw.trim();
+    if (!text) return;
+
+    if (text === '/help') {
+      // eslint-disable-next-line no-console
+      console.log('Commands: /help · /clear · /model <id> · Ctrl+C quit · Ctrl+A abort');
+      return;
+    }
+    if (text === '/clear') {
+      clear();
+      return;
+    }
+    if (text.startsWith('/model ')) {
+      process.env.OPENAI_MODEL = text.slice('/model '.length).trim();
+      return;
+    }
+    sendMessage(text);
+  };
+
+  useInput((char, key) => {
+    if (key.ctrl && char === 'c') process.exit(0);
+    if (key.ctrl && char === 'a') {
+      if (isStreaming) abort();
+      return;
+    }
+    if (key.return) {
+      if (!isStreaming) {
+        const msg = input;
+        setInput('');
+        handleSubmit(msg);
+      }
+      return;
+    }
+    if (key.backspace || key.delete) {
+      setInput((p) => p.slice(0, -1));
+      return;
+    }
+    if (char && char.length === 1 && !key.ctrl && !key.meta) {
+      setInput((p) => p + char);
+    }
+  });
+
+  return (
+    <Box flexDirection="column" paddingX={1} paddingY={1}>
+      {visible.length === 0 ? (
+        <WelcomeCard />
+      ) : (
+        <Box flexDirection="column">
+          {visible.map((m) => (
+            <ChatMessage key={m.id} message={m} />
+          ))}
+        </Box>
+      )}
+
+      {/* Input */}
+      <Box
+        marginTop={1}
+        borderStyle="single"
+        borderColor={isStreaming ? theme.colors.mutedForeground : theme.colors.focusRing}
+        paddingX={1}
+      >
+        <Text color={theme.colors.mutedForeground}>{'› '}</Text>
+        <Text>{input}</Text>
+        <Text color={theme.colors.primary}>▌</Text>
+      </Box>
+
+      <Box paddingX={1} justifyContent="space-between">
+        <Text dimColor>
+          {isStreaming
+            ? 'streaming…  Ctrl+A to abort'
+            : '? for shortcuts  ·  /help  ·  Ctrl+C to quit'}
+        </Text>
+        <Text dimColor>◎ {MODEL} · openai</Text>
+      </Box>
+    </Box>
+  );
+}
+
+render(
+  <ThemeProvider>
+    <App />
+  </ThemeProvider>,
+);
+`,
 };
 
 // ─── AI assistant setup script (src/setup.ts) ─────────────────────────────────
@@ -658,22 +1021,187 @@ main().catch((err) => {
 });
 `;
 
+// ─── Coding agent setup script (src/setup.ts) ────────────────────────────────
+
+const CODING_AGENT_SETUP = `/**
+ * Coding Agent Setup — run with: npm run setup
+ *
+ * Collects your OpenAI API key + model and writes them to .env.local so
+ * \`npm start\` can pick them up via \`node --env-file\`.
+ */
+import { intro, outro, text, select, confirm, log } from 'termui/clack';
+import { writeFileSync, existsSync, readFileSync } from 'fs';
+
+async function main() {
+  intro('Coding Agent Setup');
+
+  const existingKey = process.env.OPENAI_API_KEY;
+  if (existingKey) {
+    log.info('OPENAI_API_KEY already set in the environment — skipping prompt.');
+  }
+
+  const apiKey = existingKey
+    ? existingKey
+    : await text({
+        message: 'Paste your OpenAI API key',
+        placeholder: 'sk-...',
+        validate: (v) => (v.trim().length < 8 ? 'API key looks too short' : undefined),
+      });
+
+  const model = await select({
+    message: 'Default model',
+    options: [
+      { value: 'gpt-4o-mini',  label: 'gpt-4o-mini',  hint: 'fast + cheap (default)' },
+      { value: 'gpt-4o',       label: 'gpt-4o',       hint: 'most capable general-purpose' },
+      { value: 'gpt-4.1-mini', label: 'gpt-4.1-mini', hint: 'balanced coding model' },
+      { value: 'gpt-4.1',      label: 'gpt-4.1',      hint: 'top coding performance' },
+      { value: 'custom',       label: 'Other…',        hint: 'enter a model id manually' },
+    ],
+  });
+
+  const finalModel = model === 'custom'
+    ? await text({ message: 'Model id', placeholder: 'o1-mini' })
+    : model;
+
+  const baseURL = await text({
+    message: 'Custom OpenAI-compatible base URL (optional)',
+    placeholder: 'https://api.openai.com/v1',
+  });
+
+  const write = await confirm({ message: 'Write settings to .env.local?', initialValue: true });
+  if (!write) {
+    outro('Skipped — remember to export OPENAI_API_KEY before running \`npm start\`.');
+    return;
+  }
+
+  const lines = [
+    \`OPENAI_API_KEY=\${String(apiKey)}\`,
+    \`OPENAI_MODEL=\${String(finalModel)}\`,
+    ...(baseURL && String(baseURL).trim() ? [\`OPENAI_BASE_URL=\${String(baseURL).trim()}\`] : []),
+  ];
+
+  if (existsSync('.env.local')) {
+    const current = readFileSync('.env.local', 'utf-8').trimEnd();
+    writeFileSync('.env.local', current + '\\n' + lines.join('\\n') + '\\n', { mode: 0o600 });
+  } else {
+    writeFileSync('.env.local', lines.join('\\n') + '\\n', { mode: 0o600 });
+  }
+
+  log.success('Wrote .env.local (mode 600)');
+  log.warn('Keep .env.local out of version control.');
+  outro('Setup complete — run \`npm start\` to launch the agent.');
+}
+
+main().catch((err) => {
+  console.error('Setup failed:', err instanceof Error ? err.message : err);
+  process.exit(1);
+});
+`;
+
+const CODING_AGENT_ENV_EXAMPLE = `# Copy to .env.local and fill in your values, or run: npm run setup
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-mini
+# OPENAI_BASE_URL=https://api.openai.com/v1
+`;
+
 // ─── Static file content ──────────────────────────────────────────────────────
 
-function buildPackageJson(name: string, template: Template): object {
+/** Walk up from the new project dir to find the published `termui` workspace root (tsup + package.json). */
+function findLocalTermuiPackageRoot(fromDir: string): string | null {
+  let dir = resolve(fromDir);
+  for (let i = 0; i < 12; i++) {
+    const pkgPath = join(dir, 'package.json');
+    const tsupPath = join(dir, 'tsup.config.ts');
+    if (existsSync(pkgPath) && existsSync(tsupPath)) {
+      try {
+        const pkg = JSON.parse(readFileSync(pkgPath, 'utf8')) as { name?: string };
+        if (pkg.name === 'termui') return dir;
+      } catch {
+        /* ignore invalid json */
+      }
+    }
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return null;
+}
+
+/**
+ * When scaffolding inside this repo, install from `npm pack` output (file:…/*.tgz) instead of
+ * `file:../..` to the repo root. A directory link makes `import 'react'` from termui/dist resolve
+ * via the monorepo's node_modules while the app uses its own — two Reacts → invalid hook call.
+ * A packed install only contains published files, so React resolves once under the new app.
+ */
+async function resolveTermuiDependency(projectDir: string): Promise<string> {
+  const override = process.env['TERMUI_PACKAGE_SPECIFIER']?.trim();
+  if (override) return override;
+
+  const root = findLocalTermuiPackageRoot(projectDir);
+  if (root) {
+    const tgzPath = ensureLocalTermuiPack(root);
+    let rel = relative(projectDir, tgzPath);
+    if (!rel.startsWith('.')) rel = `./${rel}`;
+    return `file:${rel.split(/\\/g).join('/')}`;
+  }
+  return '^1.5.1';
+}
+
+function ensureLocalTermuiPack(termuiRoot: string): string {
+  const pkgPath = join(termuiRoot, 'package.json');
+  const pkg = JSON.parse(readFileSync(pkgPath, 'utf8')) as { version?: string };
+  const version = pkg.version ?? '0.0.0';
+  const tgzName = `termui-${version}.tgz`;
+  const tgzPath = join(termuiRoot, tgzName);
+  const distIndex = join(termuiRoot, 'dist', 'index.js');
+
+  if (!existsSync(distIndex)) {
+    step('Building termui (dist/ missing)…');
+    const run = existsSync(join(termuiRoot, 'pnpm-lock.yaml'))
+      ? 'pnpm run build:root'
+      : 'npm run build:root';
+    execSync(run, { cwd: termuiRoot, stdio: 'inherit', env: process.env });
+  }
+
+  if (!existsSync(join(termuiRoot, 'dist', 'index.js'))) {
+    throw new Error(
+      `termui dist/ is missing after build. In ${termuiRoot}, run: pnpm run build:root (or npm run build:root)`
+    );
+  }
+
+  step('Packing termui for local npm install (single React copy)…');
+  execSync('npm pack --silent', { cwd: termuiRoot, stdio: 'pipe', env: process.env });
+
+  if (!existsSync(tgzPath)) {
+    throw new Error(`npm pack did not create ${tgzName} in ${termuiRoot}.`);
+  }
+  return tgzPath;
+}
+
+function buildPackageJson(name: string, template: Template, termuiSpecifier: string): object {
   const isAI = template === 'ai-assistant';
+  const isCodingAgent = template === 'coding-agent';
+
+  const scripts: Record<string, string> = {
+    start: 'tsx src/index.tsx',
+    build: 'tsc',
+    dev: 'tsx watch src/index.tsx',
+  };
+  if (isAI) scripts.setup = 'tsx src/setup.ts';
+  if (isCodingAgent) {
+    // Load .env.local automatically via node --env-file (Node >= 20.6)
+    scripts.start = 'tsx --env-file-if-exists=.env.local src/index.tsx';
+    scripts.dev = 'tsx watch --env-file-if-exists=.env.local src/index.tsx';
+    scripts.setup = 'tsx src/setup.ts';
+  }
+
   return {
     name,
     version: '0.1.0',
     type: 'module',
-    scripts: {
-      start: 'tsx src/index.tsx',
-      build: 'tsc',
-      dev: 'tsx watch src/index.tsx',
-      ...(isAI ? { setup: 'tsx src/setup.ts' } : {}),
-    },
+    scripts,
     dependencies: {
-      termui: 'latest',
+      termui: termuiSpecifier,
       ink: '^5.0.0',
       react: '^18.0.0',
       ...(isAI
@@ -684,6 +1212,7 @@ function buildPackageJson(name: string, template: Template): object {
             // openai: '^4.0.0',
           }
         : {}),
+      ...(isCodingAgent ? { openai: '^4.67.0' } : {}),
     },
     devDependencies: {
       typescript: '^5.0.0',
@@ -729,6 +1258,7 @@ const README_STARTER_COMPONENTS: Record<Template, string | null> = {
   dashboard: 'app-shell tabs table progress-bar text',
   wizard: null,
   'ai-assistant': null,
+  'coding-agent': null,
 };
 
 function buildReadme(name: string, template: Template): string {
@@ -736,6 +1266,35 @@ function buildReadme(name: string, template: Template): string {
   const addSection = comps
     ? `\n## Add starter components\n\n\`\`\`bash\nnpx termui add ${comps}\n\`\`\`\n`
     : '';
+
+  const codingAgentSection =
+    template === 'coding-agent'
+      ? `
+## Configure OpenAI
+
+Run the interactive setup (writes \`.env.local\`):
+
+\`\`\`bash
+npm run setup
+\`\`\`
+
+Or set the env vars directly:
+
+\`\`\`bash
+export OPENAI_API_KEY=sk-...
+export OPENAI_MODEL=gpt-4o-mini
+# export OPENAI_BASE_URL=https://api.openai.com/v1
+\`\`\`
+
+## Shortcuts
+
+- \`/help\` — list slash commands
+- \`/clear\` — reset the conversation
+- \`/model <id>\` — switch model for the session
+- \`Ctrl+A\` — abort the streaming response
+- \`Ctrl+C\` — quit
+`
+      : '';
 
   return `# ${name}
 
@@ -747,7 +1306,7 @@ A TermUI app built with the **${template}** template.
 npm install${addSection}
 npm start
 \`\`\`
-
+${codingAgentSection}
 ## Docs
 
 - [TermUI docs](https://arindam200.github.io/termui)

@@ -43,10 +43,7 @@ describe('config utils', () => {
       version: '1.0.0',
       componentsDir: './components/ui',
       registry: 'https://arindam200.github.io/termui',
-      registries: [
-        'https://company.github.io/termui-registry',
-        'https://cdn.example.com/termui',
-      ],
+      registries: ['https://company.github.io/termui-registry', 'https://cdn.example.com/termui'],
       theme: 'dracula',
     };
     writeConfig(config, tmpDir);

@@ -73,7 +73,9 @@ function MyMenu({ items }: { items: string[] }) {
   return (
     <Box flexDirection="column">
       {items.map((item, i) => (
-        <Text key={item} color={i === activeIndex ? 'cyan' : undefined}>{item}</Text>
+        <Text key={item} color={i === activeIndex ? 'cyan' : undefined}>
+          {item}
+        </Text>
       ))}
     </Box>
   );
@@ -105,7 +107,12 @@ function Modal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { isFocused: confirmFocused } = useFocus({ id: 'modal-confirm' });
   const { isFocused: cancelFocused } = useFocus({ id: 'modal-cancel' });
 
-  useInput((_, key) => { if (key.escape) onClose(); }, { isActive: isOpen });
+  useInput(
+    (_, key) => {
+      if (key.escape) onClose();
+    },
+    { isActive: isOpen }
+  );
 
   return (
     <Box flexDirection="column">

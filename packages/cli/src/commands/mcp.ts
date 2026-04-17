@@ -58,9 +58,19 @@ function getGlobalConfigPath(): string {
   const home = homedir();
   switch (platform()) {
     case 'win32':
-      return resolve(process.env['APPDATA'] ?? resolve(home, 'AppData', 'Roaming'), 'Claude', 'claude_desktop_config.json');
+      return resolve(
+        process.env['APPDATA'] ?? resolve(home, 'AppData', 'Roaming'),
+        'Claude',
+        'claude_desktop_config.json'
+      );
     case 'darwin':
-      return resolve(home, 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json');
+      return resolve(
+        home,
+        'Library',
+        'Application Support',
+        'Claude',
+        'claude_desktop_config.json'
+      );
     default:
       return resolve(home, '.config', 'Claude', 'claude_desktop_config.json');
   }
@@ -149,8 +159,7 @@ export async function installMcp(): Promise<void> {
     );
   } else {
     outro(
-      `Restart Claude Desktop to pick up the new server  ·  ` +
-        `Config saved to ${hi(displayPath)}`
+      `Restart Claude Desktop to pick up the new server  ·  ` + `Config saved to ${hi(displayPath)}`
     );
   }
 }
@@ -167,10 +176,7 @@ export async function mcp(_args: string[]): Promise<void> {
     // Use embedded local registry
   }
 
-  const server = new Server(
-    { name: 'termui', version: '1.4.2' },
-    { capabilities: { tools: {} } }
-  );
+  const server = new Server({ name: 'termui', version: '1.4.2' }, { capabilities: { tools: {} } });
 
   // ── Tool definitions ────────────────────────────────────────────────────────
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
@@ -204,8 +210,7 @@ export async function mcp(_args: string[]): Promise<void> {
             components: {
               type: 'array',
               items: { type: 'string' },
-              description:
-                'Component names to install (e.g. ["spinner", "progress-bar", "toast"])',
+              description: 'Component names to install (e.g. ["spinner", "progress-bar", "toast"])',
             },
           },
           required: ['components'],
@@ -277,7 +282,9 @@ export async function mcp(_args: string[]): Promise<void> {
           (filterCategory ? ` in category "${filterCategory}"` : '') +
           ':\n',
       ];
-      for (const [cat, comps] of Object.entries(byCategory).sort(([a], [b]) => a.localeCompare(b))) {
+      for (const [cat, comps] of Object.entries(byCategory).sort(([a], [b]) =>
+        a.localeCompare(b)
+      )) {
         lines.push(`## ${cat} (${comps.length})`);
         for (const comp of comps) {
           lines.push(`  - **${comp.name}** — ${comp.description}`);
@@ -477,7 +484,9 @@ export async function mcp(_args: string[]): Promise<void> {
         };
       }
 
-      const lines = [`Search results for "${query}" (${scored.length} match${scored.length !== 1 ? 'es' : ''}):\n`];
+      const lines = [
+        `Search results for "${query}" (${scored.length} match${scored.length !== 1 ? 'es' : ''}):\n`,
+      ];
       for (const { comp } of scored) {
         lines.push(`**${comp.name}** _(${comp.category})_ — ${comp.description}`);
         lines.push(`  \`npx termui add ${comp.name}\``);

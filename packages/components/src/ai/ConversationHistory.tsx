@@ -38,18 +38,14 @@ export function ConversationHistory({
         setScrollOffset((o) => Math.min(Math.max(0, totalChildren - maxHeight), o + 1));
       }
     },
-    { isActive },
+    { isActive }
   );
 
   const visibleChildren = childArray.slice(scrollOffset, scrollOffset + maxHeight);
 
   return (
     <Box flexDirection="column">
-      <Box
-        flexDirection="column"
-        overflow="hidden"
-        height={maxHeight}
-      >
+      <Box flexDirection="column" overflow="hidden" height={maxHeight}>
         {visibleChildren}
       </Box>
       {showScrollHint && isActive && (

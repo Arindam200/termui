@@ -1,7 +1,7 @@
 {
   "name": "termui",
   "private": false,
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "A TypeScript/React terminal UI framework with 100+ components, 8 themes, and a shadcn-style CLI",
   "keywords": [
     "terminal",
@@ -215,6 +215,7 @@
     "react": "^18.0.0"
   },
   "sideEffects": false,
+  "prepublishOnly": "npm run build:root && npm run verify:dist",
   "files": [
     "dist",
     "README.md"
@@ -222,6 +223,7 @@
   "scripts": {
     "build": "turbo run build && tsup",
     "build:root": "tsup && node -e \"require('fs').chmodSync('dist/cli.js', '755')\"",
+    "verify:dist": "node scripts/verify-dist-no-workspace-imports.mjs",
     "dev": "turbo run dev --parallel",
     "test": "turbo run test",
     "lint": "turbo run lint",

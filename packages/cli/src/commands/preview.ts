@@ -50,7 +50,9 @@ export async function preview(_args: string[]): Promise<void> {
   try {
     process.stdin.setRawMode(true);
   } catch {
-    console.error('termui preview requires a terminal that supports raw mode (e.g. Windows Terminal).');
+    console.error(
+      'termui preview requires a terminal that supports raw mode (e.g. Windows Terminal).'
+    );
     process.exit(1);
   }
   process.stdin.resume();

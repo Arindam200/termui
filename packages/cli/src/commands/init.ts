@@ -1,9 +1,115 @@
 import { execSync } from 'child_process';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join, relative } from 'path';
+import { join, relative, resolve, isAbsolute } from 'path';
 import { writeConfig, type TermUIConfig } from '../utils/config.js';
-import { printLogo, intro, step, warn, done, outro, hi, dim, bold } from '../utils/ui.js';
+import { printLogo, intro, step, warn, done, outro, hi, dim, bold, pc } from '../utils/ui.js';
 import { select, confirm, text } from '../utils/clack.js';
+
+// ─── Option parsing ───────────────────────────────────────────────────────────
+
+interface InitOptions {
+  yes: boolean;
+  defaults: boolean;
+  force: boolean;
+  cwd?: string;
+  name?: string;
+  silent: boolean;
+  reinstall?: boolean;
+  help: boolean;
+  components: string[];
+}
+
+function parseOptions(argv: string[]): InitOptions {
+  const opts: InitOptions = {
+    yes: true, // -y defaults to true per spec
+    defaults: false,
+    force: false,
+    silent: false,
+    help: false,
+    components: [],
+  };
+
+  const takesValue = new Set(['-c', '--cwd', '-n', '--name']);
+
+  for (let i = 0; i < argv.length; i++) {
+    const tok = argv[i]!;
+    const next = argv[i + 1];
+    const peek = (): string | undefined =>
+      next !== undefined && !next.startsWith('-') ? next : undefined;
+
+    switch (tok) {
+      case '-h':
+      case '--help':
+        opts.help = true;
+        break;
+      case '-y':
+      case '--yes':
+        opts.yes = true;
+        break;
+      case '--no-yes':
+        opts.yes = false;
+        break;
+      case '-d':
+      case '--defaults':
+        opts.defaults = true;
+        break;
+      case '-f':
+      case '--force':
+        opts.force = true;
+        break;
+      case '-s':
+      case '--silent':
+        opts.silent = true;
+        break;
+      case '--reinstall':
+        opts.reinstall = true;
+        break;
+      case '--no-reinstall':
+        opts.reinstall = false;
+        break;
+      default: {
+        if (takesValue.has(tok)) {
+          const v = peek();
+          if (v === undefined) {
+            throw new Error(`Option ${tok} requires a value`);
+          }
+          if (tok === '-c' || tok === '--cwd') opts.cwd = v;
+          else if (tok === '-n' || tok === '--name') opts.name = v;
+          i++;
+        } else if (tok.startsWith('-')) {
+          throw new Error(`Unknown option: ${tok}`);
+        } else {
+          opts.components.push(tok);
+        }
+      }
+    }
+  }
+
+  return opts;
+}
+
+function printInitHelp(): void {
+  const { cyan, yellow, green, bold: b } = pc;
+  console.log(`
+${b('Usage:')} termui init [options] [components...]
+
+initialize your project and install dependencies
+
+${b('Arguments:')}
+  ${green('components')}             names, url or local path to component
+
+${b('Options:')}
+  ${cyan('-y, --yes')}              skip confirmation prompt. ${yellow('(default: true)')}
+  ${cyan('-d, --defaults')}         use default configuration. ${yellow('(default: false)')}
+  ${cyan('-f, --force')}            force overwrite of existing configuration. ${yellow('(default: false)')}
+  ${cyan('-c, --cwd <cwd>')}        the working directory. defaults to the current directory.
+  ${cyan('-n, --name <name>')}      the name for the new project.
+  ${cyan('-s, --silent')}           mute output. ${yellow('(default: false)')}
+  ${cyan('--reinstall')}            re-install existing UI components.
+  ${cyan('--no-reinstall')}         do not re-install existing UI components.
+  ${cyan('-h, --help')}             display help for command
+`);
+}
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -133,114 +239,176 @@ export default {
 
 // ─── Main command ─────────────────────────────────────────────────────────────
 
-export async function init(_args: string[], opts?: { isNested?: boolean }): Promise<void> {
-  const cwd = process.cwd();
+export async function init(args: string[], opts?: { isNested?: boolean }): Promise<void> {
+  let parsed: InitOptions;
+  try {
+    parsed = parseOptions(args);
+  } catch (err) {
+    console.error(`\x1b[31mError:\x1b[0m ${(err as Error).message}`);
+    console.error(`Run ${hi('npx termui init --help')} for usage.`);
+    process.exit(1);
+  }
+
+  if (parsed.help) {
+    printInitHelp();
+    return;
+  }
+
+  // Silent mode: suppress non-error output.
+  const silent = parsed.silent;
+  const logStep = silent ? () => {} : step;
+  const logWarn = silent ? () => {} : warn;
+  const logDone = silent ? () => {} : done;
+  const logOutro = silent ? () => {} : outro;
+
+  // Resolve working directory.
+  const cwd = parsed.cwd
+    ? isAbsolute(parsed.cwd)
+      ? parsed.cwd
+      : resolve(process.cwd(), parsed.cwd)
+    : process.cwd();
+
+  if (parsed.cwd && !existsSync(cwd)) {
+    console.error(`\x1b[31mError:\x1b[0m --cwd path does not exist: ${cwd}`);
+    process.exit(1);
+  }
 
   // ─── Logo + intro ──────────────────────────────────────────────────────────
-  if (!opts?.isNested) {
+  if (!opts?.isNested && !silent) {
     printLogo();
     intro('termui init');
   }
 
-  step(`Initializing in ${hi(cwd)}`);
+  logStep(`Initializing in ${hi(cwd)}`);
+  if (parsed.name) logStep(`Project name: ${hi(parsed.name)}`);
 
-  // ─── Step 1: Detect environment ────────────────────────────────────────────
+  // ─── Detect environment ────────────────────────────────────────────────────
   const pm = detectPackageManager(cwd);
   const useTypeScript = detectTypeScript(cwd);
 
-  step(`Detected ${hi(pm)} · ${useTypeScript ? hi('TypeScript') : dim('JavaScript')} project`);
+  logStep(`Detected ${hi(pm)} · ${useTypeScript ? hi('TypeScript') : dim('JavaScript')} project`);
 
-  // ─── Step 2: Check for existing config ────────────────────────────────────
+  // ─── Existing config handling ─────────────────────────────────────────────
   const configJsonPath = join(cwd, 'termui.config.json');
   if (existsSync(configJsonPath)) {
-    warn(`${hi('termui.config.json')} already exists — overwrite?`);
-    const overwrite = await confirm({ message: 'Overwrite existing config?', initialValue: false });
-    if (!overwrite) {
-      outro(`Aborted — your existing config is unchanged.`);
+    if (parsed.force) {
+      logWarn(`${hi('termui.config.json')} exists — overwriting (--force)`);
+    } else if (parsed.yes || parsed.defaults) {
+      logOutro(`Config already exists. Use ${hi('--force')} to overwrite.`);
       return;
+    } else {
+      logWarn(`${hi('termui.config.json')} already exists — overwrite?`);
+      const overwrite = await confirm({
+        message: 'Overwrite existing config?',
+        initialValue: false,
+      });
+      if (!overwrite) {
+        logOutro(`Aborted — your existing config is unchanged.`);
+        return;
+      }
     }
   }
 
-  // ─── Step 3: Components directory ─────────────────────────────────────────
-  const componentsDir = await text({
-    message: 'Components directory',
-    placeholder: './components/ui',
-    validate: (v) => {
-      if (v.includes('..')) return 'Path must not contain ".."';
-      return undefined;
-    },
-  });
+  // ─── Components directory ─────────────────────────────────────────────────
+  const componentsDir =
+    parsed.yes || parsed.defaults
+      ? './components/ui'
+      : await text({
+          message: 'Components directory',
+          placeholder: './components/ui',
+          validate: (v) => (v.includes('..') ? 'Path must not contain ".."' : undefined),
+        });
 
-  // ─── Step 4: Theme selection ───────────────────────────────────────────────
-  const theme = await select<Theme>({ message: 'Pick a theme', options: [...THEMES] });
+  // ─── Theme selection ──────────────────────────────────────────────────────
+  const theme: Theme =
+    parsed.yes || parsed.defaults
+      ? 'default'
+      : await select<Theme>({ message: 'Pick a theme', options: [...THEMES] });
 
-  // ─── Step 5: Install dependencies ─────────────────────────────────────────
-  const shouldInstall = await confirm({
-    message: 'Install dependencies? (react, ink, termui)',
-    initialValue: true,
-  });
+  // ─── Install dependencies? ────────────────────────────────────────────────
+  const shouldInstall =
+    parsed.yes || parsed.defaults
+      ? true
+      : await confirm({
+          message: 'Install dependencies? (react, ink, termui)',
+          initialValue: true,
+        });
 
-  // ─── Step 6: Create components directory ──────────────────────────────────
+  // ─── Create components directory ──────────────────────────────────────────
   const resolvedComponentsDir = join(cwd, componentsDir.replace(/^\.\//, ''));
   if (!existsSync(resolvedComponentsDir)) {
     mkdirSync(resolvedComponentsDir, { recursive: true });
-    step(`Created ${hi(componentsDir)}`);
+    logStep(`Created ${hi(componentsDir)}`);
   } else {
-    warn(`${hi(componentsDir)} already exists — skipping`);
+    logWarn(`${hi(componentsDir)} already exists — skipping`);
   }
 
-  // ─── Step 7: Write termui.config.json ─────────────────────────────────────
+  // ─── Write termui.config.json ─────────────────────────────────────────────
   const config: TermUIConfig = {
     version: '1.0.0',
     componentsDir,
     registry: 'https://arindam200.github.io/termui',
     theme,
   };
-
   writeConfig(config, cwd);
-  step(`Wrote ${hi('termui.config.json')}  ${dim(`theme: ${theme}`)}`);
+  logStep(`Wrote ${hi('termui.config.json')}  ${dim(`theme: ${theme}`)}`);
 
-  // ─── Step 8: Write termui.config.ts ───────────────────────────────────────
+  // ─── Write termui.config.ts ───────────────────────────────────────────────
   const configTsPath = join(cwd, 'termui.config.ts');
-  if (!existsSync(configTsPath)) {
+  if (!existsSync(configTsPath) || parsed.force) {
     writeFileSync(configTsPath, buildConfigTs(theme, componentsDir), 'utf-8');
-    step(`Created ${hi('termui.config.ts')}`);
+    logStep(`${existsSync(configTsPath) ? 'Updated' : 'Created'} ${hi('termui.config.ts')}`);
   } else {
-    warn(`${hi('termui.config.ts')} already exists — keeping your config`);
+    logWarn(`${hi('termui.config.ts')} already exists — keeping your config`);
   }
 
-  // ─── Step 9: Generate starter app ─────────────────────────────────────────
+  // ─── Starter app ──────────────────────────────────────────────────────────
   const srcDir = join(cwd, 'src');
   if (!existsSync(srcDir)) {
     mkdirSync(srcDir, { recursive: true });
-    step(`Created ${hi('src/')} directory`);
+    logStep(`Created ${hi('src/')} directory`);
   }
 
   const ext = useTypeScript ? 'tsx' : 'jsx';
   const appFilePath = join(srcDir, `index.${ext}`);
 
-  if (!existsSync(appFilePath)) {
+  if (!existsSync(appFilePath) || parsed.force) {
     writeFileSync(appFilePath, buildStarterApp(useTypeScript, componentsDir), 'utf-8');
-    step(`Created ${hi(`src/index.${ext}`)}  ${dim('starter Hello, TermUI app')}`);
+    logStep(`Created ${hi(`src/index.${ext}`)}  ${dim('starter Hello, TermUI app')}`);
   } else {
-    warn(`${hi(`src/index.${ext}`)} already exists — skipping`);
+    logWarn(`${hi(`src/index.${ext}`)} already exists — skipping`);
   }
 
-  // ─── Step 10: Install dependencies ──────────────────────────────────────────
+  // ─── Install dependencies ─────────────────────────────────────────────────
   if (shouldInstall) {
     const installCmd = buildInstallCommand(pm);
-    step(`Installing dependencies…`);
+    logStep(`Installing dependencies…`);
     try {
-      execSync(installCmd, { stdio: 'inherit', cwd });
+      execSync(installCmd, { stdio: silent ? 'ignore' : 'inherit', cwd });
     } catch {
-      warn(`Install failed. Run manually: ${hi(installCmd)}`);
+      logWarn(`Install failed. Run manually: ${hi(installCmd)}`);
     }
   }
 
-  // ─── Done ──────────────────────────────────────────────────────────────────
-  done('All done! TermUI is ready.');
+  // ─── Install positional components via `add` ──────────────────────────────
+  if (parsed.components.length > 0) {
+    logStep(`Adding components: ${parsed.components.map((c) => hi(c)).join(', ')}`);
+    const prevCwd = process.cwd();
+    try {
+      if (cwd !== prevCwd) process.chdir(cwd);
+      const { add } = await import('./add.js');
+      const addArgs = [...parsed.components];
+      if (parsed.reinstall) addArgs.push('--force');
+      await add(addArgs, { isNested: true });
+    } finally {
+      if (cwd !== prevCwd) process.chdir(prevCwd);
+    }
+  }
 
-  outro(
+  // ─── Done ─────────────────────────────────────────────────────────────────
+  logDone('All done! TermUI is ready.');
+
+  logOutro(
     `Next: ${hi('npx termui add box text spinner')}  ·  ${hi('npx termui list')}  ·  ${hi('npx termui preview')}`
   );
 }

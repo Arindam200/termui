@@ -278,20 +278,20 @@ import {
 
 TermUI ships a dedicated set of AI/LLM UI components for building chat interfaces and agent UIs:
 
-| Component       | Description                                                      |
-| --------------- | ---------------------------------------------------------------- |
-| `ChatMessage`   | Renders a single chat turn with role, content, and style         |
-| `ChatThread`    | Scrollable thread of `ChatMessage` components                    |
-| `ToolCall`      | Displays a tool/function call with name and arguments            |
-| `ThinkingBlock` | Collapsible reasoning/thinking block for chain-of-thought output |
-| `TokenUsage`    | Shows prompt/completion/total token counts with optional cost    |
-| `ContextMeter`  | Progress bar showing context window usage with warn/critical zones |
-| `ModelSelector` | Interactive picker for AI model selection, grouped by provider   |
-| `FileChange`    | Diff-style display of file modifications from an agent           |
-| `ToolApproval`        | Confirmation prompt before executing a tool call (risk-gated)    |
-| `StreamOutput`        | Standalone streaming display — animates text or AsyncIterable    |
-| `ConversationHistory` | Scrollable wrapper for ChatMessage history with ↑↓ navigation    |
-| `ErrorRetry`          | Error state with keyboard retry/dismiss affordance               |
+| Component             | Description                                                        |
+| --------------------- | ------------------------------------------------------------------ |
+| `ChatMessage`         | Renders a single chat turn with role, content, and style           |
+| `ChatThread`          | Scrollable thread of `ChatMessage` components                      |
+| `ToolCall`            | Displays a tool/function call with name and arguments              |
+| `ThinkingBlock`       | Collapsible reasoning/thinking block for chain-of-thought output   |
+| `TokenUsage`          | Shows prompt/completion/total token counts with optional cost      |
+| `ContextMeter`        | Progress bar showing context window usage with warn/critical zones |
+| `ModelSelector`       | Interactive picker for AI model selection, grouped by provider     |
+| `FileChange`          | Diff-style display of file modifications from an agent             |
+| `ToolApproval`        | Confirmation prompt before executing a tool call (risk-gated)      |
+| `StreamOutput`        | Standalone streaming display — animates text or AsyncIterable      |
+| `ConversationHistory` | Scrollable wrapper for ChatMessage history with ↑↓ navigation      |
+| `ErrorRetry`          | Error state with keyboard retry/dismiss affordance                 |
 
 The `termui/ai` adapter provides streaming React hooks:
 
@@ -327,21 +327,21 @@ npx termui add mcp
 
 `npx termui add mcp` prompts you to choose one of three installation targets:
 
-| Scope | Config file written |
-| --- | --- |
-| **Local project** | `.mcp.json` (Claude Code project scope) |
-| **Global — Claude Code** | `~/.claude/settings.json` |
+| Scope                       | Config file written                                               |
+| --------------------------- | ----------------------------------------------------------------- |
+| **Local project**           | `.mcp.json` (Claude Code project scope)                           |
+| **Global — Claude Code**    | `~/.claude/settings.json`                                         |
 | **Global — Claude Desktop** | `~/Library/Application Support/Claude/claude_desktop_config.json` |
 
 Once installed, your AI assistant gets five tools:
 
-| Tool | Description |
-| --- | --- |
-| `list_components` | Browse all components grouped by category |
-| `add_component` | Install component(s) into the current project |
-| `get_component_docs` | Full props + usage for a specific component |
-| `search_components` | Keyword search over the registry |
-| `get_theme_tokens` | List available themes and their token structure |
+| Tool                 | Description                                     |
+| -------------------- | ----------------------------------------------- |
+| `list_components`    | Browse all components grouped by category       |
+| `add_component`      | Install component(s) into the current project   |
+| `get_component_docs` | Full props + usage for a specific component     |
+| `search_components`  | Keyword search over the registry                |
+| `get_theme_tokens`   | List available themes and their token structure |
 
 ---
 
@@ -400,13 +400,13 @@ const openai = new OpenAI();
 
 In-repo docs live under [`docs/`](./docs). Start at **[docs/index.md](./docs/index.md)** for the overview and category guides (layout, typography, feedback, charts, and more). API-focused pages:
 
-| Doc                                                  | Contents                              |
-| ---------------------------------------------------- | ------------------------------------- |
-| [docs/api/cli.md](./docs/api/cli.md)                 | CLI reference                         |
-| [docs/api/hooks.md](./docs/api/hooks.md)             | Hooks API                             |
-| [docs/api/testing.md](./docs/api/testing.md)         | Testing utilities                     |
-| [docs/adapters.md](./docs/adapters.md)               | Adapters overview                     |
-| [docs/accessibility.md](./docs/accessibility.md)     | Keyboard nav, focus traps, ARIA, env vars |
+| Doc                                              | Contents                                  |
+| ------------------------------------------------ | ----------------------------------------- |
+| [docs/api/cli.md](./docs/api/cli.md)             | CLI reference                             |
+| [docs/api/hooks.md](./docs/api/hooks.md)         | Hooks API                                 |
+| [docs/api/testing.md](./docs/api/testing.md)     | Testing utilities                         |
+| [docs/adapters.md](./docs/adapters.md)           | Adapters overview                         |
+| [docs/accessibility.md](./docs/accessibility.md) | Keyboard nav, focus traps, ARIA, env vars |
 
 ---
 
@@ -515,13 +515,13 @@ pnpm --filter @termui/cli dev
 
 ## Roadmap
 
-| Phase       | Status         | Description                                                                                                              |
-| ----------- | -------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| **Phase 1** | ✅ **Done**    | 19 components, CLI (init/add/list), 3 themes, 12 hooks                                                                   |
-| **Phase 2** | ✅ **Done**    | 75 components, 9 themes, adapters, diff/update/theme commands                                                            |
-| **Phase 3** | ✅ **Done**    | 101 components, charts, dev tools, templates, testing package                                                            |
-| **Phase 4** | ✅ Complete    | AI components + streaming hooks, chalk/ora/meow/commander/inquirer/Vue/Svelte adapters, voice dictation, Windows CI, NO_UNICODE compat, `termui/testing` subpath, MCP server, accessibility hooks (`useKeyboardNavigation`, `useFocusTrap`), `StreamOutput`, `ConversationHistory`, `ErrorRetry`, `Modal`/`Drawer` focus trapping, 1,300+ tests |
-| **Phase 5** | 🔜 Planned     | Plugin system, community registry                                                                                        |
+| Phase       | Status      | Description                                                                                                                                                                                                                                                                                                                                     |
+| ----------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Phase 1** | ✅ **Done** | 19 components, CLI (init/add/list), 3 themes, 12 hooks                                                                                                                                                                                                                                                                                          |
+| **Phase 2** | ✅ **Done** | 75 components, 9 themes, adapters, diff/update/theme commands                                                                                                                                                                                                                                                                                   |
+| **Phase 3** | ✅ **Done** | 101 components, charts, dev tools, templates, testing package                                                                                                                                                                                                                                                                                   |
+| **Phase 4** | ✅ Complete | AI components + streaming hooks, chalk/ora/meow/commander/inquirer/Vue/Svelte adapters, voice dictation, Windows CI, NO_UNICODE compat, `termui/testing` subpath, MCP server, accessibility hooks (`useKeyboardNavigation`, `useFocusTrap`), `StreamOutput`, `ConversationHistory`, `ErrorRetry`, `Modal`/`Drawer` focus trapping, 1,300+ tests |
+| **Phase 5** | 🔜 Planned  | Plugin system, community registry                                                                                                                                                                                                                                                                                                               |
 
 ---
 

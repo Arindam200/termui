@@ -109,13 +109,13 @@ npx termui mcp
 npx termui mcp --help
 ```
 
-| Tool exposed | Description |
-| --- | --- |
-| `list_components` | Browse all components grouped by category |
-| `add_component` | Install component(s) into the current project |
-| `get_component_docs` | Full props + usage for a specific component |
-| `search_components` | Keyword search over the registry |
-| `get_theme_tokens` | List available themes and their token structure |
+| Tool exposed         | Description                                     |
+| -------------------- | ----------------------------------------------- |
+| `list_components`    | Browse all components grouped by category       |
+| `add_component`      | Install component(s) into the current project   |
+| `get_component_docs` | Full props + usage for a specific component     |
+| `search_components`  | Keyword search over the registry                |
+| `get_theme_tokens`   | List available themes and their token structure |
 
 ---
 
@@ -127,10 +127,10 @@ Install the MCP server config into an AI tool. Prompts for the installation scop
 npx termui add mcp
 ```
 
-| Scope | File written |
-| --- | --- |
-| Local project | `.mcp.json` (Claude Code project scope — auto-detected) |
-| Global — Claude Code | `~/.claude/settings.json` |
+| Scope                   | File written                                                              |
+| ----------------------- | ------------------------------------------------------------------------- |
+| Local project           | `.mcp.json` (Claude Code project scope — auto-detected)                   |
+| Global — Claude Code    | `~/.claude/settings.json`                                                 |
 | Global — Claude Desktop | `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) |
 
 After installing, restart your AI tool. Claude Code auto-detects `.mcp.json`; Claude Desktop requires a restart.

@@ -50,7 +50,10 @@ export function readConfig(cwd = process.cwd()): TermUIConfig | null {
       const config: Partial<TermUIConfig> = {};
       // Only string-valued fields can be extracted with a regex.
       // `registries` (string[]) is array-valued and only supported in .json configs.
-      const pairs: [keyof Pick<TermUIConfig, 'version' | 'componentsDir' | 'registry' | 'theme'>, RegExp][] = [
+      const pairs: [
+        keyof Pick<TermUIConfig, 'version' | 'componentsDir' | 'registry' | 'theme'>,
+        RegExp,
+      ][] = [
         ['version', /\bversion\s*:\s*['"]([^'"]+)['"]/],
         ['componentsDir', /\bcomponentsDir\s*:\s*['"]([^'"]+)['"]/],
         ['registry', /\bregistry\s*:\s*['"]([^'"]+)['"]/],

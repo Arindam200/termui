@@ -247,13 +247,21 @@ describe('HeatMap row label width', () => {
 
 describe('HeatMap min/max computation', () => {
   it('computes global min from all rows', () => {
-    const data = [[5, 10], [1, 8], [3, 6]];
+    const data = [
+      [5, 10],
+      [1, 8],
+      [3, 6],
+    ];
     const allValues = data.flat();
     expect(Math.min(...allValues)).toBe(1);
   });
 
   it('computes global max from all rows', () => {
-    const data = [[5, 10], [1, 8], [3, 6]];
+    const data = [
+      [5, 10],
+      [1, 8],
+      [3, 6],
+    ];
     const allValues = data.flat();
     expect(Math.max(...allValues)).toBe(10);
   });
@@ -265,7 +273,10 @@ describe('HeatMap min/max computation', () => {
   });
 
   it('all-zero data has min=0 and max=0', () => {
-    const data = [[0, 0], [0, 0]];
+    const data = [
+      [0, 0],
+      [0, 0],
+    ];
     const allValues = data.flat();
     expect(Math.min(...allValues)).toBe(0);
     expect(Math.max(...allValues)).toBe(0);

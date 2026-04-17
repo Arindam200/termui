@@ -38,10 +38,7 @@ const ICONS: Record<NotificationVariant, string> = {
   info: 'ℹ',
 };
 
-function variantColor(
-  variant: NotificationVariant,
-  theme: ReturnType<typeof useTheme>
-): string {
+function variantColor(variant: NotificationVariant, theme: ReturnType<typeof useTheme>): string {
   switch (variant) {
     case 'success':
       return theme.colors.success;

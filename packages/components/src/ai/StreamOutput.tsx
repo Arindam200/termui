@@ -41,12 +41,7 @@ export function StreamOutput({
         </Text>
       )}
       {stream ? (
-        <StreamingText
-          stream={stream}
-          cursor={cursor}
-          speed={speed}
-          onComplete={onComplete}
-        />
+        <StreamingText stream={stream} cursor={cursor} speed={speed} onComplete={onComplete} />
       ) : (
         <StreamingText
           text={text}
