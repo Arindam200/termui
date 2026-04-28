@@ -117,6 +117,22 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run lint
 
+  audit:
+    name: Security audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Audit (fail on high+)
+        run: pnpm audit --audit-level high
+      - name: Audit (informational, low+)
+        run: pnpm audit --audit-level low || true
+
   changeset:
     name: Changeset check
     runs-on: ubuntu-latest

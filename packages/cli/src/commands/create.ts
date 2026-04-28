@@ -1250,6 +1250,11 @@ export default {
 const GITIGNORE = `node_modules/
 dist/
 *.js.map
+
+# secrets — keep .env* files local
+.env
+.env.local
+.env.*.local
 `;
 
 const README_STARTER_COMPONENTS: Record<Template, string | null> = {

@@ -271,5 +271,15 @@
   "author": {
     "name": "Arindam Majumder",
     "url": "https://github.com/Arindam200"
+  },
+  "pnpm": {
+    "overrides": {
+      "hono": ">=4.12.14",
+      "@hono/node-server": ">=1.19.13",
+      "picomatch": ">=4.0.4",
+      "brace-expansion": ">=5.0.5",
+      "esbuild": ">=0.25.0",
+      "postcss": ">=8.5.11"
+    }
   }
 }

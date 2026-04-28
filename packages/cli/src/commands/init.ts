@@ -21,7 +21,7 @@ interface InitOptions {
 
 function parseOptions(argv: string[]): InitOptions {
   const opts: InitOptions = {
-    yes: true, // -y defaults to true per spec
+    yes: false, // interactive by default; pass -y/--yes to skip prompts and auto-install
     defaults: false,
     force: false,
     silent: false,
