@@ -82,14 +82,20 @@
     "strip-ansi": "^7.1.0"
   },
   "peerDependencies": {
+    "cfonts": "^3.3.1",
     "react": "^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "cfonts": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@termui/testing": "workspace:*",
-    "@types/react": "^18.0.0",
     "@types/node": "^20.0.0",
-    "vitest": "^1.0.0",
+    "@types/react": "^18.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
     "typescript": "^5.4.0",
-    "@vitest/coverage-v8": "^1.0.0"
+    "vitest": "^1.0.0"
   }
 }

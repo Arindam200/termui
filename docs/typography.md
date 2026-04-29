@@ -207,24 +207,67 @@ import { Gradient } from 'termui/components';
 
 ## BigText
 
-Renders large ASCII-art text using figlet fonts.
+Renders large ASCII-art block-letter text. Ships **two render engines**:
 
-**Props:**
-| Prop | Type | Default | Required |
-|------|------|---------|----------|
-| `children` | `string` | `—` | ✓ |
-| `font` | `string` | `'Standard'` | — |
-| `color` | `string` | `—` | — |
+| Engine | When to use | Install | Bundle cost |
+|---|---|---|---|
+| `'basic'` _(default)_ | Most apps. Single color, uppercase A–Z, digits, basic punctuation. | None — built in. | 0 KB extra |
+| `'cfonts'` _(opt-in)_ | You want richer fonts, gradients, alignment, or backgrounds. | `npm install cfonts` | ~400 KB |
 
-**Usage:**
+If you ask for `engine="cfonts"` but `cfonts` isn't installed, BigText logs a one-line warning and **falls back to the basic engine** so the UI never breaks.
+
+**Quick start:**
 
 ```tsx
 import { BigText } from 'termui/components';
 
-<BigText font="Big" color="cyan">
-  HELLO
-</BigText>;
+// Default — zero deps
+<BigText>HELLO</BigText>
+
+// Color (basic or cfonts)
+<BigText color="cyan">HELLO</BigText>
+
+// Opt in to cfonts for a richer look
+<BigText engine="cfonts" font="tiny">HELLO</BigText>
+
+// Gradient across characters (cfonts only)
+<BigText engine="cfonts" font="tiny" gradient={['red', 'magenta']} transitionGradient>
+  TERMUI
+</BigText>
+
+// Hex color + centered (cfonts only — basic engine ignores align)
+<BigText engine="cfonts" font="3d" color="#ff6b35" align="center">MyApp</BigText>
 ```
+
+**Installing the cfonts engine in a shadcn-style project:**
+
+```bash
+npx termui add big-text   # copies BigText.tsx + BigText.font.ts (basic engine)
+npm install cfonts        # opt in to engine="cfonts" — only needed for richer fonts
+```
+
+**Props:**
+
+| Prop | Type | Default | Engine | Required |
+|------|------|---------|--------|----------|
+| `children` | `string` | `—` | both | ✓ |
+| `engine` | `'basic' \| 'cfonts'` | `'basic'` | both | — |
+| `color` | `string \| string[]` | theme `primary` | both (basic uses first) | — |
+| `font` | `'console' \| 'block' \| 'simpleBlock' \| 'simple' \| '3d' \| 'simple3d' \| 'chrome' \| 'huge' \| 'shade' \| 'slick' \| 'grid' \| 'pallet' \| 'tiny'` | `'block'` | cfonts only | — |
+| `gradient` | `[string, string]` | `—` | cfonts only | — |
+| `transitionGradient` | `boolean` | `false` | cfonts only | — |
+| `background` | `string` | `—` | cfonts only | — |
+| `align` | `'left' \| 'center' \| 'right'` | `'left'` | cfonts only | — |
+| `letterSpacing` | `number` | `—` | cfonts only | — |
+| `lineHeight` | `number` | `—` | cfonts only | — |
+| `space` | `boolean` | `false` | cfonts only | — |
+
+> Props marked **cfonts only** are silently ignored under the basic engine.
+
+**Migrating from BigText 1.x:**
+
+- The pre-1.x `font="Standard"` / `font="Big"` figlet names no longer exist. Use `engine="cfonts"` and pick from the list above (e.g. `font="block"`, `font="tiny"`).
+- The `SplashScreen.titleColorAlt` prop's behaviour now depends on `engine`: under `'cfonts'` it forms a smooth gradient across glyphs; under `'basic'` it renders the legacy alternating-row striped look.
 
 ---
 

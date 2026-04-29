@@ -342,15 +342,30 @@ export const CATALOG: Category[] = [
       },
       {
         name: 'BigText',
-        description: 'Renders large ASCII-art text using figlet fonts.',
+        description:
+          'Renders large ASCII-art text via cfonts — 13 fonts, gradients, alignment, and backgrounds.',
         props: [
           { name: 'children', type: 'string', required: true },
-          { name: 'font', type: 'string', default: "'Standard'" },
-          { name: 'color', type: 'string' },
+          {
+            name: 'font',
+            type: "'block' | 'simple' | '3d' | 'chrome' | 'huge' | 'shade' | 'slick' | 'grid' | 'pallet' | 'tiny' | 'console' | 'simpleBlock' | 'simple3d'",
+            default: "'block'",
+          },
+          { name: 'color', type: 'string | string[]' },
+          { name: 'engine', type: "'basic' | 'cfonts'", default: "'basic'" },
+          { name: 'gradient', type: '[string, string]  // cfonts only' },
+          { name: 'transitionGradient', type: 'boolean  // cfonts only' },
+          { name: 'align', type: "'left' | 'center' | 'right'", default: "'left'" },
         ],
         usage: `import { BigText } from 'termui/components'
 
-<BigText font="Big" color="cyan">HELLO</BigText>`,
+// Default — basic engine, zero deps
+<BigText color="cyan">HELLO</BigText>
+
+// Opt in to cfonts (npm install cfonts) for richer fonts/gradients
+<BigText engine="cfonts" font="tiny" gradient={['red', 'magenta']} transitionGradient>
+  TERMUI
+</BigText>`,
       },
       {
         name: 'Digits',

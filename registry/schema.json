@@ -1,7 +1,7 @@
 {
   "$schema": "https://arindam200.github.io/termui/schema-meta.json",
-  "version": "1.1.0",
-  "updatedAt": "2026-03-23",
+  "version": "1.2.0",
+  "updatedAt": "2026-04-23",
   "components": {
     "box": {
       "name": "box",
@@ -275,11 +275,12 @@
     },
     "big-text": {
       "name": "big-text",
-      "description": "Figlet-style large ASCII art text",
-      "version": "1.0.0",
+      "description": "Block-letter ASCII art with built-in basic font; opt-in `cfonts` engine for 13 fonts + gradients",
+      "version": "2.0.0",
       "category": "typography",
-      "files": ["BigText.tsx"],
+      "files": ["BigText.tsx", "BigText.font.ts"],
       "deps": [],
+      "optionalDeps": ["cfonts"],
       "peerComponents": []
     },
     "digits": {

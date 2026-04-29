@@ -1,14 +1,28 @@
-import React, { type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { Box, Text } from 'ink';
 import { useTheme } from 'termui';
-import { BigText } from 'termui/components';
+import {
+  BigText,
+  type BigTextFont,
+  type BigTextEngine,
+  BIG_TEXT_FONT,
+  BIG_TEXT_FALLBACK,
+  decodeBigTextRow,
+} from 'termui/components';
 
-export type FigletFont = 'block' | 'simple';
+export type FigletFont = BigTextFont;
 
 export interface SplashScreenProps {
   title: string;
-  font?: FigletFont;
+  /** BigText render engine. Default: `'basic'` (zero deps). Set to `'cfonts'` for richer fonts/gradients (requires `npm install cfonts`). */
+  engine?: BigTextEngine;
+  font?: BigTextFont;
   titleColor?: string;
+  /**
+   * Secondary color for the title.
+   * - `engine="cfonts"` → smooth gradient across glyphs.
+   * - `engine="basic"` → alternating-row colors (legacy striped look).
+   */
   titleColorAlt?: string;
   bold?: boolean;
   subtitle?: string;
@@ -16,11 +30,12 @@ export interface SplashScreenProps {
   author?: { name: string; href?: string };
   statusLine?: ReactNode;
   padding?: number;
-  align?: 'left' | 'center';
+  align?: 'left' | 'center' | 'right';
 }
 
 export function SplashScreen({
   title,
+  engine = 'basic',
   font = 'block',
   titleColor,
   titleColorAlt,
@@ -30,32 +45,45 @@ export function SplashScreen({
   author,
   statusLine,
   padding = 2,
+  align = 'left',
 }: SplashScreenProps) {
   const theme = useTheme();
   const resolvedTitleColor = titleColor ?? theme.colors.primary;
 
-  // Build OSC 8 hyperlink for author if href is provided
   const authorNode = author
     ? author.href
       ? `\x1b]8;;${author.href}\x1b\\${author.name}\x1b]8;;\x1b\\`
       : author.name
     : null;
 
+  let titleNode: ReactNode;
+  if (titleColorAlt && engine === 'cfonts') {
+    titleNode = (
+      <BigText
+        engine="cfonts"
+        font={font}
+        gradient={[resolvedTitleColor, titleColorAlt]}
+        transitionGradient
+        align={align}
+      >
+        {title}
+      </BigText>
+    );
+  } else if (titleColorAlt) {
+    titleNode = (
+      <BasicAlternating title={title} color={resolvedTitleColor} colorAlt={titleColorAlt} />
+    );
+  } else {
+    titleNode = (
+      <BigText engine={engine} font={font} color={resolvedTitleColor} align={align}>
+        {title}
+      </BigText>
+    );
+  }
+
   return (
     <Box flexDirection="column" paddingLeft={padding}>
-      {/* BigText alternates between titleColor and titleColorAlt for rows */}
-      {titleColorAlt ? (
-        <AltColorBigText
-          text={title}
-          font={font}
-          color={resolvedTitleColor}
-          colorAlt={titleColorAlt}
-        />
-      ) : (
-        <BigText font={font} color={resolvedTitleColor}>
-          {title}
-        </BigText>
-      )}
+      {titleNode}
 
       {subtitle && (
         <Box marginTop={1}>
@@ -75,242 +103,37 @@ export function SplashScreen({
   );
 }
 
-// Renders BigText with alternating row colors for depth effect
-function AltColorBigText({
-  text,
-  font,
+function BasicAlternating({
+  title,
   color,
   colorAlt,
 }: {
-  text: string;
-  font: FigletFont;
+  title: string;
   color: string;
   colorAlt: string;
 }) {
-  const onChar = font === 'block' ? '█' : '▓';
+  const onChar = '█';
   const offChar = ' ';
-
-  const FONT: Record<string, number[][]> = {
-    A: [
-      [0, 1, 0],
-      [1, 0, 1],
-      [1, 1, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-    ],
-    B: [
-      [1, 1, 0],
-      [1, 0, 1],
-      [1, 1, 0],
-      [1, 0, 1],
-      [1, 1, 0],
-    ],
-    C: [
-      [0, 1, 1],
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 0, 0],
-      [0, 1, 1],
-    ],
-    D: [
-      [1, 1, 0],
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 1, 0],
-    ],
-    E: [
-      [1, 1, 1],
-      [1, 0, 0],
-      [1, 1, 0],
-      [1, 0, 0],
-      [1, 1, 1],
-    ],
-    F: [
-      [1, 1, 1],
-      [1, 0, 0],
-      [1, 1, 0],
-      [1, 0, 0],
-      [1, 0, 0],
-    ],
-    G: [
-      [0, 1, 1],
-      [1, 0, 0],
-      [1, 0, 1],
-      [1, 0, 1],
-      [0, 1, 1],
-    ],
-    H: [
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 1, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-    ],
-    I: [
-      [1, 1, 1],
-      [0, 1, 0],
-      [0, 1, 0],
-      [0, 1, 0],
-      [1, 1, 1],
-    ],
-    J: [
-      [0, 0, 1],
-      [0, 0, 1],
-      [0, 0, 1],
-      [1, 0, 1],
-      [0, 1, 0],
-    ],
-    K: [
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 1, 0],
-      [1, 0, 1],
-      [1, 0, 1],
-    ],
-    L: [
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 1, 1],
-    ],
-    M: [
-      [1, 0, 1],
-      [1, 1, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-    ],
-    N: [
-      [1, 0, 1],
-      [1, 1, 1],
-      [1, 1, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-    ],
-    O: [
-      [0, 1, 0],
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-      [0, 1, 0],
-    ],
-    P: [
-      [1, 1, 0],
-      [1, 0, 1],
-      [1, 1, 0],
-      [1, 0, 0],
-      [1, 0, 0],
-    ],
-    Q: [
-      [0, 1, 0],
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 1, 1],
-      [0, 1, 1],
-    ],
-    R: [
-      [1, 1, 0],
-      [1, 0, 1],
-      [1, 1, 0],
-      [1, 0, 1],
-      [1, 0, 1],
-    ],
-    S: [
-      [0, 1, 1],
-      [1, 0, 0],
-      [0, 1, 0],
-      [0, 0, 1],
-      [1, 1, 0],
-    ],
-    T: [
-      [1, 1, 1],
-      [0, 1, 0],
-      [0, 1, 0],
-      [0, 1, 0],
-      [0, 1, 0],
-    ],
-    U: [
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-      [0, 1, 0],
-    ],
-    V: [
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-      [0, 1, 0],
-    ],
-    W: [
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 1, 1],
-      [1, 0, 1],
-    ],
-    X: [
-      [1, 0, 1],
-      [1, 0, 1],
-      [0, 1, 0],
-      [1, 0, 1],
-      [1, 0, 1],
-    ],
-    Y: [
-      [1, 0, 1],
-      [1, 0, 1],
-      [0, 1, 0],
-      [0, 1, 0],
-      [0, 1, 0],
-    ],
-    Z: [
-      [1, 1, 1],
-      [0, 0, 1],
-      [0, 1, 0],
-      [1, 0, 0],
-      [1, 1, 1],
-    ],
-    ' ': [
-      [0, 0, 0],
-      [0, 0, 0],
-      [0, 0, 0],
-      [0, 0, 0],
-      [0, 0, 0],
-    ],
-  };
-
-  const FALLBACK: number[][] = [
-    [1, 1, 1],
-    [1, 0, 1],
-    [1, 0, 1],
-    [1, 0, 1],
-    [1, 1, 1],
-  ];
-
-  const chars = text.split('');
+  const chars = title.split('');
   const rows = 5;
 
   return (
     <Box flexDirection="column">
       {Array.from({ length: rows }, (_, rowIdx) => {
         const rowColor = rowIdx % 2 === 0 ? color : colorAlt;
+        const line = chars
+          .map((ch) => {
+            const upper = ch.toUpperCase();
+            const glyph = BIG_TEXT_FONT[upper] ?? BIG_TEXT_FONT[ch] ?? BIG_TEXT_FALLBACK;
+            const row = decodeBigTextRow(glyph[rowIdx] ?? 0);
+            return row.map((p) => (p ? onChar : offChar)).join('') + ' ';
+          })
+          .join('')
+          .replace(/\s+$/, '');
         return (
-          <Box key={rowIdx} flexDirection="row">
-            {chars.map((ch, charIdx) => {
-              const upper = ch.toUpperCase();
-              const charRows = FONT[upper] ?? FONT[ch] ?? FALLBACK;
-              const row = charRows[rowIdx] ?? [0, 0, 0];
-              const rowStr = row.map((pixel) => (pixel ? onChar : offChar)).join('');
-              return (
-                <Text key={charIdx} color={rowColor}>
-                  {rowStr + ' '}
-                </Text>
-              );
-            })}
-          </Box>
+          <Text key={rowIdx} color={rowColor}>
+            {line}
+          </Text>
         );
       })}
     </Box>

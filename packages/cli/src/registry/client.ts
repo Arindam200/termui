@@ -307,10 +307,10 @@ export function getLocalRegistry(): RegistryManifest {
       },
       'big-text': {
         name: 'big-text',
-        description: 'Figlet-style large ASCII art text',
-        version: '1.0.0',
+        description: 'Block-letter ASCII art (basic engine built-in; opt-in cfonts engine)',
+        version: '2.0.0',
         category: 'typography',
-        files: ['BigText.tsx'],
+        files: ['BigText.tsx', 'BigText.font.ts'],
       },
       digits: {
         name: 'digits',
